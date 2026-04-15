@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>German Telehealth Infrastructure — Structural Mapping for Threat Modeling · Julie Di Gao</title>
+  <!-- Google Fonts removed: now using Calibri system font everywhere -->
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .layout, .sidebar, .content { display: contents; }
+
+    /* Risk badge */
+    .cs-risk-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      margin: 1.5rem 0;
+    }
+    .cs-risk-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+    }
+    .cs-risk-badge {
+      flex-shrink: 0;
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 0.15rem;
+      min-width: 4rem;
+      text-align: center;
+    }
+    .cs-risk-badge.high   { background: #fde8e8; color: #c0392b; }
+    .cs-risk-badge.medium { background: #fef3cd; color: #b7791f; }
+    .cs-risk-badge.low    { background: #e8f5e9; color: #2e7d32; }
+    .cs-risk-text {
+      font-size: 0.875rem;
+      color: var(--secondary);
+      line-height: 1.55;
+    }
+    .cs-risk-text strong { color: var(--text); font-weight: 600; }
+
+    /* Regulation strip */
+    .cs-reg-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 1.25rem 0;
+    }
+    .cs-reg-pill {
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--secondary);
+      background: var(--surface);
+      white-space: nowrap;
+    }
+
+    /* Incident box */
+    .cs-incident {
+      background: #fdf2f2;
+      border-left: 3px solid #c0392b;
+      border-radius: 0 4px 4px 0;
+      padding: 1.1rem 1.4rem;
+      margin: 1.5rem 0;
+    }
+    .cs-incident-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #c0392b;
+      margin-bottom: 0.4rem;
+    }
+    .cs-incident p {
+      font-size: 0.875rem;
+      color: #5a2323;
+      line-height: 1.6;
+      margin: 0;
+    }
+    /* Architecture cards */
+    .cs-arch-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin: 2.5rem 0;
+    }
+    .cs-arch-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      border: none;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .cs-arch-card:hover {
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .cs-arch-diagram {
+      padding: 2rem 1.5rem 1.5rem;
+      background: linear-gradient(180deg, #f8f9fa 0%, #f1f3f5 100%);
+    }
+    .cs-arch-diagram svg { display: block; width: 100%; }
+    .cs-arch-info {
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+    .cs-arch-tag {
+      display: block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #2251FF;
+      margin-bottom: 0.35rem;
+      font-family: var(--font);
+    }
+    .cs-arch-card h3 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin: 0;
+      line-height: 1.3;
+      font-family: var(--font);
+    }
+    @media (max-width: 768px) {
+      .cs-arch-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="cs-page">
+  <a class="skip-link" href="#cs-main">Skip to content</a>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-name">Julie Di Gao</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="nav-links">
+    <a href="index.html#projects">Projects</a>
+    <a href="index.html#reviews">Customer Review</a>
+    <a href="https://mail.google.com/mail/?view=cm&to=julie.gao369@gmail.com" target="_blank" rel="noopener">Contact</a>
+    <a href="https://calendar.app.google/rjYfn2XpzJs34tZLA" class="nav-cta" target="_blank" rel="noopener">Schedule a call</a>
+  </div>
+  </nav>
+
+  <main id="cs-main">
+    <div class="cs-header">
+      <a href="index.html" class="cs-back">All work</a>
+
+      <p class="cs-eyebrow">Critical Infrastructure Research · 2025 · KIT OCI</p>
+      <h1 class="cs-title">German Telehealth Infrastructure: Structural Mapping for Threat Modeling</h1>
+      <p class="cs-sub">A KIT doctoral researcher needed a structural baseline before she could model cybersecurity risk in German hospital networks. I mapped three digitised care delivery architectures to give her that foundation under the EU NIS2 framework.</p>
+
+      <div class="cs-meta">
+        <div class="cs-meta-item"><span class="cs-meta-label">Role</span> <span class="cs-meta-value">Research Assistant</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Client</span> <span class="cs-meta-value">OCI KIT</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Year</span> <span class="cs-meta-value">2025</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Focus</span> <span class="cs-meta-value">Literature research</span></div>
+      </div>
+    </div>
+
+    <div class="cs-body">
+
+      <!-- ── Research questions ────────────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Research questions</p>
+        <h2>Three questions for the threat model</h2>
+        <ul>
+          <li><strong>Architecture:</strong> How are systems connected, and where do data dependencies concentrate?</li>
+          <li><strong>Criticality:</strong> Which operations are time-critical, and what does disruption cost clinically?</li>
+          <li><strong>Regulatory exposure:</strong> Which operators carry NIS2/KRITIS obligations, and how does that shape their architecture?</li>
+        </ul>
+      </div>
+
+      <!-- ── Callout ────────────────────────────────────────────── -->
+      <div class="cs-callout">
+        <p>In healthcare, IT availability is a clinical metric. Disruption is measured in minutes, and the consequence is measured in neurological damage, not just data loss.</p>
+      </div>
+
+      <!-- ── Three models (security lens) ─────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Network architectures</p>
+        <h2>Three integration models, three structural profiles</h2>
+        <p>Three models, each representing a distinct integration strategy: vertical, horizontal, and networked. Scope limited to regional care delivery networks. The national TI, gematik, and ePA layers are excluded.</p>
+
+        <div class="cs-arch-grid">
+
+          <!-- Card 1: PORT Stuttgart -->
+          <div class="cs-arch-card">
+            <div class="cs-arch-diagram">
+              <svg viewBox="0 0 240 185" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;">
+                <defs><style>
+                  .a-dash{stroke:#cbd5e1;stroke-width:1.5;stroke-dasharray:4 4;fill:none;}
+                  .a-rect{fill:#fff;stroke:#2251FF;stroke-width:1.5;}
+                  .a-hl{fill:#E8EEFF;stroke:#2251FF;stroke-width:1.5;}
+                  .a-t{font-size:9px;font-weight:600;fill:#000;text-anchor:middle;dominant-baseline:central;}
+                </style></defs>
+                <path class="a-dash" d="M120 45 L120 90"/>
+                <path class="a-dash" d="M120 120 L70 155"/>
+                <path class="a-dash" d="M120 120 L170 155"/>
+                <rect class="a-rect" x="70" y="25" width="100" height="26" rx="3"/>
+                <text class="a-t" x="120" y="38">Research Network</text>
+                <rect class="a-hl"  x="45" y="90" width="150" height="30" rx="3"/>
+                <text class="a-t" x="120" y="105">Robert Bosch Hospital</text>
+                <rect class="a-rect" x="30" y="150" width="80" height="22" rx="11"/>
+                <text class="a-t" x="70" y="161">Mobile Nurse</text>
+                <rect class="a-rect" x="130" y="150" width="80" height="22" rx="11"/>
+                <text class="a-t" x="170" y="161">Mobile Nurse</text>
+              </svg>
+            </div>
+            <div class="cs-arch-info">
+              <span class="cs-arch-tag">PORT Stuttgart</span>
+              <h3>Vertical Integration</h3>
+            </div>
+          </div>
+
+          <!-- Card 2: PORT Hohenstein -->
+          <div class="cs-arch-card">
+            <div class="cs-arch-diagram">
+              <svg viewBox="0 0 240 185" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;">
+                <defs><style>
+                  .b-link{stroke:#cbd5e1;stroke-width:1.5;fill:none;}
+                  .b-rect{fill:#fff;stroke:#2251FF;stroke-width:1.5;}
+                  .b-hl{fill:#E8EEFF;stroke:#2251FF;stroke-width:1.5;}
+                  .b-t{font-size:9px;font-weight:600;fill:#000;text-anchor:middle;dominant-baseline:central;}
+                </style></defs>
+                <circle cx="120" cy="100" r="48" style="fill:none;stroke:#cbd5e1;stroke-width:1;stroke-dasharray:3 3;"/>
+                <line class="b-link" x1="120" y1="100" x2="120" y2="42"/>
+                <line class="b-link" x1="120" y1="100" x2="178" y2="72"/>
+                <line class="b-link" x1="120" y1="100" x2="178" y2="128"/>
+                <line class="b-link" x1="120" y1="100" x2="120" y2="158"/>
+                <line class="b-link" x1="120" y1="100" x2="62"  y2="128"/>
+                <line class="b-link" x1="120" y1="100" x2="62"  y2="72"/>
+                <rect class="b-hl"   x="90"  y="85"  width="60" height="30" rx="3"/>
+                <text class="b-t" x="120" y="100">Shared DB</text>
+                <rect class="b-rect" x="83"  y="26"  width="74" height="20" rx="10"/>
+                <text class="b-t" x="120" y="36">GP Clinic</text>
+                <rect class="b-rect" x="153" y="62"  width="68" height="20" rx="10"/>
+                <text class="b-t" x="187" y="72">Pediatrics</text>
+                <rect class="b-rect" x="153" y="118" width="68" height="20" rx="10"/>
+                <text class="b-t" x="187" y="128">Psychiatry</text>
+                <rect class="b-rect" x="83"  y="148" width="74" height="20" rx="10"/>
+                <text class="b-t" x="120" y="158">Social Services</text>
+                <rect class="b-rect" x="19"  y="118" width="66" height="20" rx="10"/>
+                <text class="b-t" x="52"  y="128">Midwifery</text>
+                <rect class="b-rect" x="19"  y="62"  width="66" height="20" rx="10"/>
+                <text class="b-t" x="52"  y="72">Physio</text>
+              </svg>
+            </div>
+            <div class="cs-arch-info">
+              <span class="cs-arch-tag">PORT Hohenstein</span>
+              <h3>Horizontal Community Integration</h3>
+            </div>
+          </div>
+
+          <!-- Card 3: NEVAS Bavaria -->
+          <div class="cs-arch-card">
+            <div class="cs-arch-diagram">
+              <svg viewBox="0 0 240 185" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;">
+                <defs><style>
+                  .c-link{stroke:#cbd5e1;stroke-width:1.5;fill:none;}
+                  .c-dash{stroke:#cbd5e1;stroke-width:1.5;stroke-dasharray:4 4;fill:none;}
+                  .c-hub{fill:#E8EEFF;stroke:#2251FF;stroke-width:1.5;}
+                  .c-spoke{fill:#fff;stroke:#94a3b8;stroke-width:1.5;}
+                  .c-t{font-size:9px;font-weight:600;fill:#000;text-anchor:middle;dominant-baseline:central;}
+                </style></defs>
+                <path class="c-dash" d="M120 60 L75 140"/>
+                <path class="c-dash" d="M120 60 L165 140"/>
+                <path class="c-dash" d="M75 140 L165 140"/>
+                <line class="c-link" x1="120" y1="60" x2="80"  y2="30"/>
+                <line class="c-link" x1="120" y1="60" x2="120" y2="25"/>
+                <line class="c-link" x1="120" y1="60" x2="160" y2="30"/>
+                <circle class="c-spoke" cx="80"  cy="30"  r="5"/>
+                <circle class="c-spoke" cx="120" cy="25"  r="5"/>
+                <circle class="c-spoke" cx="160" cy="30"  r="5"/>
+                <line class="c-link" x1="75" y1="140" x2="35" y2="120"/>
+                <line class="c-link" x1="75" y1="140" x2="30" y2="155"/>
+                <line class="c-link" x1="75" y1="140" x2="55" y2="175"/>
+                <circle class="c-spoke" cx="35" cy="120" r="5"/>
+                <circle class="c-spoke" cx="30" cy="155" r="5"/>
+                <circle class="c-spoke" cx="55" cy="175" r="5"/>
+                <line class="c-link" x1="165" y1="140" x2="200" y2="120"/>
+                <line class="c-link" x1="165" y1="140" x2="205" y2="155"/>
+                <line class="c-link" x1="165" y1="140" x2="181" y2="175"/>
+                <circle class="c-spoke" cx="200" cy="120" r="5"/>
+                <circle class="c-spoke" cx="205" cy="155" r="5"/>
+                <circle class="c-spoke" cx="181" cy="175" r="5"/>
+                <circle class="c-hub" cx="120" cy="60"  r="18"/>
+                <text class="c-t" x="120" y="60">Hub</text>
+                <circle class="c-hub" cx="75"  cy="140" r="18"/>
+                <text class="c-t" x="75"  y="140">Hub</text>
+                <circle class="c-hub" cx="165" cy="140" r="18"/>
+                <text class="c-t" x="165" y="140">Hub</text>
+              </svg>
+            </div>
+            <div class="cs-arch-info">
+              <span class="cs-arch-tag">NEVAS Bavaria</span>
+              <h3>Regional Network Coordination</h3>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Comparative table ─────────────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Structural comparison</p>
+        <h2>Security-relevant dimensions across the three models</h2>
+
+        <div class="cs-table-wrap">
+          <table class="cs-table">
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th>PORT Stuttgart</th>
+                <th>PORT Hohenstein</th>
+                <th>NEVAS Bavaria</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Integration type</td>
+                <td>Vertical — hospital campus</td>
+                <td>Horizontal — community multi-agency</td>
+                <td>Regional hub-and-spoke network</td>
+              </tr>
+              <tr>
+                <td>Network nodes</td>
+                <td>1 center + RBK hospital campus</td>
+                <td>13 departments + county agencies</td>
+                <td>19 hospitals (3 hubs + 16 spokes)</td>
+              </tr>
+              <tr>
+                <td>Population served</td>
+                <td>~22,500</td>
+                <td>~3,700</td>
+                <td>2.9 million</td>
+              </tr>
+              <tr>
+                <td>Time-criticality</td>
+                <td>Moderate — chronic care coordination</td>
+                <td>Low — scheduled primary care</td>
+                <td>Extreme — stroke "golden hour"</td>
+              </tr>
+              <tr>
+                <td>Data sensitivity</td>
+                <td>Ambulatory + inpatient EHR convergence</td>
+                <td>Multi-disciplinary community records</td>
+                <td>Acute neurological + imaging data</td>
+              </tr>
+              <tr>
+                <td>External connections</td>
+                <td>Bosch Health Campus research network</td>
+                <td>County health office, public agencies</td>
+                <td>19 inter-hospital video/data links</td>
+              </tr>
+              <tr>
+                <td>NIS2 exposure (indicative)</td>
+                <td>Likely essential entity (via RBK hospital, subject to NIS2UmsuCG thresholds)</td>
+                <td>Likely important entity (subject to operator size thresholds)</td>
+                <td>Likely essential entity (subject to formal classification)</td>
+              </tr>
+              <tr>
+                <td>Structural concern (literature-indicated)</td>
+                <td>Research network boundary</td>
+                <td>Rural IT resource constraints (ENISA 2023)</td>
+                <td>16 spoke hospitals with variable IT maturity (ENISA 2023)</td>
+              </tr>
+              <tr>
+                <td>Active since</td>
+                <td>2022</td>
+                <td>September 2019</td>
+                <td>2014</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── NEVAS deep dive ───────────────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">NEVAS Bavaria — structurally most complex</p>
+        <h2>A 19-hospital network where availability is a patient safety constraint</h2>
+        <p>NEVAS connects 3 stroke centers with 16 regional hospitals via 24/7 video and data links. Regional hospitals lack round-the-clock neurologists. Remote experts fill that gap during the critical "golden hour."</p>
+        <figure style="margin:1.75rem 0;">
+          <img src="img/german-telehealth/nevas-bavaria-user-journey.png" alt="NEVAS Bavaria patient journey — clinical workflow from spoke hospital through treatment decision to hub transfer and recovery" style="width:100%; border-radius:8px; border:1px solid rgba(0,0,0,0.07);" />
+          <figcaption style="font-size:0.75rem; color:var(--secondary); margin-top:0.5rem; line-height:1.5;">NEVAS patient pathway — from spoke hospital CT imaging and video consult with hub neurologist, through treatment decision, to mechanical thrombectomy at the hub center and rehabilitation referral.</figcaption>
+        </figure>
+        <p>Three structural characteristics matter most for threat modeling:</p>
+        <div class="cs-risk-row">
+          <div class="cs-risk-item">
+            <span class="cs-risk-badge high">Structural</span>
+            <div class="cs-risk-text"><strong>Extreme time-criticality.</strong> Stroke efficacy drops by the minute. Network downtime cuts regional access to specialist intervention immediately.</div>
+          </div>
+          <div class="cs-risk-item">
+            <span class="cs-risk-badge high">Structural</span>
+            <div class="cs-risk-text"><strong>Distributed entry points.</strong> 19 interconnected IT environments, 19 entry vectors. Smaller regional hospitals typically have lower security maturity and can propagate compromise to hubs.</div>
+          </div>
+          <div class="cs-risk-item">
+            <span class="cs-risk-badge medium">Structural</span>
+            <div class="cs-risk-text"><strong>Protocol dependency.</strong> Manipulated treatment protocols or corrupt diagnostics data could warp clinical decisions across the network before detection.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PORT Stuttgart deep dive ──────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">PORT Stuttgart — research network exposure</p>
+        <h2>Hospital campus integration with an external research boundary</h2>
+        <p>PORT Stuttgart sits inside Robert Bosch Hospital and connects to the Bosch Health Campus research ecosystem. Structurally, this creates a dual-domain environment: KRITIS-governed clinical operations alongside a research network with different security standards.</p>
+        <div class="cs-risk-row">
+          <div class="cs-risk-item">
+            <span class="cs-risk-badge medium">Structural</span>
+            <div class="cs-risk-text"><strong>Research-clinical boundary.</strong> Research network traffic converging with clinical infrastructure creates a trust boundary problem. If insufficiently segmented, the research connection becomes a lateral movement path into clinical systems.</div>
+          </div>
+          <div class="cs-risk-item">
+            <span class="cs-risk-badge medium">Structural</span>
+            <div class="cs-risk-text"><strong>Mobile endpoints.</strong> Community Health Nurses conduct home visits with mobile devices. Endpoint security depends on consistent device management and remote access policies.</div>
+          </div>
+          <div class="cs-risk-item">
+            <span class="cs-risk-badge low">Structural</span>
+            <div class="cs-risk-text"><strong>Vertical integration (asset).</strong> Embedding within RBK hospital means security governance falls under existing KRITIS obligations, providing a higher baseline than a standalone center.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PORT Hohenstein deep dive ─────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">PORT Hohenstein — rural security maturity gap</p>
+        <h2>Cross-agency data sharing in a resource-constrained environment</h2>
+        <p>PORT Hohenstein serves ~3,700 people across 13 departments and integrates with county agencies including long-term care coordination and the county health office. Multiple entities access health records in an environment with limited IT security resources.</p>
+        <div class="cs-risk-row">
+          <div class="cs-risk-item">
+            <span class="cs-risk-badge medium">Structural</span>
+            <div class="cs-risk-text"><strong>Cross-agency data sharing.</strong> Health data flows between GP, psychiatry, physiotherapy, midwifery, social services, and county agencies. Each integration point is a potential confidentiality or integrity risk.</div>
+          </div>
+          <div class="cs-risk-item">
+            <span class="cs-risk-badge medium">Structural</span>
+            <div class="cs-risk-text"><strong>Rural IT maturity.</strong> Smaller rural facilities consistently rank below urban hospitals in security investment and incident response. A structural gap across European healthcare, not specific to Hohenstein.</div>
+          </div>
+          <div class="cs-risk-item">
+            <span class="cs-risk-badge low">Structural</span>
+            <div class="cs-risk-text"><strong>Lower operational criticality.</strong> Scheduled primary care tolerates availability disruption better than acute care. Backup workflows exist. Less time-pressure than NEVAS.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Security findings ─────────────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Structural observations</p>
+        <h2>What the mapping identified as relevant for threat modeling</h2>
+
+        <div class="cs-findings">
+          <div class="cs-finding">
+            <h3>Integration architecture shapes the structural preconditions for security risk</h3>
+            <p>Vertical integration (PORT Stuttgart) concentrates connectivity at the campus boundary. Horizontal integration (PORT Hohenstein) distributes access across agencies with varying IT resources. Network coordination (NEVAS) creates interconnection across 19 IT environments. Threat modeling needs to be architecture-specific.</p>
+          </div>
+          <div class="cs-finding">
+            <h3>Availability outranks confidentiality in time-critical networks</h3>
+            <p>Standard frameworks prioritise CIA in that order. In stroke networks like NEVAS, availability is paramount. A ransomware attack causing 6-hour downtime during a stroke event has immediate, irreversible clinical consequences. Different from administrative systems.</p>
+          </div>
+          <div class="cs-finding">
+            <h3>Spoke hospitals in distributed networks warrant further security assessment</h3>
+            <p>In NEVAS, the 16 spoke hospitals are the most numerous interconnection points. ENISA's 2023 report identifies smaller facilities as generally having lower IT security maturity across Europe. Whether that holds for NEVAS specifically is an open question for the doctoral researcher's subsequent assessment.</p>
+          </div>
+          <div class="cs-finding">
+            <h3>NIS2 entity classification depends on operator-specific thresholds</h3>
+            <p>NIS2 classifies healthcare as essential, but entity classification under Germany's NIS2UmsuCG depends on operator-specific criteria (turnover, employee count). The structural differences between models are relevant context, but formal classification was outside this mapping's scope.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Implications for the doctoral research ────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Implications for the OCI research</p>
+        <h2>A baseline that enables the right questions</h2>
+        <p>This was scoped as infrastructure mapping, not security assessment. The researcher needed to know what is connected, what is time-critical, and what is regulated before applying her security framework.</p>
+        <p>The deliverable gives her three things: a typology of network architectures for scoping threat models, a mapping of NIS2 entity obligations per operator, and identification of NEVAS as the highest-priority case where availability risk and life-safety consequences converge.</p>
+        <p><strong>Scope limitations.</strong> Literature-based and descriptive. Not a security assessment, penetration test, or formal threat model. Risk badges reflect structural characteristics, not validated ratings from STRIDE or OCTAVE. The national TI, gematik, and ePA are excluded. Actual protocols, authentication mechanisms, and segmentation architectures remain open questions for fieldwork.</p>
+        <p>This pattern (diverse architectures, variable security maturity, harmonised NIS2 obligations) is not unique to Germany. It is how healthcare digitalisation has proceeded across the EU: driven by clinical need, not security design.</p>
+      </div>
+
+      <!-- ── Sources ────────────────────────────────────────────── -->
+      <details class="cs-sources fade-in">
+        <summary>Sources &amp; References</summary>
+        <ol>
+          <li><a href="https://epub.ub.uni-muenchen.de/120016/1/masouris-et-al-2024-telemedical-stroke-care.pdf" rel="noopener">Masouris et al. (2024) — Telemedical Stroke Care, NEVAS network</a></li>
+          <li><a href="https://www.gesundheitszentrum-hohenstein.de" rel="noopener">Gesundheitszentrum Hohenstein — PORT primary care center</a></li>
+          <li><a href="https://www.bosch-health-campus.de/en" rel="noopener">Bosch Health Campus — PORT Stuttgart context</a></li>
+          <li><a href="https://journals.sagepub.com/doi/10.1177/17474930241234259" rel="noopener">NEVAS network — SAGE Journals</a></li>
+          <li><a href="https://www.port-gesundheitszentrum.de/de/hausarztpraxis-0" rel="noopener">PORT Gesundheitszentrum — Hausarztpraxis</a></li>
+          <li><a href="https://www.bosch-health-campus.de/en/institution/port-gesundheitszentrum-bosch-health-campus" rel="noopener">PORT Gesundheitszentrum — Bosch Health Campus</a></li>
+          <li><a href="https://www.bosch-health-campus.de/en/project/community-health-nursing/details" rel="noopener">Community Health Nursing — Bosch Health Campus</a></li>
+          <li><a href="https://www.lmu-klinikum.de/aktuelles/pressemitteilungen/das-neurovaskulare-netzwerk-sudwestbayern-nevas-wurde-erneut-als-schlaganfall-netzwerk-nach-den-kriterien-der-deutschen-schlaganfall-gesellschaft-zertifiziert/79b29e3c92793bd4" rel="noopener">NEVAS DSG Certification — LMU Klinikum</a></li>
+          <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11017549/" rel="noopener">PMC — Integrated Care Models in Germany</a></li>
+          <li>ENISA (2023) — Health Sector Threat Landscape Report, European Union Agency for Cybersecurity</li>
+          <li>EU Directive 2022/2555 (NIS2) — measures for a high common level of cybersecurity across the Union</li>
+          <li>BSI (2022) — IT-Grundschutz für Krankenhaus-Informationssysteme, Bundesamt für Sicherheit in der Informationstechnik</li>
+        </ol>
+      </details>
+
+      <div class="cs-tags" style="margin-top:2rem">
+        <span class="cs-tag">Critical Infrastructure</span>
+        <span class="cs-tag">Healthcare Cybersecurity</span>
+        <span class="cs-tag">NIS2 Directive</span>
+        <span class="cs-tag">KRITIS</span>
+        <span class="cs-tag">Network Topology Analysis</span>
+        <span class="cs-tag">Threat Modeling Context</span>
+        <span class="cs-tag">KIT OCI</span>
+      </div>
+
+    </div>
+
+    <!-- Next project -->
+    <div class="cs-next-project">
+      <p class="cs-next-label">Next Project</p>
+      <a href="mercedes-ewagon.html" class="cs-next-link">
+        <h2 class="cs-next-title">Mercedes-Benz E-Wagon &mdash; A Station-Based Sharing System for Factory Floor Mobility</h2>
+        <p class="cs-next-desc">Ethnography on the factory floor — personas, journey maps, and service design for e-trolley sharing.</p>
+        <span class="cs-next-arrow">Read case study &rarr;</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>&copy; 2025 Julie Di Gao</span>
+    <a href="mailto:julie.gao369@gmail.com">julie.gao369@gmail.com</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
