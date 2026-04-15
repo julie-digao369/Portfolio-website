@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Rullja Smart Bin Sensor — Market Research Report · Julie Di Gao</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .layout, .sidebar, .content { display: contents; }
+
+    /* ── Stat cards ── */
+    .cs-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.875rem;
+      margin: 1.5rem 0;
+    }
+    .cs-stat-card {
+      background: #f7f8ff;
+      border: 1px solid rgba(34,81,255,0.1);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+    }
+    .cs-stat-num {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+      font-family: var(--font);
+    }
+    .cs-stat-label {
+      font-size: 0.71rem;
+      color: var(--secondary);
+      line-height: 1.4;
+    }
+
+    /* ── TAM/SAM/SOM funnel ── */
+    .cs-market-funnel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .cs-mf-row {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+    }
+    .cs-mf-label {
+      width: 3rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .cs-mf-track {
+      flex: 1;
+      background: #f0f1f5;
+      border-radius: 5px;
+      height: 34px;
+      overflow: hidden;
+      position: relative;
+    }
+    .cs-mf-fill {
+      height: 100%;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      padding: 0 0.75rem;
+      min-width: 8rem;
+    }
+    .cs-mf-fill span {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    /* ── Berlin penetration ── */
+    .cs-berlin-viz {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      margin: 1.75rem 0;
+      flex-wrap: wrap;
+    }
+    .cs-berlin-donut { flex-shrink: 0; }
+    .cs-berlin-stats { display: flex; flex-direction: column; gap: 1rem; }
+    .cs-berlin-stat-num {
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1;
+      font-family: var(--font);
+    }
+    .cs-berlin-stat-desc { font-size: 0.78rem; color: var(--secondary); margin-top: 0.15rem; }
+
+    /* ── GTM Timeline ── */
+    .cs-gtm-timeline {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin: 1.75rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.07);
+    }
+    .cs-gtm-phase { padding: 1.25rem 1.1rem; }
+    .cs-gtm-phase:nth-child(1) { background: #2251FF; }
+    .cs-gtm-phase:nth-child(2) { background: #4066f5; border-left: 1px solid rgba(255,255,255,0.15); }
+    .cs-gtm-phase:nth-child(3) { background: #6487f8; border-left: 1px solid rgba(255,255,255,0.15); }
+    .cs-gtm-timespan {
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 0.4rem;
+    }
+    .cs-gtm-pname {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+    .cs-gtm-pdesc {
+      font-size: 0.71rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.45;
+    }
+
+    /* ── Competitor scatter plot (SVG) ── */
+    .cs-matrix-svg {
+      width: 100%;
+      max-width: 660px;
+      margin: 2rem auto;
+      display: block;
+      overflow: visible;
+    }
+    .cs-matrix-legend {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 0.75rem;
+      font-size: 0.65rem;
+      color: var(--secondary);
+    }
+    .cs-matrix-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .cs-table--risk {
+      table-layout: fixed;
+      width: 100%;
+    }
+    .cs-table--risk th,
+    .cs-table--risk td,
+    .cs-table--risk td:first-child { white-space: normal; overflow-wrap: break-word; word-break: break-word; }
+    .cs-table--risk th:nth-child(1),
+    .cs-table--risk td:nth-child(1) { width: 26%; }
+    .cs-table--risk th:nth-child(2),
+    .cs-table--risk td:nth-child(2) { width: 9%; }
+    .cs-table--risk th:nth-child(3),
+    .cs-table--risk td:nth-child(3) { width: 10%; }
+    .cs-table--risk th:nth-child(4),
+    .cs-table--risk td:nth-child(4) { width: 55%; }
+
+    /* ── Product image grid ── */
+    .cs-product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin: 1.75rem 0;
+    }
+    .cs-product-grid figure { margin: 0; }
+    .cs-product-grid img {
+      width: 100%;
+      border-radius: 10px;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+    }
+    .cs-product-grid figcaption {
+      font-size: 0.7rem;
+      color: var(--secondary);
+      margin-top: 0.5rem;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 600px) {
+      .cs-product-grid { grid-template-columns: 1fr; }
+      .cs-gtm-timeline { grid-template-columns: 1fr; }
+      .cs-gtm-phase:nth-child(2),
+      .cs-gtm-phase:nth-child(3) { border-left: none; border-top: 1px solid rgba(255,255,255,0.15); }
+    }
+
+    /* ── Value Proposition — flow diagram ── */
+    .vp-flow {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 1.75rem 0 0.5rem;
+    }
+    .vp-flow-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1.25rem 0.875rem;
+      background: #f7f8ff;
+      border: 1px solid rgba(34,81,255,0.08);
+      border-radius: 10px;
+      gap: 0.4rem;
+    }
+    .vp-flow-icon {
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .vp-flow-step strong {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text);
+      font-family: var(--font);
+      display: block;
+    }
+    .vp-flow-step p {
+      font-size: 0.75rem;
+      color: var(--secondary);
+      line-height: 1.45;
+      margin: 0;
+      font-family: var(--font);
+      flex: 1;
+    }
+    .vp-flow-result {
+      margin-top: auto;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(34,81,255,0.1);
+      width: 100%;
+    }
+    .vp-flow-result-num {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.1;
+      font-family: var(--font);
+      letter-spacing: -0.02em;
+    }
+    .vp-flow-result-label {
+      font-size: 0.68rem;
+      color: var(--secondary);
+      line-height: 1.3;
+      margin-top: 0.15rem;
+      font-family: var(--font);
+    }
+    .vp-flow-arrow {
+      flex-shrink: 0;
+      width: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b0b8c9;
+    }
+
+    /* ── Unit economics equation ── */
+    .vp-econ {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 1.5rem 0 1rem;
+    }
+    .vp-econ-card {
+      flex: 1;
+      padding: 1.375rem 1.25rem;
+      border-radius: 10px;
+      border: 1px solid rgba(34,81,255,0.08);
+      background: var(--surface);
+    }
+    .vp-econ-card--savings {
+      background: #f0fdf4;
+      border-color: rgba(22,163,74,0.2);
+    }
+    .vp-econ-card--payback {
+      background: #eff6ff;
+      border-color: rgba(34,81,255,0.18);
+    }
+    .vp-econ-op {
+      flex-shrink: 0;
+      width: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 300;
+      color: var(--tertiary);
+    }
+    .vp-econ-eyebrow {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--tertiary);
+      font-family: var(--font);
+      margin-bottom: 0.4rem;
+    }
+    .vp-econ-num {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-family: var(--font);
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+    .vp-econ-num--savings { color: #16a34a; }
+    .vp-econ-num--payback { color: #2251FF; }
+    .vp-econ-label {
+      font-size: 0.75rem;
+      color: var(--secondary);
+      line-height: 1.4;
+      font-family: var(--font);
+    }
+
+    @media (max-width: 580px) {
+      .vp-econ { flex-direction: column; }
+      .vp-econ-op { transform: rotate(90deg); height: 1.75rem; width: 100%; }
+    }
+
+    /* ── Value Proposition — 3-col advantages ── */
+    .cs-features--3col {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .cs-features--3col .cs-feature {
+      padding: 1.25rem;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid rgba(34,81,255,0.07);
+    }
+    .cs-features--3col .cs-feature h3 {
+      font-size: 1rem;
+      margin-bottom: 0.375rem;
+    }
+    .cs-features--3col .cs-feature p {
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 640px) {
+      .vp-flow { flex-direction: column; }
+      .vp-flow-arrow { transform: rotate(90deg); align-self: center; height: 1.5rem; }
+      .cs-features--3col { grid-template-columns: 1fr; }
+    }
+
+    /* ── Risk matrix ── */
+    .rm-wrap {
+      display: flex;
+      gap: 0.5rem;
+      align-items: stretch;
+      margin: 1.75rem 0 2rem;
+    }
+    .rm-yaxis-label {
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+      font-size: 0.59rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .rm-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .rm-grid-area {
+      display: flex;
+      gap: 0.3rem;
+      align-items: stretch;
+    }
+    .rm-slabels {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      flex-shrink: 0;
+      width: 2.25rem;
+    }
+    .rm-slabel {
+      flex: 1;
+      font-size: 0.59rem;
+      font-weight: 600;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 0.3rem;
+    }
+    .rm-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 0.3rem;
+    }
+    .rm-cell {
+      border-radius: 7px;
+      min-height: 72px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      padding: 0.5rem;
+    }
+    .rm-cell--red    { background: #f5ecec; }
+    .rm-cell--orange { background: #f5f0e8; }
+    .rm-cell--yellow { background: #f4f3e6; }
+    .rm-cell--green  { background: #eaf0ec; }
+    .rm-chip {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #fff;
+      font-family: var(--font);
+      flex-shrink: 0;
+    }
+    .rm-chip--red    { background: #8f2323; }
+    .rm-chip--orange { background: #a05420; }
+    .rm-chip--yellow { background: #7a6518; }
+    .rm-chip--green  { background: #1e6040; }
+    .rm-xlabels {
+      display: grid;
+      grid-template-columns: 2.55rem repeat(3, 1fr);
+      gap: 0.3rem;
+    }
+    .rm-xlabel {
+      font-size: 0.59rem;
+      font-weight: 600;
+      color: var(--secondary);
+      text-align: center;
+    }
+    .rm-xaxis-label {
+      font-size: 0.59rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: center;
+      padding-left: 2.55rem;
+      margin-top: 0.1rem;
+    }
+    .rm-legend {
+      display: flex;
+      flex-direction: column;
+      margin-top: 1.75rem;
+    }
+    .rm-legend-item {
+      display: grid;
+      grid-template-columns: 1.625rem 1fr auto;
+      gap: 0.875rem;
+      padding: 0.875rem 0;
+      border-bottom: 0.5px solid var(--border-light);
+      align-items: start;
+    }
+    .rm-legend-item:first-child { border-top: 0.5px solid var(--border-light); }
+    .rm-legend-chip {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      font-family: var(--font);
+      margin-top: 0.1rem;
+    }
+    .rm-legend-item h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 0.25rem;
+      font-family: var(--font);
+      line-height: 1.35;
+    }
+    .rm-legend-item p {
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      line-height: 1.5;
+      margin: 0;
+      font-family: var(--font);
+    }
+    .rm-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      font-family: var(--font);
+      margin-top: 0.125rem;
+      letter-spacing: 0.03em;
+    }
+    .rm-badge--red    { background: #fee2e2; color: #dc2626; }
+    .rm-badge--orange { background: #ffedd5; color: #c2410c; }
+    .rm-badge--yellow { background: #fef9c3; color: #a16207; }
+    .rm-badge--green  { background: #f0fdf4; color: #15803d; }
+
+    @media (max-width: 540px) {
+      .rm-slabels { width: 1.75rem; }
+      .rm-xlabels { grid-template-columns: 1.75rem repeat(3,1fr); }
+      .rm-xaxis-label { padding-left: 1.75rem; }
+      .rm-cell { min-height: 54px; }
+    }
+  </style>
+</head>
+<body class="cs-page">
+  <a class="skip-link" href="#cs-main">Skip to content</a>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-name">Julie Di Gao</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="nav-links">
+    <a href="index.html#projects">Projects</a>
+    <a href="index.html#reviews">Customer Review</a>
+    <a href="https://mail.google.com/mail/?view=cm&to=julie.gao369@gmail.com" target="_blank" rel="noopener">Contact</a>
+    <a href="https://calendar.app.google/rjYfn2XpzJs34tZLA" class="nav-cta" target="_blank" rel="noopener">Schedule a call</a>
+  </div>
+  </nav>
+
+  <main id="cs-main">
+    <div class="cs-header">
+      <a href="index.html" class="cs-back">All work</a>
+
+      <p class="cs-eyebrow">Market Research · 2025 · IoT · Smart City</p>
+      <h1 class="cs-title">Rullja Smart Bin Sensor — Market Research Report</h1>
+      <p class="cs-sub">TAM/SAM/SOM sizing, 10-competitor matrix, buyer segmentation, regulatory landscape, and a three-phase go-to-market strategy for a German IoT startup entering municipal waste management.</p>
+
+      <div class="cs-meta">
+        <div class="cs-meta-item"><span class="cs-meta-label">Role</span> <span class="cs-meta-value">Market Researcher</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Client</span> <span class="cs-meta-value">Rullja</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Year</span> <span class="cs-meta-value">2025</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Focus</span> <span class="cs-meta-value">Germany GTM Strategy</span></div>
+      </div>
+    </div>
+
+    <div class="cs-body">
+
+      <!-- ── Executive Summary ── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Executive summary</p>
+        <h2>A sensor and a dashboard that tell cities when to empty a bin</h2>
+        <p>Rullja sells two things: a LoRa plug-on fill-level sensor for public waste bins, and a route planning software system for the waste management companies. The sensor clips onto existing bins in minutes. The software replaces fixed-schedule dispatching with demand-driven routing. Together, they cut collection costs 30&ndash;40%. ROI arrives within 12&ndash;18 months on conservative assumptions (20% trip reduction, &euro;200/sensor, 5,000-bin initial rollout).</p>
+        <p>This report outlines a GTM path and provides benchmark-based unit economics to support a 12&ndash;18 month payback narrative. The priority is to convert these benchmarks into Rullja-specific figures via a 100&ndash;500 sensor German pilot with auditable before-and-after cost data.</p>
+
+        <div class="cs-product-grid" style="margin-top:1.75rem">
+          <figure>
+            <img src="img/rullja/rullja-sensor.png" alt="Rullja LoRa sensor node installed inside the lid of a public waste bin" loading="lazy" />
+            <figcaption><strong>Sensor node.</strong> LoRa-connected fill-level sensor. Clips onto existing bin lids. No infrastructure replacement required.</figcaption>
+          </figure>
+          <figure>
+            <img src="img/rullja/rullja-software.png" alt="Rullja waste management dashboard showing route planning, fill levels, and map view" loading="lazy" />
+            <figcaption><strong>Route planning dashboard.</strong> Real-time fill levels, automated route optimization, fleet management, historical analytics, and business KPIs.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="cs-callout fade-in">
+        <p><strong>Note on financials:</strong> All current unit economics and ROI estimates use Sensoneo and peer vendor benchmarks as price and impact anchors. Rullja has not yet completed its own reference deployment or published a pricing model. A first German pilot is required to validate Rullja-specific savings and confirm the assumed 12&ndash;18 month payback.</p>
+      </div>
+
+      <!-- ── 1. Problem Statement ── -->
+      <div class="cs-part-divider fade-in">
+        <h2>1. Problem Statement</h2>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">1.1 BSR cost pressure</p>
+        <h2>Berlin's waste authority is being squeezed from two sides</h2>
+        <p>BSR runs 1,300 employees and 350 vehicles. Its workforce demanded an 8% pay rise in 2025. Talks broke down. Workers struck in March. BSR raised service fees 4.9% in January 2025, just as raw material costs climbed.</p>
+        <p>Any technology that reduces unnecessary truck dispatches has a clear budget justification. This is that technology.</p>
+
+        <figure style="margin: 1.5rem 0 0;">
+          <img src="img/rullja/berlin-bins.jpg" alt="Overflowing public rubbish bins on a Berlin street" style="width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;" loading="lazy" />
+          <figcaption style="font-size:0.8125rem;color:var(--tertiary);margin-top:0.5rem;font-family:var(--font);">Berlin's fixed-schedule collection means bins overflow before the truck arrives.</figcaption>
+        </figure>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">1.2 Collection inefficiency</p>
+        <h2>80% of collections happen at the wrong time</h2>
+        <p>Trucks run on fixed schedules, not fill levels. About 80% of collections happen when bins are not ready for them. Results:</p>
+        <ul>
+          <li>Fuel burned on unnecessary dispatches</li>
+          <li>Labor hours spent on bins that are less than 50% full</li>
+          <li>Bins that overflow before the next scheduled collection</li>
+          <li>Avoidable CO&#8322; emissions from every extra truck trip</li>
+        </ul>
+      </div>
+
+      <div class="cs-callout fade-in">
+        <p>The truck arrives when the bin is nearly empty. Or already overflowing. Neither is the point of having a truck.</p>
+      </div>
+
+      <!-- ── 2. Market Opportunity ── -->
+      <div class="cs-part-divider fade-in">
+        <h2>2. Market Opportunity</h2>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">2.1 Market sizing</p>
+        <h2>From a $1.3B market to a $5M three-year target</h2>
+
+        <div class="cs-market-funnel">
+          <div class="cs-mf-row">
+            <span class="cs-mf-label">TAM</span>
+            <div class="cs-mf-track">
+              <div class="cs-mf-fill" style="width:100%;background:#2251FF;">
+                <span>Germany smart bins — $0.4B (2024) &rarr; $1.3B (2033) &nbsp;·&nbsp; CAGR 15.5%</span>
+              </div>
+            </div>
+          </div>
+          <div class="cs-mf-row">
+            <span class="cs-mf-label">SAM</span>
+            <div class="cs-mf-track">
+              <div class="cs-mf-fill" style="width:35%;background:#4268f5;">
+                <span>Plug-on addressable — $100&ndash;140M</span>
+              </div>
+            </div>
+          </div>
+          <div class="cs-mf-row">
+            <span class="cs-mf-label">SOM</span>
+            <div class="cs-mf-track">
+              <div class="cs-mf-fill" style="width:5%;background:#6b90f8;min-width:9rem;">
+                <span>3-yr target — $1.5&ndash;5M</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p>Germany generates 50+ million tons of municipal solid waste annually. Federal policy targets 65% recycling by 2030. The government has committed over &euro;820M to smart city projects. Procurement pathways exist and are funded.</p>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">2.2 Berlin beachhead</p>
+        <h2>21,500 public bins. 50 are smart. That gap is the opportunity.</h2>
+
+        <div class="cs-berlin-viz">
+          <div class="cs-berlin-donut">
+            <svg viewBox="0 0 160 160" width="140" height="140" aria-hidden="true">
+              <!-- Background ring (total bins) -->
+              <circle cx="80" cy="80" r="58" fill="none" stroke="#E8EEFF" stroke-width="20"/>
+              <!-- Smart bins arc: 50/21500 = 0.232% of circumference 364.4 = ~0.85; show 4px min -->
+              <circle cx="80" cy="80" r="58" fill="none" stroke="#2251FF" stroke-width="20"
+                      stroke-dasharray="5 359" stroke-linecap="round"
+                      transform="rotate(-90 80 80)"/>
+              <text x="80" y="74" text-anchor="middle" font-size="20" font-weight="700" fill="#2251FF"
+                    style="font-family:system-ui,-apple-system,sans-serif">&lt;0.25%</text>
+              <text x="80" y="93" text-anchor="middle" font-size="10" fill="#888"
+                    style="font-family:system-ui,-apple-system,sans-serif">smart bins</text>
+            </svg>
+          </div>
+          <div class="cs-berlin-stats">
+            <div>
+              <div class="cs-berlin-stat-num" style="color:var(--primary)">21,500</div>
+              <div class="cs-berlin-stat-desc">public bins in Berlin</div>
+            </div>
+            <div>
+              <div class="cs-berlin-stat-num" style="color:var(--accent)">50</div>
+              <div class="cs-berlin-stat-desc">equipped with smart sensors today</div>
+            </div>
+          </div>
+        </div>
+
+        <ul>
+          <li>Berlin already validated the concept: Mr.fill grew from 34 units in 2019 to 50+ by 2024</li>
+          <li>Institutional demand is proven. Penetration is nowhere near it.</li>
+          <li>BSR's labor pressure and 2025 fee increases make collection efficiency a budget priority right now</li>
+          <li>Ha&szlig;furt, Kaiserslautern, Solingen, Wolfsburg: active Smart City Model Project sites, ready for expansion</li>
+        </ul>
+      </div>
+
+      <!-- ── 3. Competitive Landscape ── -->
+      <div class="cs-part-divider fade-in">
+        <h2>3. Competitive Landscape</h2>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">3.1 Where the market is crowded — and where it is not</p>
+        <h2>10 competitors. Most are either foreign, expensive, or both. The low-barrier German quadrant is wide open.</h2>
+        <p>The smart waste sensor market has 10 active players across 5 countries. That sounds crowded until you plot them on two axes that actually matter for municipal procurement in Germany:</p>
+        <ol>
+          <li><strong>Technology Complexity</strong> — Is this a clip-on sensor (1), a sensor plus routing software (3), or a full smart city ecosystem platform (5)?</li>
+          <li><strong>Deployment Scale in Germany</strong> — Has this vendor run one pilot (1), won a city contract (2), scaled to multiple cities (3), or is it a national-scale incumbent (4)?</li>
+        </ol>
+        <p>Rullja sits at (3, 1): medium tech complexity, no German deployments yet. Most competition clusters at (4, 3): foreign players with more technical capability and more German traction. Zolitron, at exactly the same tech complexity as Rullja, is already at deployment level 4. This is not a blue ocean. It is a contested market with a narrow, time-limited opening for a German-native player to establish references before the foreign (4, 3) cluster closes the GDPR gap.</p>
+
+        <!--
+          SVG scatter plot — axes use exact 1–5 (X) and 1–4 (Y) scales
+          Plot area: x 70–630 (width 560), y 35–425 (height 390)
+          x(v) = 70 + (v-1)/4 * 560   →  1=70  2=210  3=350  4=490  5=630
+          y(v) = 425 - (v-1)/3 * 390  →  1=425  2=295  3=165  4=35
+        -->
+        <svg class="cs-matrix-svg" viewBox="0 0 680 510" role="img"
+             aria-label="Competitive positioning matrix: Technology Complexity vs. Deployment Scale in Germany">
+
+          <!-- Grid lines -->
+          <line x1="70"  y1="35"  x2="70"  y2="425" stroke="#e5e9f5" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="210" y1="35"  x2="210" y2="425" stroke="#e5e9f5" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="350" y1="35"  x2="350" y2="425" stroke="#e5e9f5" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="490" y1="35"  x2="490" y2="425" stroke="#e5e9f5" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="630" y1="35"  x2="630" y2="425" stroke="#e5e9f5" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <line x1="70" y1="425" x2="630" y2="425" stroke="#e5e9f5" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="70" y1="295" x2="630" y2="295" stroke="#e5e9f5" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="70" y1="165" x2="630" y2="165" stroke="#e5e9f5" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="70" y1="35"  x2="630" y2="35"  stroke="#e5e9f5" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- Axes -->
+          <line x1="70" y1="30" x2="70" y2="430" stroke="#b0b8c9" stroke-width="1.5"/>
+          <line x1="65" y1="425" x2="635" y2="425" stroke="#b0b8c9" stroke-width="1.5"/>
+
+          <!-- X tick labels -->
+          <text x="70"  y="446" text-anchor="middle" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">1</text>
+          <text x="210" y="446" text-anchor="middle" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">2</text>
+          <text x="350" y="446" text-anchor="middle" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">3</text>
+          <text x="490" y="446" text-anchor="middle" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">4</text>
+          <text x="630" y="446" text-anchor="middle" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">5</text>
+
+          <!-- Y tick labels -->
+          <text x="58" y="429" text-anchor="end" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">1</text>
+          <text x="58" y="299" text-anchor="end" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">2</text>
+          <text x="58" y="169" text-anchor="end" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">3</text>
+          <text x="58" y="39"  text-anchor="end" font-size="11" fill="#6b7280" font-family="system-ui,sans-serif">4</text>
+
+          <!-- Axis titles -->
+          <text x="350" y="474" text-anchor="middle" font-size="10" font-weight="700" fill="#2251FF"
+                letter-spacing="0.07em" font-family="system-ui,sans-serif">TECHNOLOGY COMPLEXITY →</text>
+          <text transform="rotate(-90 16 230)" x="16" y="230" text-anchor="middle" font-size="10"
+                font-weight="700" fill="#2251FF" letter-spacing="0.07em" font-family="system-ui,sans-serif">DEPLOYMENT SCALE →</text>
+
+          <!-- ── Data points ── -->
+          <!-- Cross marker macro: M cx-6,cy-6 L cx+6,cy+6 M cx+6,cy-6 L cx-6,cy+6 -->
+
+          <!-- Zolitron (3,4) x=350, y=35 — German, strong deploy -->
+          <path d="M344,29 L356,41 M356,29 L344,41" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="358" y="38" font-size="10" font-weight="600" fill="#333" font-family="system-ui,sans-serif">Deutsche Telekom &amp; Zolitron</text>
+
+          <!-- trescore (2,2) x=210, y=295 — German, moderate -->
+          <path d="M204,289 L216,301 M216,289 L204,301" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="218" y="299" font-size="10" font-weight="600" fill="#333" font-family="system-ui,sans-serif">trescore GmbH</text>
+
+          <!-- (4,3) cluster x=490, y=165 — four players, stacked vertically -->
+          <!-- Mr.fill (4,3) y=157 -->
+          <path d="M484,151 L496,163 M496,151 L484,163" stroke="#888" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="499" y="159" font-size="10" fill="#555" font-family="system-ui,sans-serif">Mr. Fill</text>
+
+          <!-- Sensoneo (4,3) y=169 -->
+          <path d="M484,163 L496,175 M496,163 L484,175" stroke="#888" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="499" y="172" font-size="10" fill="#555" font-family="system-ui,sans-serif">Sensoneo</text>
+
+          <!-- SLOC.one (4,3) y=181 — label left side to avoid overlap -->
+          <path d="M484,175 L496,187 M496,175 L484,187" stroke="#888" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="481" y="185" text-anchor="end" font-size="10" fill="#555" font-family="system-ui,sans-serif">SLOC.one</text>
+
+          <!-- Nordsense (4,3) y=193 — threat, red -->
+          <path d="M484,187 L496,199 M496,187 L484,199" stroke="#e54040" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="499" y="198" font-size="10" font-weight="600" fill="#c53030" font-family="system-ui,sans-serif">Nordsense ⚠</text>
+
+          <!-- Bigbelly (5,4) x=630, y=35 — German, high deploy -->
+          <path d="M624,29 L636,41 M636,29 L624,41" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="621" y="28" text-anchor="end" font-size="10" font-weight="600" fill="#333" font-family="system-ui,sans-serif">Bigbelly</text>
+
+          <!-- AMCS Group (5,4) x=630, y=51 — offset down from Bigbelly -->
+          <path d="M624,45 L636,57 M636,45 L624,57" stroke="#b0b8c9" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="621" y="58" text-anchor="end" font-size="10" fill="#6b7280" font-family="system-ui,sans-serif">AMCS Group</text>
+
+          <!-- Evreka (3,1) x=350, y=425 — offset right -->
+          <path d="M356,419 L368,431 M368,419 L356,431" stroke="#b0b8c9" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="371" y="430" font-size="10" fill="#6b7280" font-family="system-ui,sans-serif">Evreka</text>
+
+          <!-- Rullja (3,1) x=350, y=425 — offset left, highlighted in blue -->
+          <circle cx="336" cy="425" r="8" fill="rgba(34,81,255,0.12)" stroke="#2251FF" stroke-width="2"/>
+          <circle cx="336" cy="425" r="3.5" fill="#2251FF"/>
+          <text x="333" y="413" text-anchor="end" font-size="11" font-weight="700" fill="#2251FF" font-family="system-ui,sans-serif">Rullja</text>
+
+        </svg>
+
+        <div class="cs-matrix-legend">
+          <span>
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0"><circle cx="7" cy="7" r="5" fill="rgba(34,81,255,0.12)" stroke="#2251FF" stroke-width="2"/><circle cx="7" cy="7" r="2.5" fill="#2251FF"/></svg>
+            Rullja
+          </span>
+          <span>
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0"><path d="M2,2 L12,12 M12,2 L2,12" stroke="#333" stroke-width="2.5" stroke-linecap="round"/></svg>
+            German presence
+          </span>
+          <span>
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0"><path d="M2,2 L12,12 M12,2 L2,12" stroke="#e54040" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Direct threat
+          </span>
+          <span>
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0"><path d="M2,2 L12,12 M12,2 L2,12" stroke="#b0b8c9" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Foreign / entering
+          </span>
+        </div>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">3.2 Reading the map</p>
+        <h2>A contested market. One narrow lane. Twelve months to use it.</h2>
+
+        <p>The matrix shows no empty quadrant and no obvious gap. What it shows is a specific lane that stays open while two conditions hold: foreign players carry GDPR and Vergabe friction in German tenders, and high-deployment German players remain focused on their existing verticals. Both conditions are temporary.</p>
+
+        <div class="cs-table-wrap">
+          <table class="cs-table">
+            <thead>
+              <tr><th>Cluster</th><th>Players</th><th>Actual threat level</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>German, high deployment</td><td>Zolitron, Bigbelly</td><td><strong>Low direct competition now, high risk if they expand.</strong> Zolitron dominates glass container monitoring (10,000+ units in Bochum) but has not entered the general public bin market or built an integrated routing platform. Bigbelly requires full bin replacement — a different procurement and capex profile. Neither is targeting Rullja's buyer today. Both could change direction.</td></tr>
+              <tr><td>Foreign, medium tech, medium deploy</td><td>Nordsense, Sensoneo, SLOC.one</td><td><strong>The live threat cluster.</strong> All three have more German traction than Rullja and comparable tech. Nordsense has Nordic city references and is actively building German accounts. Sensoneo has deployed across Europe. SLOC.one is partnered with Lufthansa for airport logistics. None are German entities, which creates compliance friction — but that friction erodes as they localise.</td></tr>
+              <tr><td>Foreign, full platform</td><td>AMCS, Evreka</td><td><strong>Different buyer, different sales motion.</strong> Both sell full fleet management platforms, not point sensors. They compete for operations-wide IT budgets, not a sensor line item. Not a direct threat at entry stage.</td></tr>
+              <tr><td>German, low deploy</td><td>trescore</td><td><strong>Overlapping market, non-overlapping product.</strong> trescore sells multi-protocol sensors to SME waste operators. No routing dashboard. Serves a similar buyer but with a sensor-only offer. Could partner or could be a later-stage competitor if they build the software layer.</td></tr>
+              <tr><td style="color:var(--accent);font-weight:700">German, medium tech, early deploy</td><td style="font-weight:600">Rullja</td><td><strong>Right position, zero references.</strong> The product covers the integrated sensor-plus-routing gap that no German company currently fills. The constraint is not the product — it is the absence of a single auditable German deployment to show buyers.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">3.3 Rullja's five structural advantages</p>
+        <h2>Sensor + software, German incorporation, brownfield deployment, CRA-readiness, and cost.</h2>
+        <ol>
+          <li><strong>Integrated system:</strong> Sensor hardware and route planning dashboard sold as one product. Cities get a complete system; Rullja gets hardware margins plus recurring SaaS revenue. Sensor-only competitors lack the routing layer. Full-platform competitors (AMCS, Evreka) require heavy infrastructure commitments.</li>
+          <li><strong>Brownfield plug-on:</strong> No new bin procurement. Sensors deploy on existing infrastructure in weeks, not years.</li>
+          <li><strong>German company:</strong> Simpler GDPR compliance path. Stronger position in Vergaberecht evaluations where data sovereignty matters.</li>
+          <li><strong>CRA-ready:</strong> EU Cyber Resilience Act mandates full IoT compliance by December 2027. Foreign vendors face higher adaptation costs. Rullja can sell compliance as a feature.</li>
+          <li><strong>Total cost of ownership:</strong> Per-installation cost far below full bin replacement systems. No infrastructure rip-and-replace.</li>
+        </ol>
+      </div>
+
+      <div class="cs-callout fade-in">
+        <p><strong>The window is 12 months, not 36.</strong> Nordsense already has Nordic city references and is actively building German accounts. Sensoneo is expanding across Europe. When one of them closes a Berlin contract, the GDPR advantage Rullja holds becomes irrelevant. Phase 1 (Section 7) is the only move that matters right now.</p>
+      </div>
+
+      <!-- ── 4. Value Proposition ── -->
+      <div class="cs-part-divider fade-in">
+        <h2>4. Value Proposition</h2>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">4.1 Operational savings</p>
+        <h2>BSR's fleet puts millions in annual operating spend on the table</h2>
+        <p>A conservative 20% efficiency gain on instrumented routes means seven-figure annual savings. The mechanism is three steps.</p>
+
+        <!-- How it works flow — stats embedded in each step -->
+        <div class="vp-flow">
+          <div class="vp-flow-step">
+            <div class="vp-flow-icon">
+              <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                <circle cx="16" cy="22" r="4" fill="currentColor"/>
+                <path d="M10 16a8.5 8.5 0 0 1 12 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M5 11a15 15 0 0 1 22 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0.4"/>
+              </svg>
+            </div>
+            <strong>Sensor reads fill level</strong>
+            <p>Continuous monitoring. No manual inspection. No guesswork about which bins need collection.</p>
+            <div class="vp-flow-result">
+              <div class="vp-flow-result-num">Live data</div>
+              <div class="vp-flow-result-label">replaces scheduled guessing</div>
+            </div>
+          </div>
+          <div class="vp-flow-arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="vp-flow-step">
+            <div class="vp-flow-icon">
+              <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                <rect x="4" y="20" width="6" height="8" rx="1" fill="currentColor"/>
+                <rect x="13" y="13" width="6" height="15" rx="1" fill="currentColor" opacity="0.65"/>
+                <rect x="22" y="7" width="6" height="21" rx="1" fill="currentColor" opacity="0.35"/>
+              </svg>
+            </div>
+            <strong>Dashboard optimizes route</strong>
+            <p>Only bins above fill threshold are scheduled. The rest stay off the route until they need it.</p>
+            <div class="vp-flow-result">
+              <div class="vp-flow-result-num">20–40%</div>
+              <div class="vp-flow-result-label">fewer collection trips</div>
+            </div>
+          </div>
+          <div class="vp-flow-arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="vp-flow-step">
+            <div class="vp-flow-icon">
+              <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                <rect x="2" y="12" width="18" height="12" rx="2" fill="currentColor" opacity="0.35"/>
+                <path d="M20 16h6l4 5v5H20V16z" fill="currentColor" opacity="0.75"/>
+                <circle cx="8" cy="26" r="3" fill="currentColor"/>
+                <circle cx="24" cy="26" r="3" fill="currentColor"/>
+              </svg>
+            </div>
+            <strong>Fleet dispatches on demand</strong>
+            <p>Lower fuel, maintenance, and crew costs. Overflows eliminated before they happen.</p>
+            <div class="vp-flow-result">
+              <div class="vp-flow-result-num">80%</div>
+              <div class="vp-flow-result-label">fewer overflow incidents · 20–30% cost reduction</div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:0.8rem;color:var(--tertiary);margin-top:0.625rem"><em>Benchmark figures from Sensoneo and Nordsense published case studies. CO&#8322; reduction scales proportionally with trip reduction and is reportable under EU ESG frameworks.</em></p>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">4.1.1 Unit economics</p>
+        <h2>€1M in. €2.6M out. Payback in under a year.</h2>
+        <p>Conservative assumptions. 5,000 bins. 20% trip reduction. Benchmark figures — not Rullja's own data.</p>
+
+        <div class="vp-econ">
+          <div class="vp-econ-card">
+            <div class="vp-econ-eyebrow">Investment</div>
+            <div class="vp-econ-num">&euro;1.0M</div>
+            <div class="vp-econ-label">one-off capex<br>5,000 sensors at &euro;200 installed</div>
+          </div>
+          <div class="vp-econ-op" aria-hidden="true">÷</div>
+          <div class="vp-econ-card vp-econ-card--savings">
+            <div class="vp-econ-eyebrow">Annual savings</div>
+            <div class="vp-econ-num vp-econ-num--savings">&euro;2.6M</div>
+            <div class="vp-econ-label">per year from 20% trip reduction<br>on instrumented routes</div>
+          </div>
+          <div class="vp-econ-op" aria-hidden="true">=</div>
+          <div class="vp-econ-card vp-econ-card--payback">
+            <div class="vp-econ-eyebrow">Payback period</div>
+            <div class="vp-econ-num vp-econ-num--payback">&lt;12m</div>
+            <div class="vp-econ-label">stays inside 18 months even at half the benchmark savings rate</div>
+          </div>
+        </div>
+
+        <p style="font-size:0.8rem;color:var(--tertiary)"><em>Assumptions: 350 trucks at €150K/year; 25% of fleet on instrumented routes (cost base €13.1M/year); 20% trip reduction saves €2.6M/year. Rullja-specific figures pending first German pilot.</em></p>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">4.2 Secondary advantages</p>
+        <h2>German by default. CRA-ready. Live in weeks, not quarters.</h2>
+
+        <div class="cs-features cs-features--3col" style="margin-top:1.25rem">
+          <div class="cs-feature">
+            <div class="cs-feature-num">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><path d="M12 2L4 6v6c0 5.25 3.5 10.1 8 11.5 4.5-1.4 8-6.25 8-11.5V6L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              Compliance
+            </div>
+            <h3>German by default</h3>
+            <p>BSI guidelines apply automatically. Foreign competitors need extra contractual layers to match the same standard. That friction is Rullja's moat in public tenders.</p>
+          </div>
+          <div class="cs-feature">
+            <div class="cs-feature-num">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M9 7h6M9 11h6M9 15h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Regulation
+            </div>
+            <h3>CRA-ready</h3>
+            <p>EU Cyber Resilience Act requires full IoT compliance by December 2027. Foreign vendors face higher adaptation costs. Rullja sells compliance as a feature, not a burden.</p>
+          </div>
+          <div class="cs-feature">
+            <div class="cs-feature-num">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="vertical-align:-3px;margin-right:4px"><path d="M13 2L4.5 13H12L11 22 19.5 11H12L13 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              Speed
+            </div>
+            <h3>Live in weeks</h3>
+            <p>Existing bins go live within weeks of contract signing. No hardware procurement cycle. Brownfield speed closes the window before competitors can reopen it.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 5. Buyer Segmentation ── -->
+      <div class="cs-part-divider fade-in">
+        <h2>5. Buyer Segmentation</h2>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Customer segments</p>
+        <h2>Four buyers. Four completely different procurement processes.</h2>
+
+        <div class="cs-table-wrap">
+          <table class="cs-table">
+            <thead>
+              <tr><th>Segment</th><th>Decision Maker</th><th>Process</th><th>Key Criteria</th><th>Time to Close</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Municipal waste authorities (e.g. BSR)</td><td>Operations Director, Digital Officer</td><td>Public tender (Vergabe); EU threshold &gt;&euro;215K triggers open tender</td><td>Compliance, proven ROI, GDPR, local support</td><td>6&ndash;18 months</td></tr>
+              <tr><td>Private waste operators</td><td>Operations / Fleet Manager</td><td>Direct commercial negotiation</td><td>ROI speed, routing integration, unit economics</td><td>2&ndash;6 months</td></tr>
+              <tr><td>Commercial real estate / BIDs</td><td>Facilities Manager</td><td>Direct purchase or SaaS contract</td><td>Unit cost, installation simplicity</td><td>1&ndash;3 months</td></tr>
+              <tr><td>Smart city system integrators</td><td>Project Manager</td><td>B2B partnership</td><td>API compatibility, white-label options</td><td>3&ndash;9 months</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>Primary commercial target:</strong> private waste operators. Fastest close, no Vergabe threshold, no Betriebsrat. Get a reference that proves the product. <strong>Strategic anchor:</strong> BSR Berlin, once there is a clean case study to show their works council. Union scrutiny is high after the March 2025 strike. Brief the Betriebsrat before approaching BSR management.</p>
+      </div>
+
+      <!-- ── 6. Regulatory Environment ── -->
+      <div class="cs-part-divider fade-in">
+        <h2>6. Regulatory Environment</h2>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">6.1 EU policy</p>
+        <h2>65% recycling mandate by 2030. &euro;820M in smart city funding already committed.</h2>
+        <p>Germany targets 65% national recycling by 2030 under the EU Circular Economy Action Plan. The &euro;820M Smart City Dialogue program creates funded procurement pathways for IoT urban infrastructure. The demand is policy-mandated and the budget exists.</p>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">6.2 GDPR and data sovereignty</p>
+        <h2>German incorporation is a competitive moat in public tenders.</h2>
+        <p>IoT sensors collecting location data in public spaces fall under GDPR. Municipalities are risk-averse about personal data in public infrastructure. Rullja processes data within German jurisdiction under BSI oversight. Foreign vendors need additional contractual mechanisms to reach the same compliance standard. That complexity is Rullja's advantage.</p>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">6.3 EU Cyber Resilience Act</p>
+        <h2>Full compliance required by December 2027. Fines up to &euro;15M.</h2>
+        <p>The CRA entered into force in December 2024. Incident reporting becomes mandatory September 2026. Full compliance is required December 11, 2027. Fines reach &euro;15M or 2.5% of global turnover. Start compliance documentation now. Sell it as a feature, not a burden.</p>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">6.4 Vergaberecht</p>
+        <h2>Win one tender. Access multi-year, high-volume contracts.</h2>
+        <p>Municipal contracts over &euro;215,000 require EU-wide public tender. The sales cycle is long, but the contract is multi-year and high-volume. Germany's Deutschland Digital marketplace lists pre-qualified smart city solutions. Registering there cuts per-city procurement friction significantly.</p>
+      </div>
+
+      <!-- ── 7. Go-to-Market Strategy ── -->
+      <div class="cs-part-divider fade-in">
+        <h2>7. Go-to-Market Strategy</h2>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Three-phase roadmap</p>
+        <h2>Private operator first. Berlin second. European metros third.</h2>
+
+        <div class="cs-gtm-timeline">
+          <div class="cs-gtm-phase">
+            <div class="cs-gtm-timespan">Phase 1 &nbsp;·&nbsp; Months 1&ndash;12</div>
+            <div class="cs-gtm-pname">Private Operator Reference</div>
+            <div class="cs-gtm-pdesc">Win a private operator pilot. No Vergabe. No Betriebsrat. Generate auditable ROI in six months.</div>
+          </div>
+          <div class="cs-gtm-phase">
+            <div class="cs-gtm-timespan">Phase 2 &nbsp;·&nbsp; Months 12&ndash;36</div>
+            <div class="cs-gtm-pname">BSR Berlin + Smart Cities</div>
+            <div class="cs-gtm-pdesc">Enter BSR with a reference in hand. Parallel entry into Wolfsburg, Kaiserslautern, and other Smart City Model Project sites.</div>
+          </div>
+          <div class="cs-gtm-phase">
+            <div class="cs-gtm-timespan">Phase 3 &nbsp;·&nbsp; Year 3+</div>
+            <div class="cs-gtm-pname">European Expansion</div>
+            <div class="cs-gtm-pdesc">Austria, Switzerland, Benelux. CRA compliance is the lead differentiator against non-EU incumbents.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-callout fade-in">
+        <p>BSR workers struck in March 2025. The Betriebsrat is watching every efficiency project. "We reduce collection trips" is not a sales pitch to a public operator mid-labor dispute. It is a threat to headcount. Get a private reference first.</p>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Phase 1 — Private operator reference (months 1&ndash;12)</p>
+        <h2>Build the case study before approaching anyone public</h2>
+        <p>Target a private waste operator or a mid-size Smart City Model Project city: Wolfsburg and Kaiserslautern are both active sites with IoT infrastructure already deployed. Neither carries BSR's union exposure or Vergabe procurement timelines.</p>
+        <p>Run a 100&ndash;500 sensor pilot with a transparent six-month ROI framework. Track collection trip reduction, overflow frequency, and cost-per-collection before and after. The output is a single auditable number: percentage efficiency gain at a named German operator.</p>
+        <p>Channels: direct commercial outreach, BSI SMIoTI smart city forums, Deutschland Digital marketplace registration.</p>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Phase 2 — BSR Berlin + major municipalities (months 12&ndash;36)</p>
+        <h2>Enter BSR with a reference the works council can read</h2>
+        <p>BSR is the prize, not the starting point. Approach once there is an auditable private-sector reference in hand. Brief the Betriebsrat before pitching management. Frame the product as dispatch optimization that reduces wasted trips, not headcount reduction.</p>
+        <p>Parallel targets: Hamburg, Munich, Frankfurt, Cologne, Stuttgart. Lead every conversation with the Phase 1 case study. Enter EU-wide smart city tenders. Build partnerships with German system integrators running multi-domain municipal IoT deployments.</p>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Phase 3 — European expansion (year 3+)</p>
+        <h2>Austrian, Swiss, and Benelux municipalities</h2>
+        <p>Use local distribution partners. Enter EU Smart City Marketplace programs. CRA compliance leads as a differentiator against competitors from outside the EU.</p>
+      </div>
+
+      <!-- ── 8. Risk Assessment ── -->
+      <div class="cs-part-divider fade-in">
+        <h2>8. Risk Assessment</h2>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Risk matrix</p>
+        <h2>Nine risks. Three require action before the first sales call.</h2>
+
+        <!-- Visual risk matrix -->
+        <div class="rm-wrap">
+          <span class="rm-yaxis-label">Severity &uarr;</span>
+          <div class="rm-main">
+            <div class="rm-grid-area">
+              <!-- Row severity labels -->
+              <div class="rm-slabels">
+                <span class="rm-slabel">High</span>
+                <span class="rm-slabel">Med</span>
+                <span class="rm-slabel">Low</span>
+              </div>
+              <!-- 3×3 grid (top-left = High S / Low L) -->
+              <div class="rm-grid">
+                <!-- Row 1: High severity -->
+                <div class="rm-cell rm-cell--orange"></div>
+                <div class="rm-cell rm-cell--red"></div>
+                <div class="rm-cell rm-cell--red">
+                  <span class="rm-chip rm-chip--red">1</span>
+                  <span class="rm-chip rm-chip--red">2</span>
+                  <span class="rm-chip rm-chip--red">3</span>
+                </div>
+                <!-- Row 2: Medium severity -->
+                <div class="rm-cell rm-cell--green">
+                  <span class="rm-chip rm-chip--green">6</span>
+                </div>
+                <div class="rm-cell rm-cell--yellow">
+                  <span class="rm-chip rm-chip--yellow">5</span>
+                  <span class="rm-chip rm-chip--yellow">9</span>
+                </div>
+                <div class="rm-cell rm-cell--orange">
+                  <span class="rm-chip rm-chip--orange">4</span>
+                  <span class="rm-chip rm-chip--orange">8</span>
+                </div>
+                <!-- Row 3: Low severity -->
+                <div class="rm-cell rm-cell--green">
+                  <span class="rm-chip rm-chip--green">7</span>
+                </div>
+                <div class="rm-cell rm-cell--green"></div>
+                <div class="rm-cell rm-cell--yellow"></div>
+              </div>
+            </div>
+            <!-- Column labels -->
+            <div class="rm-xlabels">
+              <div></div>
+              <span class="rm-xlabel">Low</span>
+              <span class="rm-xlabel">Med</span>
+              <span class="rm-xlabel">High</span>
+            </div>
+            <div class="rm-xaxis-label">Likelihood &rarr;</div>
+          </div>
+        </div>
+
+        <!-- Numbered legend -->
+        <div class="rm-legend">
+          <div class="rm-legend-item">
+            <span class="rm-legend-chip rm-chip--red">1</span>
+            <div>
+              <h4>Union / Betriebsrat opposition</h4>
+              <p>Pitch private operators first. Brief works councils before touching management. Frame the product as dispatch optimisation, not headcount reduction.</p>
+            </div>
+            <span class="rm-badge rm-badge--red">High / High</span>
+          </div>
+          <div class="rm-legend-item">
+            <span class="rm-legend-chip rm-chip--red">2</span>
+            <div>
+              <h4>Long municipal procurement cycles (6&ndash;18 months)</h4>
+              <p>Phase 1 targets private operators below the Vergabe threshold. Municipal cycles run in parallel, not as the entry point.</p>
+            </div>
+            <span class="rm-badge rm-badge--red">High / High</span>
+          </div>
+          <div class="rm-legend-item">
+            <span class="rm-legend-chip rm-chip--red">3</span>
+            <div>
+              <h4>No Rullja pricing or reference deployment</h4>
+              <p>Every ROI figure in this report is borrowed from Sensoneo and peer benchmarks. Run a 100&ndash;500 sensor German pilot with transparent before/after cost tracking. Publish those numbers before entering any municipal sales conversation.</p>
+            </div>
+            <span class="rm-badge rm-badge--red">High / High</span>
+          </div>
+          <div class="rm-legend-item">
+            <span class="rm-legend-chip rm-chip--orange">4</span>
+            <div>
+              <h4>Nordsense entering Germany before Rullja secures a reference</h4>
+              <p>Private operator route closes faster than municipal. Win Phase 1 before Nordsense builds German anchor accounts.</p>
+            </div>
+            <span class="rm-badge rm-badge--orange">Med / High</span>
+          </div>
+          <div class="rm-legend-item">
+            <span class="rm-legend-chip rm-chip--yellow">5</span>
+            <div>
+              <h4>Incumbent displacement (Mr.fill already deployed)</h4>
+              <p>Lead on plug-on cost advantage. Avoid accounts already under contract.</p>
+            </div>
+            <span class="rm-badge rm-badge--yellow">Med / Med</span>
+          </div>
+          <div class="rm-legend-item">
+            <span class="rm-legend-chip rm-chip--green">6</span>
+            <div>
+              <h4>CRA / GDPR compliance costs</h4>
+              <p>Start documentation now. Sell compliance readiness as a tender advantage, not a burden.</p>
+            </div>
+            <span class="rm-badge rm-badge--green">Med / Low</span>
+          </div>
+          <div class="rm-legend-item">
+            <span class="rm-legend-chip rm-chip--green">7</span>
+            <div>
+              <h4>Connectivity gaps (NB-IoT / LoRaWAN coverage)</h4>
+              <p>Multi-protocol hardware covers most scenarios. Partner with Deutsche Telekom for network SLA in edge cases.</p>
+            </div>
+            <span class="rm-badge rm-badge--green">Low / Low</span>
+          </div>
+          <div class="rm-legend-item">
+            <span class="rm-legend-chip rm-chip--orange">8</span>
+            <div>
+              <h4>Price competition from Eastern European solutions</h4>
+              <p>Compete on total cost of ownership and local support. Unit price is not the right battleground.</p>
+            </div>
+            <span class="rm-badge rm-badge--orange">Med / High</span>
+          </div>
+          <div class="rm-legend-item">
+            <span class="rm-legend-chip rm-chip--yellow">9</span>
+            <div>
+              <h4>Thin sales resources for Vergaberecht</h4>
+              <p>Engage procurement specialists with Vergabe experience. Use Deutschland Digital to reduce per-city overhead.</p>
+            </div>
+            <span class="rm-badge rm-badge--yellow">Med / Med</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 9. Conclusion ── -->
+      <div class="cs-part-divider fade-in">
+        <h2>9. Conclusion</h2>
+      </div>
+
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Verdict</p>
+        <h2>The market is real. The product is right. The references are missing.</h2>
+        <p>Germany's public waste infrastructure has a genuine, funded, policy-mandated problem. Berlin alone has 21,450 bins not yet smart. The budget to fix that exists. The procurement pathways are open. Rullja's product — a German-incorporated, brownfield-compatible sensor plus routing software — is correctly positioned for this market.</p>
+        <p>The competitive picture is less comfortable. This report found no empty quadrant and no dominant German player in the integrated sensor-plus-routing space. What it found is a 12-month window before Nordsense and Sensoneo close their GDPR gap, and before Zolitron has reason to expand from glass containers into general public bins.</p>
+        <p>Every claim in this report about ROI, payback periods, and efficiency gains is borrowed from Sensoneo and peer benchmarks. Rullja has no published pricing and no completed German deployment. That is the only thing that needs to change. One private-sector pilot, with transparent before-and-after cost tracking, converts a borrowed narrative into a proprietary one. That is the asset this company does not yet have and cannot operate without.</p>
+      </div>
+
+      <div class="cs-callout fade-in">
+        <p>Run the pilot. Get the number. Everything else in this report is a hypothesis until that happens.</p>
+      </div>
+
+      <!-- ── References ── -->
+      <details class="cs-sources fade-in">
+        <summary>References (19 sources)</summary>
+        <ol>
+          <li>IoT Smart Bins Cut Waste Collection Costs by 40%</li>
+          <li>Smart Waste Management Stats: How Cities Are Using IoT Bins</li>
+          <li>Smart Bins &amp; AI: How Technology Is Redefining Waste Management</li>
+          <li>Germany Smart Bins Market Size, Key Highlights, Share &amp; Future Forecast 2026&ndash;2033</li>
+          <li>Germany Smart Bins Market Capabilities 2026</li>
+          <li>Smart Bin Sensor Market Size, Share, Trends &amp; Forecast [2034]</li>
+          <li>Smart Bin Sensor Market By Application 2025 &mdash; LinkedIn</li>
+          <li>Berliner Stadtreinigung erh&ouml;ht Geb&uuml;hren ab 2025</li>
+          <li>Europe Smart Waste Management Market Size &amp; Forecast</li>
+          <li>Germany allocated over &euro;820 million to smart city projects through Smart City Dialogue</li>
+          <li>Major Smart City study on IoT-Infrastructures in eight German cities</li>
+          <li>Sensoneo Smart Waste Ultrasonic Sensor LoRaWAN Single 3.0</li>
+          <li>Sensoneo Smart Waste Single Sensor &mdash; IoT-Shop</li>
+          <li>Get Started with a Smart Bin Sensor &mdash; Nordsense</li>
+          <li>European Cyber Resilience Act &mdash; Prepare Your Business Now</li>
+          <li>EU Cyber Resilience Act (CRA) &mdash; Open Source Security Foundation</li>
+          <li>Why Smart Waste Monitoring Counts for Industries &mdash; Cost</li>
+          <li>Smart city guidance for all German cities &mdash; IoT M2M Council</li>
+          <li>Cyber Resilience Act: IoT Engineers Beware 2027 Compliance</li>
+        </ol>
+      </details>
+
+      <div class="cs-tags" style="margin-top:2rem">
+        <span class="cs-tag">Market Research</span>
+        <span class="cs-tag">IoT</span>
+        <span class="cs-tag">Smart City</span>
+        <span class="cs-tag">Competitive Analysis</span>
+        <span class="cs-tag">TAM/SAM/SOM</span>
+        <span class="cs-tag">Go-to-Market</span>
+        <span class="cs-tag">B2G</span>
+      </div>
+
+    </div>
+
+    <!-- Next project -->
+    <div class="cs-next-project">
+      <p class="cs-next-label">Next Project</p>
+      <a href="ipek-gpt.html" class="cs-next-link">
+        <h2 class="cs-next-title">Transform Product Engineering Knowledge into AI Consultant Service</h2>
+        <p class="cs-next-desc">Custom GPT for KIT's engineering institute &mdash; adopted in curriculum, saved 3 days/week for two PhDs.</p>
+        <span class="cs-next-arrow">Read case study &rarr;</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>&copy; 2025 Julie Di Gao</span>
+    <a href="mailto:julie.gao369@gmail.com">julie.gao369@gmail.com</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

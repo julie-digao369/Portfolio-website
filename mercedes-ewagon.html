@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Ideation of e-Wagen simplification @ Mercedes-Benz plant Sindelfingen · Case Study · Julie Di Gao</title>
+  <!-- Google Fonts removed: now using Calibri system font everywhere -->
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .layout, .sidebar, .content { display: contents; }
+    .cs-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 1.5rem 0;
+    }
+    .cs-step {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 1rem;
+      padding: 1.25rem 0;
+      border-bottom: 0.5px solid var(--border-light);
+    }
+    .cs-step:first-child { border-top: 0.5px solid var(--border-light); }
+    .cs-step-num {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      padding-top: 0.1rem;
+      font-family: var(--font);
+    }
+    .cs-step-content h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.01em;
+      font-family: var(--font);
+    }
+    .cs-step-content p {
+      font-size: 0.9375rem;
+      color: var(--secondary);
+      line-height: 1.6;
+      margin: 0;
+      font-family: var(--font-serif);
+    }
+    .cs-usecases {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .cs-usecase {
+      padding: 1.5rem;
+      background: var(--surface);
+      border-radius: 4px;
+    }
+    .cs-usecase-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-family: var(--font);
+    }
+    .cs-usecase h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+      font-family: var(--font);
+    }
+    .cs-usecase p {
+      font-size: 0.875rem;
+      color: var(--secondary);
+      line-height: 1.55;
+      margin: 0;
+      font-family: var(--font);
+    }
+    .cs-constraint {
+      display: flex;
+      gap: 1rem;
+      padding: 1.5rem 2rem;
+      background: var(--surface);
+      border-radius: 4px;
+      margin: 1.75rem 0;
+      align-items: flex-start;
+    }
+    .cs-constraint-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+      color: var(--secondary);
+      padding-top: 0.1rem;
+    }
+    .cs-constraint-body h3 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+      font-family: var(--font);
+    }
+    .cs-constraint-body p {
+      font-size: 0.875rem;
+      color: var(--secondary);
+      line-height: 1.55;
+      margin: 0;
+      font-family: var(--font-serif);
+    }
+    .cs-img {
+      width: 100%;
+      border-radius: 4px;
+      display: block;
+      margin: 1.75rem 0;
+    }
+    .cs-img-caption {
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      margin-top: -1.25rem;
+      margin-bottom: 1.75rem;
+      font-family: var(--font);
+      opacity: 0.7;
+    }
+    /* Model comparison table */
+    .cs-model-eval { margin: 1.75rem 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .cs-compare {
+      display: grid;
+      grid-template-columns: 7.5rem repeat(5, 1fr);
+      min-width: 560px;
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    /* Header row */
+    .cs-cmp-corner {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .cs-cmp-head {
+      padding: 1.5rem 1rem 1.125rem;
+      background: var(--surface);
+      border-left: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .cs-cmp-head--sel {
+      background: #EEF3FF;
+      border-top: 2px solid var(--accent);
+      padding-top: 1.25rem;
+    }
+    .cs-cmp-num {
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: var(--secondary);
+      opacity: 0.4;
+      font-family: var(--font);
+    }
+    .cs-cmp-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+      font-family: var(--font);
+      letter-spacing: -0.01em;
+      display: block;
+      margin-top: 0.2rem;
+    }
+    /* Criterion rows */
+    .cs-cmp-label {
+      padding: 1rem 1.125rem;
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      font-family: var(--font);
+      background: var(--surface);
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+    }
+    .cs-cmp-val {
+      padding: 1rem;
+      border-top: 1px solid var(--border-light);
+      border-left: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font);
+    }
+    .cs-cmp-val--sel { background: #EEF3FF; }
+    .cs-cmp-yes {
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .cs-cmp-no {
+      color: var(--secondary);
+      font-size: 1.125rem;
+      opacity: 0.25;
+      letter-spacing: 0.05em;
+    }
+    /* System components */
+    .cs-sys-list { margin: 1.5rem 0; }
+    .cs-sys-item {
+      border-bottom: 0.5px solid var(--border-light);
+    }
+    .cs-sys-item:first-child { border-top: 0.5px solid var(--border-light); }
+    .cs-sys-item summary {
+      display: grid;
+      grid-template-columns: 2rem 1fr auto;
+      gap: 1.25rem;
+      padding: 1.125rem 0;
+      align-items: center;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+    .cs-sys-item summary::-webkit-details-marker { display: none; }
+    .cs-sys-n {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-family: var(--font);
+    }
+    .cs-sys-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+      font-family: var(--font);
+      letter-spacing: -0.01em;
+    }
+    .cs-sys-chevron {
+      font-size: 1rem;
+      color: var(--secondary);
+      opacity: 0.45;
+      transition: transform 0.2s ease;
+      font-style: normal;
+    }
+    .cs-sys-item[open] .cs-sys-chevron { transform: rotate(180deg); }
+    .cs-sys-body {
+      padding: 0 0 1.125rem 3.25rem;
+    }
+    .cs-sys-body p {
+      font-size: 0.9375rem;
+      color: var(--secondary);
+      line-height: 1.6;
+      margin: 0;
+      font-family: var(--font-serif);
+    }
+    /* Outcome cards */
+    .cs-outcome-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.625rem;
+      margin: 1.5rem 0;
+    }
+    .cs-outcome-card {
+      padding: 1.25rem 1.5rem;
+      background: var(--surface);
+      border-radius: 4px;
+    }
+    .cs-outcome-card h4 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+      font-family: var(--font);
+    }
+    .cs-outcome-card p {
+      font-size: 0.875rem;
+      color: var(--secondary);
+      line-height: 1.55;
+      margin: 0;
+      font-family: var(--font);
+    }
+    @media (max-width: 640px) {
+      .cs-system-grid, .cs-outcome-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .cs-usecases { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="cs-page">
+  <a class="skip-link" href="#cs-main">Skip to content</a>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-name">Julie Di Gao</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="nav-links">
+    <a href="index.html#projects">Projects</a>
+    <a href="index.html#reviews">Customer Review</a>
+    <a href="https://mail.google.com/mail/?view=cm&to=julie.gao369@gmail.com" target="_blank" rel="noopener">Contact</a>
+    <a href="https://calendar.app.google/rjYfn2XpzJs34tZLA" class="nav-cta" target="_blank" rel="noopener">Schedule a call</a>
+  </div>
+  </nav>
+
+  <main id="cs-main">
+    <div class="cs-header">
+      <a href="index.html" class="cs-back">All work</a>
+
+      <p class="cs-eyebrow">Academic Co-Creation · Field Research · Service Design · 2024 · Mercedes-Benz × KIT</p>
+      <h1 class="cs-title">Ideation of e-Wagen simplification @ Mercedes-Benz plant Sindelfingen</h1>
+      <p class="cs-sub">An interdisciplinary academic sprint with KIT and Mercedes-Benz Sindelfingen to redesign shared electric vehicle operations — from ethnographic shop-floor research to a deployable pooling framework with measurable fleet and operational efficiency gains.</p>
+
+      <div class="cs-meta">
+        <div class="cs-meta-item"><span class="cs-meta-label">Role</span> <span class="cs-meta-value">UX Researcher</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Client</span> <span class="cs-meta-value">Mercedes-Benz</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Year</span> <span class="cs-meta-value">2024</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Focus</span> <span class="cs-meta-value">User research, service design</span></div>
+      </div>
+    </div>
+
+    <div class="cs-body">
+
+      <!-- Problem -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">The problem</p>
+        <h2>A fleet of electric wagons — unevenly distributed, invisibly managed, operationally wasteful</h2>
+        <p>At the Mercedes-Benz Sindelfingen plant — one of Europe's largest automotive production facilities — workers rely on electric wagons for short-distance transport between stations, buildings, and logistics zones. The fleet operated with no coordination layer: vehicles accumulated in high-traffic areas while adjacent zones went without, redistribution was informal, and there was no real-time visibility into location or availability.</p>
+        <p>Workers lost productive time searching for wagons; supervisors had no data for rebalancing decisions; and the plant was likely overinvesting in fleet size to compensate for poor distribution — a classic symptom of low asset utilisation, not insufficient capacity. KIT IPEK and Mercedes-Benz commissioned an interdisciplinary sprint to design a pooled sharing system implementable within existing infrastructure.</p>
+
+        <img src="img/mercedes-ewagon/e-wagon.jpg" alt="Electric wagon at the Mercedes-Benz Sindelfingen plant" class="cs-img" />
+        <p class="cs-img-caption">An electric wagon at the Mercedes-Benz Sindelfingen plant — the vehicle at the centre of the sharing system redesign.</p>
+      </div>
+
+      <!-- Callout -->
+      <div class="cs-callout">
+        <p>"Most movement needs are short-notice and unplanned — workers walk over and take a wagon when the task arises. Any system requiring advance booking will be abandoned within a week."</p>
+      </div>
+
+      <!-- Research -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Research approach</p>
+        <h2>Interdisciplinary field research before any solution is proposed</h2>
+        <p>Tarik (KIT Carl Benz School, mechanical engineering) grounded the work in vehicle constraints, load dynamics, and infrastructure feasibility; I led user research, service design, and workflow analysis. Both lenses were necessary — fleet problems at this scale require the physical system logic and the behavioural reality of the people using it.</p>
+
+        <div class="cs-steps">
+          <div class="cs-step">
+            <span class="cs-step-num">01</span>
+            <div class="cs-step-content">
+              <h3>Ethnographic worker interviews</h3>
+              <p>In-depth interviews with technicians, logistics staff, and supervisors at Sindelfingen. Key findings: demand is spontaneous, urgency varies significantly by role, and workers have low tolerance for access friction.</p>
+            </div>
+          </div>
+          <div class="cs-step">
+            <span class="cs-step-num">02</span>
+            <div class="cs-step-content">
+              <h3>User typology and persona development</h3>
+              <p>Interview data synthesised into four user profiles distinguished by movement frequency, task urgency, and relationship to the wagon system — the design anchor for all subsequent decisions.</p>
+            </div>
+          </div>
+          <div class="cs-step">
+            <span class="cs-step-num">03</span>
+            <div class="cs-step-content">
+              <h3>End-to-end lifecycle mapping</h3>
+              <p>Mapped the full sharing lifecycle — need identification → pickup → use → return → rebalancing → charging — revealing the precise failure points where structural changes would have the greatest leverage.</p>
+            </div>
+          </div>
+          <div class="cs-step">
+            <span class="cs-step-num">04</span>
+            <div class="cs-step-content">
+              <h3>Cross-functional validation workshops</h3>
+              <p>Working sessions with Mercedes-Benz operations managers, KIT engineers, and logistics planners to validate findings and align on core sharing logic. Engineering feasibility and user acceptability were stress-tested in parallel.</p>
+            </div>
+          </div>
+        </div>
+
+        <img src="img/mercedes-ewagon/persona.jpg" alt="Four user personas developed from field interviews" class="cs-img" />
+        <p class="cs-img-caption">Four user personas derived from field interviews — each profile distinguished by movement frequency, urgency level, and sharing system expectations.</p>
+      </div>
+
+      <!-- Key design decision -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Key design decision</p>
+        <h2>Rejecting app-based booking in favour of station-based walk-up access</h2>
+        <p>The initial hypothesis was a mobile booking interface — workers reserve a wagon in advance, collect it at a designated time. Two independent constraints eliminated it: field research had established that wagon use is spontaneous, not planned, making a reservation system structurally incompatible with the workflow. And GDPR prohibits personal devices for employer-managed operations, requiring company-issued devices for all plant staff — disproportionate cost for this problem.</p>
+
+        <div class="cs-constraint">
+          <div class="cs-constraint-icon">⚖</div>
+          <div class="cs-constraint-body">
+            <h3>GDPR compliance constraint</h3>
+            <p>German data protection law prohibits personal devices for employer-managed operations without company-managed device policies. An app-based system would require issuing dedicated devices to all relevant plant workers — capital and administrative cost disproportionate to the problem being solved.</p>
+          </div>
+        </div>
+
+        <div class="cs-model-eval">
+          <div class="cs-compare">
+            <!-- Header row -->
+            <div class="cs-cmp-corner"></div>
+            <div class="cs-cmp-head">
+              <span class="cs-cmp-num">01</span>
+              <span class="cs-cmp-name">Free-floating</span>
+            </div>
+            <div class="cs-cmp-head">
+              <span class="cs-cmp-num">02</span>
+              <span class="cs-cmp-name">Free-floating + pool stations</span>
+            </div>
+            <div class="cs-cmp-head cs-cmp-head--sel">
+              <span class="cs-cmp-num">03</span>
+              <span class="cs-cmp-name">Roundtrip, station-based</span>
+            </div>
+            <div class="cs-cmp-head">
+              <span class="cs-cmp-num">04</span>
+              <span class="cs-cmp-name">Roundtrip, homezone-based</span>
+            </div>
+            <div class="cs-cmp-head">
+              <span class="cs-cmp-num">05</span>
+              <span class="cs-cmp-name">Peer-to-peer</span>
+            </div>
+            <!-- Operator fit -->
+            <div class="cs-cmp-label">Operator fit</div>
+            <div class="cs-cmp-val"><span class="cs-cmp-no">—</span></div>
+            <div class="cs-cmp-val"><span class="cs-cmp-no">—</span></div>
+            <div class="cs-cmp-val cs-cmp-val--sel"><span class="cs-cmp-yes">✓</span></div>
+            <div class="cs-cmp-val"><span class="cs-cmp-yes">✓</span></div>
+            <div class="cs-cmp-val"><span class="cs-cmp-no">—</span></div>
+            <!-- Budget feasible -->
+            <div class="cs-cmp-label">Budget feasible</div>
+            <div class="cs-cmp-val"><span class="cs-cmp-no">—</span></div>
+            <div class="cs-cmp-val"><span class="cs-cmp-no">—</span></div>
+            <div class="cs-cmp-val cs-cmp-val--sel"><span class="cs-cmp-yes">✓</span></div>
+            <div class="cs-cmp-val"><span class="cs-cmp-no">—</span></div>
+            <div class="cs-cmp-val"><span class="cs-cmp-no">—</span></div>
+          </div>
+        </div>
+
+        <p>The team converged on a station-based pooling model: fixed pickup and drop-off points distributed across the plant. Workers walk to the nearest station, take a wagon, and return it to any station when done. No app, no booking, no personal device required.</p>
+
+        <img src="img/mercedes-ewagon/e-wagon-sharing-concept.jpg" alt="Before and after: decentralised ownership vs station-based sharing system" class="cs-img" />
+        <p class="cs-img-caption">Before/after: decentralised departmental ownership with individual key access (left) vs. station-based shared pool with kiosk access and centralised data management (right).</p>
+      </div>
+
+      <!-- Use cases -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Service flows designed</p>
+        <h2>Two access tiers within a single system</h2>
+
+        <div class="cs-usecases">
+          <div class="cs-usecase">
+            <div class="cs-usecase-label">Standard flow</div>
+            <h3>Walk-up access</h3>
+            <p>Worker walks to the nearest station, collects an available wagon without pre-registration, and returns it to any station when done. Inventory updates automatically, feeding the rebalancing model.</p>
+          </div>
+          <div class="cs-usecase">
+            <div class="cs-usecase-label">Priority flow</div>
+            <h3>Time-critical access</h3>
+            <p>Escalation path for production-critical tasks when a local station is depleted. The system triggers passive redistribution from adjacent stations — no manual supervisor intervention required.</p>
+          </div>
+        </div>
+
+        <p style="font-size:0.9375rem;color:var(--secondary);line-height:1.6;margin:1.5rem 0 0.25rem;font-family:var(--font-serif)">Five hardware and software components work in concert at each station.</p>
+        <div class="cs-sys-list">
+          <details class="cs-sys-item">
+            <summary><span class="cs-sys-n">01</span><h4>Station kiosk</h4><i class="cs-sys-chevron">▾</i></summary>
+            <div class="cs-sys-body"><p>The single physical interface workers touch — ID card scan identifies the user, displays available wagons, releases the physical key on pickup, and logs the trip on return.</p></div>
+          </details>
+          <details class="cs-sys-item">
+            <summary><span class="cs-sys-n">02</span><h4>Employee ID card</h4><i class="cs-sys-chevron">▾</i></summary>
+            <div class="cs-sys-body"><p>Walk up and tap — no app, no PIN. Usage is attributed to department rather than individual, keeping the system GDPR-compliant without personal data collection.</p></div>
+          </details>
+          <details class="cs-sys-item">
+            <summary><span class="cs-sys-n">03</span><h4>Electronic Keyhole Blocker (EKB)</h4><i class="cs-sys-chevron">▾</i></summary>
+            <div class="cs-sys-body"><p>Fitted to each wagon, the EKB enables or disables the physical ignition key via the station system. A CAN bus connector reads battery status — no app or network access required on the vehicle side.</p></div>
+          </details>
+          <details class="cs-sys-item">
+            <summary><span class="cs-sys-n">04</span><h4>In-station charger</h4><i class="cs-sys-chevron">▾</i></summary>
+            <div class="cs-sys-body"><p>One charger per slot. Charging begins automatically on return and reports status to the backend, keeping the fleet ready without manual checks.</p></div>
+          </details>
+          <details class="cs-sys-item">
+            <summary><span class="cs-sys-n">05</span><h4>Backend data management</h4><i class="cs-sys-chevron">▾</i></summary>
+            <div class="cs-sys-body"><p>Aggregates real-time station utilisation, peak demand by time and zone, and trip duration — feeding directly into the plant's maintenance information system for condition-based scheduling.</p></div>
+          </details>
+        </div>
+      </div>
+
+      <!-- POM / Operational efficiency -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Operational impact · POM perspective</p>
+        <h2>Fleet pooling as an operations management lever</h2>
+        <p>The shift from siloed wagon ownership to shared pooling is an operations management intervention, not just a UX change. The <strong>pooling effect</strong> — a corollary of inventory theory — holds that consolidating independent demand streams into a shared pool reduces required safety stock while maintaining the same service level. Under the fragmented model, each zone held its own idle buffer. A shared pool collapses these into a single demand distribution with lower variance, enabling equal availability with a smaller fleet.</p>
+
+        <div class="cs-steps">
+          <div class="cs-step">
+            <span class="cs-step-num">01</span>
+            <div class="cs-step-content">
+              <h3>Fleet size reduction</h3>
+              <p>The pooling effect enables 20–35% fleet reductions in comparable facility deployments. For an industrial e-wagon at €15,000–25,000 per unit, even a modest reduction means significant capital recovery and lower depreciation.</p>
+            </div>
+          </div>
+          <div class="cs-step">
+            <span class="cs-step-num">02</span>
+            <div class="cs-step-content">
+              <h3>Asset utilisation improvement</h3>
+              <p>Fragmented fleets typically run below 50% utilisation — wagons are unavailable due to mislocation, not shortage. Real-time station inventory directly attacks idle time, improving return on the existing fleet before any new capital is deployed.</p>
+            </div>
+          </div>
+          <div class="cs-step">
+            <span class="cs-step-num">03</span>
+            <div class="cs-step-content">
+              <h3>Elimination of non-value-adding search time</h3>
+              <p>Time spent locating a wagon is muda — it does not advance throughput. Predictable walk-up availability eliminates search time as a recurring cost, with multiplicative effect across hundreds of workers per shift.</p>
+            </div>
+          </div>
+          <div class="cs-step">
+            <span class="cs-step-num">04</span>
+            <div class="cs-step-content">
+              <h3>Condition-based maintenance scheduling</h3>
+              <p>Station telemetry provides per-vehicle usage data for the first time — enabling condition-based rather than time-based maintenance. This reduces unplanned downtime and unnecessary preventive cost, extending fleet lifecycle.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outcome -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Outcome</p>
+        <h2>Four deliverables — from field data to a deployable system</h2>
+        <p>The sprint produced a complete, implementation-ready package: not just a concept, but the user research, system specification, station network, and academic validation needed to take the framework from proposal to deployment.</p>
+
+        <div class="cs-outcome-grid">
+          <div class="cs-outcome-card">
+            <h4>Station-based sharing framework</h4>
+            <p>A fully specified pooling model — service logic, access flows, and operating rules — designed to run within Sindelfingen's existing infrastructure with no mandatory behaviour change from workers.</p>
+          </div>
+          <div class="cs-outcome-card">
+            <h4>Recommended station network</h4>
+            <p>14 sharing stations mapped across the plant, each with a 150m service radius to ensure complete floor coverage. Locations validated against movement patterns and infrastructure constraints.</p>
+          </div>
+          <div class="cs-outcome-card">
+            <h4>System architecture specification</h4>
+            <p>Hardware and software component design — station kiosk, EKB key blocker, charger integration, employee ID access, and centralised backend — specified to operate without a worker-facing app.</p>
+          </div>
+          <div class="cs-outcome-card">
+            <h4>Academic contribution at KIT IPEK</h4>
+            <p>The interdisciplinary methodology — combining ethnographic UX research with mechanical systems engineering — was incorporated as a case study in a doctoral dissertation at KIT IPEK, validating the co-creation approach for industrial mobility contexts.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="cs-tags">
+        <span class="cs-tag">Field Research</span>
+        <span class="cs-tag">Ethnography</span>
+        <span class="cs-tag">Persona Development</span>
+        <span class="cs-tag">Service Design</span>
+        <span class="cs-tag">Operations Management</span>
+        <span class="cs-tag">Fleet Optimisation</span>
+        <span class="cs-tag">Mobility</span>
+        <span class="cs-tag">Manufacturing</span>
+      </div>
+
+    </div>
+
+    <!-- Next project -->
+    <div class="cs-next-project">
+      <p class="cs-next-label">Next Project</p>
+      <a href="rullja-smart-bin.html" class="cs-next-link">
+        <h2 class="cs-next-title">Rullja Smart Bin Sensor &mdash; Market Research Report</h2>
+        <p class="cs-next-desc">Market analysis for a German IoT startup — TAM/SAM/SOM, competitive matrix, and go-to-market strategy.</p>
+        <span class="cs-next-arrow">Read case study &rarr;</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>&copy; 2025 Julie Di Gao</span>
+    <a href="mailto:julie.gao369@gmail.com">julie.gao369@gmail.com</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

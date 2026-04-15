@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Julie Di Gao — Research · Strategy · Technology</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       TOP NAV — dark navy bar
+  ============================================================ -->
+  <nav class="site-nav">
+    <a href="index.html" class="nav-name">Julie Di Gao</a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <div class="nav-links">
+      <a href="#projects">Projects</a>
+      <a href="#reviews">Customer Review</a>
+      <a href="https://mail.google.com/mail/?view=cm&to=julie.gao369@gmail.com" target="_blank" rel="noopener">Contact</a>
+      <a href="https://calendar.app.google/rjYfn2XpzJs34tZLA" class="nav-cta" target="_blank" rel="noopener">Schedule a call</a>
+    </div>
+  </nav>
+
+  <main class="layout">
+
+    <!-- ============================================================
+         HERO — dark navy, large serif headline
+    ============================================================ -->
+    <section class="hero-section">
+      <div class="hero-inner">
+        <p class="hero-eyebrow">Research · Strategy · Technology</p>
+        <h1 class="hero-title">What can I help you with?</h1>
+        <p class="hero-desc">Research, design, AI tooling. I turn foggy ideas into things that work.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FILTER BAR — horizontal tabs
+    ============================================================ -->
+    <div class="filter-bar">
+      <div class="filter-inner">
+        <div class="role-tabs" role="tablist" aria-label="Work categories" id="track-select">
+          <button class="role-tab" role="tab" id="tab-research" data-role="research" aria-selected="false" aria-controls="panel-research" tabindex="0">Research</button>
+          <button class="role-tab" role="tab" id="tab-design" data-role="design" aria-selected="false" aria-controls="panel-design" tabindex="-1">Design</button>
+          <button class="role-tab" role="tab" id="tab-automation" data-role="automation" aria-selected="false" aria-controls="panel-automation" tabindex="-1">AI &amp; Automation</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         CONTENT — project cards
+    ============================================================ -->
+    <div class="content">
+    <section class="projects-stage" id="projects">
+
+      <!-- ── Design Projects ── -->
+      <div class="projects-group" role="tabpanel" id="panel-design" aria-labelledby="tab-design" data-group="design" hidden>
+        <div class="projects-grid">
+
+          <a href="orka-health.html" class="card">
+            <div class="card-thumb"><img src="img/orka-thumb.jpg" alt="Orka Two Hearing Aids App Onboarding design" /></div>
+            <div class="card-body">
+              <span class="card-meta">2020–23 · B2C App</span>
+              <h3 class="card-title">Orka Two Hearing Aids App Onboarding design</h3>
+              <p class="card-desc">Redesigned the Gen 2 onboarding experience to guide users through crucial device adjustment periods. Delivered an average 5.3/7 user satisfaction score to drastically cut device returns.</p>
+              <div class="card-tags">
+                <span class="p-tag">B2C</span>
+                <span class="p-tag">Interaction Design</span>
+                <span class="p-tag">Prototyping</span>
+                <span class="p-tag">Telehealth</span>
+              </div>
+            </div>
+          </a>
+
+          <div class="card" style="cursor: default;">
+            <div class="card-thumb"><img src="img/orka-domestic.jpeg" alt="Orka Digital Product Design" style="opacity: 0.85;" /></div>
+            <div class="card-body">
+              <span class="card-meta">Ongoing consultant <span class="project-badge">Active</span> <span class="project-badge" style="background:#f1f5f9;color:#475569;margin-left:4px">Confidential 🔒</span></span>
+              <h3 class="card-title">Orka Digital Product Design</h3>
+              <p class="card-desc">Rehired after a two-year hiatus to consult on product design strategy. This work is ongoing and strictly under NDA.</p>
+              <div class="card-tags">
+                <span class="p-tag">B2C</span>
+                <span class="p-tag">Smart Wearables</span>
+                <span class="p-tag">Product Consultant</span>
+              </div>
+            </div>
+          </div>
+
+          <a href="dog-cardiac.html" class="card">
+            <div class="card-thumb"><img src="img/petstech.jpg" alt="PetsTech Cardiac Monitor" /></div>
+            <div class="card-body">
+              <span class="card-meta">2025 · Hardware UI</span>
+              <h3 class="card-title">PetsTech Cardiac Monitor UI Design</h3>
+              <p class="card-desc">Designed the interface for a 20,000 CNY pet cardiac device. Every pixel is a hardware decision on a segment LCD. Three concepts, one shipped.</p>
+              <div class="card-tags">
+                <span class="p-tag">Hardware UI</span>
+                <span class="p-tag">Medical Device</span>
+                <span class="p-tag">Veterinary Tech</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="rullja-app.html" class="card">
+            <div class="card-thumb"><img src="img/rullja/rullja-software.png" alt="RullJa IoT Dashboard Concept Demo" /></div>
+            <div class="card-body">
+              <span class="card-meta">2025 · Concept Demo</span>
+              <h3 class="card-title">RullJa IoT Dashboard — Investor Concept Demo</h3>
+              <p class="card-desc">Built an interactive dashboard prototype for a waste-tech startup pitching IoT fill-level sensors to investors. Concept only. Backed by market research showing a €100M+ addressable segment in Germany.</p>
+              <div class="card-tags">
+                <span class="p-tag">Dashboard Design</span>
+                <span class="p-tag">IoT</span>
+                <span class="p-tag">Startup</span>
+                <span class="p-tag">Concept Demo</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- ── Research Projects ── -->
+      <div class="projects-group" role="tabpanel" id="panel-research" aria-labelledby="tab-research" data-group="research" hidden>
+        <div class="projects-grid">
+
+          <a href="agile-cps.html" class="card">
+            <div class="card-thumb"><img src="img/agile-cps.png" alt="Agile CPS research" /></div>
+            <div class="card-body">
+              <span class="card-meta">2025 · Conference Paper · KIT IPEK</span>
+              <h3 class="card-title">Developing CPS as Entrepreneurs: Agile Development in Startups and SMEs</h3>
+              <p class="card-desc">Master thesis selected by IPEK for publication at ECIE 2025. SLR of 1,929 papers — using a structured AI extraction workflow with Perplexity and manual validation — mapping how agile adapts across startup, SME, and enterprise contexts in CPS engineering.</p>
+              <div class="card-tags">
+                <span class="p-tag">Systematic Literature Review</span>
+                <span class="p-tag">AI-Assisted Research</span>
+                <span class="p-tag">Agile · CPS</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="german-telehealth.html" class="card">
+            <div class="card-thumb"><img src="img/telehealth-de.png" alt="German telehealth" /></div>
+            <div class="card-body">
+              <span class="card-meta">2025 · Commissioned Study · KIT OCI</span>
+              <h3 class="card-title">German Telehealth Infrastructure: Structural Mapping for Threat Modeling</h3>
+              <p class="card-desc">Commissioned by a KIT doctoral researcher in critical infrastructure cybersecurity. Mapped the integration architectures of German hospital networks — PORT and NEVAS — as a structural baseline for NIS2 threat modeling.</p>
+              <div class="card-tags">
+                <span class="p-tag">Critical Infrastructure</span>
+                <span class="p-tag">Healthcare Cybersecurity</span>
+                <span class="p-tag">NIS2 · KRITIS</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="mercedes-ewagon.html" class="card">
+            <div class="card-thumb"><img src="img/mercedesetrolley.jpg" alt="Mercedes-Benz E-Wagon" /></div>
+            <div class="card-body">
+              <span class="card-meta">2024 · Field Research</span>
+              <h3 class="card-title">Ideation of e-Wagen simplification @ Mercedes-Benz plant Sindelfingen</h3>
+              <p class="card-desc">Ethnography on the Mercedes-Benz factory floor — personas, journey maps, and full service design for e-trolley sharing.</p>
+              <div class="card-tags">
+                <span class="p-tag">Ethnography</span>
+                <span class="p-tag">Service Design</span>
+                <span class="p-tag">Mobility</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="rullja-smart-bin.html" class="card">
+            <div class="card-thumb"><img src="img/rullja-bin.png" alt="Rullja Smart Bin Sensor" /></div>
+            <div class="card-body">
+              <span class="card-meta">2025 · Market Research</span>
+              <h3 class="card-title">Rullja Smart Bin Sensor — Market Research Report</h3>
+              <p class="card-desc">Market analysis for a German IoT startup — TAM/SAM/SOM sizing, 10-competitor matrix, buyer segmentation, regulatory landscape, and a three-phase go-to-market strategy for municipal entry.</p>
+              <div class="card-tags">
+                <span class="p-tag">Market Research</span>
+                <span class="p-tag">IoT</span>
+                <span class="p-tag">Smart City</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- ── AI Projects ── -->
+      <div class="projects-group" role="tabpanel" id="panel-automation" aria-labelledby="tab-automation" data-group="automation" hidden>
+        <div class="projects-grid">
+
+          <a href="ipek-gpt.html" class="card">
+            <div class="card-thumb"><img src="img/ipek-gpt-thumb.jpg" alt="IPEK AI Consultant" /></div>
+            <div class="card-body">
+              <span class="card-meta">2025 · AI Consulting</span>
+              <h3 class="card-title">Transform Product Engineering Knowledge into AI Consultant Service</h3>
+              <p class="card-desc">Built 2 AI consulting MVPs for KIT's engineering institute — InnoFox Coach and Project Type Assessor. 50+ students using, 100% budget saved, shipped in half the time.</p>
+              <div class="card-tags">
+                <span class="p-tag">AI Tooling</span>
+                <span class="p-tag">Custom GPT</span>
+                <span class="p-tag">B2B</span>
+              </div>
+            </div>
+          </a>
+
+
+          <a href="#" class="card">
+            <div class="card-thumb"><img src="img/invoice-automation.png" alt="Cincobox Bill AutoBot" /></div>
+            <div class="card-body">
+              <span class="card-meta">Ongoing · Agentic Build <span class="project-badge">Active</span></span>
+              <h3 class="card-title">Cincobox Bill AutoBot</h3>
+              <p class="card-desc">A quality inspection firm's CEO was burning one full day every month on manual invoicing, so I restructured his client order database and built an invoice automation tool in Google Sheets by agentic coding.</p>
+              <div class="card-tags">
+                <span class="p-tag">Automation</span>
+                <span class="p-tag">Database Structure</span>
+                <span class="p-tag">Agentic Coding</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+    </section>
+    </div><!-- /.content -->
+
+
+
+  </main>
+
+  <!-- ============================================================
+       TESTIMONIALS
+  ============================================================ -->
+  <section id="reviews" class="testimonials">
+    <div class="testimonials-inner">
+      <p class="testimonials-label">What People Say</p>
+      <div class="testimonials-grid">
+
+        <div class="testimonial">
+          <p class="testimonial-quote">"Of all the hearing aids I have tested in the past, Orka has the best look, clarity and performance of some of the most expensive hearing aids on the market. From the modern look of the hearing aids to the minimalist ecosystem of the App. It's so beautiful and refreshing."</p>
+          <div class="testimonial-author">
+            <span class="testimonial-name">Retired Design Director, 73</span>
+            <span class="testimonial-role">Orka Health · Trustpilot Review</span>
+          </div>
+        </div>
+
+        <div class="testimonial">
+          <p class="testimonial-quote">"Ms. Gao developed a GPT-based chatbot, 'Product Development Coach,' that supports engineering method selection using frameworks such as iPeM, InnoFox, and SPALTEN, and will be integrated into our Integrierte Produktentwicklung course. I am confident that she will be an outstanding contributor in any advanced academic or professional environment."</p>
+          <div class="testimonial-author">
+            <span class="testimonial-name">Prof. Dr.-Ing. Dr. h. c. Albert Albers</span>
+            <span class="testimonial-role">IPEK · Institute of Product Engineering, KIT · <a href="https://drive.google.com/file/d/1tdlXSylzmhAf9vjlkqF7maoI1d_9qmV9/view" target="_blank" rel="noopener" class="testimonial-link">Read full letter</a></span>
+          </div>
+        </div>
+
+        <div class="testimonial">
+          <p class="testimonial-quote">"Ms. Gao's professional experience is distinguished by her dedication, collaborative problem-solving, and remarkable track record in performance evaluations. I thoroughly enjoyed working with her, as she consistently demonstrated exceptional cooperation, teamwork, and strong personal and soft skills that contributed to the overall success of the projects we undertook together."</p>
+          <div class="testimonial-author">
+              <span class="testimonial-name">Ben Sun</span>
+            <span class="testimonial-role">CEO · Orka Health · <a href="https://drive.google.com/file/d/1TQSXAxwFOmkfhooDOiuo72C9SazqI4s3/view" target="_blank" rel="noopener" class="testimonial-link">Read full letter</a></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer id="contact" class="site-footer">
+    <span>&copy; 2026 Julie Di Gao</span>
+    <span>Shanghai &middot; <span id="clock" aria-hidden="true"></span></span>
+    <a href="mailto:julie.gao369@gmail.com">julie.gao369@gmail.com</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
