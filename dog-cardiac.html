@@ -88,6 +88,9 @@
     @media (max-width: 700px) {
       .concepts-grid { grid-template-columns: 1fr; }
     }
+    @media (max-width: 640px) {
+      .req-stats-grid { grid-template-columns: 1fr !important; }
+    }
   </style>
 </head>
 <body class="cs-page">
@@ -106,8 +109,6 @@
 
   <main id="cs-main">
     <div class="cs-header">
-      <a href="index.html" class="cs-back">All work</a>
-
       <p class="cs-eyebrow">Hardware UI Design · 2025 · B2B + B2C · China Market</p>
       <h1 class="cs-title">PetsTech Cardiac Monitor UI Design</h1>
       <p class="cs-sub">A veterinary cardiac monitor that costs 20,000 CNY per unit. The screen is a segment LCD. Every pixel is a hardware decision. I had to make it read like a hospital monitor while keeping BOM costs survivable.</p>
@@ -143,7 +144,7 @@
         <h2>Everything a vet needs. Nothing the hardware can't handle.</h2>
         <p>I worked with the veterinary team to inventory every piece of information the screen had to carry. The constraint was brutal: segment LCDs price per trace, so every element I added had a dollar sign attached.</p>
 
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem">
+        <div class="req-stats-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem">
           <div style="text-align:center;padding:1.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px">
             <div style="font-size:2rem;font-weight:700;color:var(--text);line-height:1">4</div>
             <div style="font-size:0.82rem;font-weight:600;color:var(--text);margin-top:0.4rem">Treatment modes</div>
@@ -229,6 +230,7 @@
         <h2>I scored each concept across six dimensions. No single winner.</h2>
         <p>The decision was not "which looks best." It was "which survives manufacturing while still being usable in a vet clinic at 2 AM."</p>
 
+        <div style="overflow-x:auto">
         <table class="eval-table">
           <thead>
             <tr>
@@ -277,6 +279,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
 
       <!-- Outcome -->

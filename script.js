@@ -75,18 +75,16 @@ tabs.forEach(tab => {
     sessionStorage.setItem('activeTab', tab.dataset.role);
 
     // Mobile: scroll to first card of the selected group
-    if (window.innerWidth <= 768) {
-      setTimeout(() => {
-        const group = document.querySelector(`.projects-group[data-group="${tab.dataset.role}"]`);
-        const firstCard = group && group.querySelector('.card');
-        if (firstCard) {
-          const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 64;
-          const filterH = document.querySelector('.filter-bar')?.offsetHeight || 44;
-          const top = firstCard.getBoundingClientRect().top + window.scrollY - navH - filterH - 12;
-          window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-        }
-      }, 50);
-    }
+    setTimeout(() => {
+      const group = document.querySelector(`.projects-group[data-group="${tab.dataset.role}"]`);
+      const firstCard = group && group.querySelector('.card');
+      if (firstCard) {
+        const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 64;
+        const filterH = document.querySelector('.filter-bar')?.offsetHeight || 44;
+        const top = firstCard.getBoundingClientRect().top + window.scrollY - navH - filterH - 12;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }
+    }, 50);
   });
 });
 

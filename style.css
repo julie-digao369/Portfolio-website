@@ -843,7 +843,8 @@ body.nav-open::before {
     width: calc(100% - 3.5rem);
     align-self: center;
     border-bottom: none;
-    padding: 1.125rem 1.5rem;
+    padding: 0.875rem 1.5rem;
+    min-height: 48px;
     background: linear-gradient(135deg, #6B3DE8 0%, #2251FF 65%, #C07A3E 100%);
     border: none;
     border-radius: var(--radius-pill);
@@ -881,7 +882,7 @@ body.nav-open::before {
     font-size: clamp(1.75rem, 6vw, 2.5rem);
   }
   .hero-section {
-    padding-top: calc(var(--header-h) + clamp(3rem, 7vw, 5rem) + 30px);
+    padding-top: calc(var(--header-h) + clamp(3rem, 7vw, 5rem) + 6px);
   }
 
   .filter-inner {
@@ -1022,18 +1023,7 @@ body.nav-open::before {
   padding: calc(var(--header-h) + 4rem) clamp(1.25rem, 5vw, 2rem) 0;
 }
 
-.cs-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.8125rem;
-  font-family: var(--font);
-  color: var(--secondary);
-  transition: color 0.2s;
-  margin-bottom: 2.5rem;
-}
-.cs-back:hover { color: var(--text); }
-.cs-back::before { content: '←'; }
+
 
 .cs-eyebrow {
   font-family: var(--font);
