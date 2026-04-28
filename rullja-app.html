@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>RullJa IoT Dashboard — Waste Management Design · Julie Di Gao</title>
+    <meta name="description" content="Waste-tech startup pitching IoT fill-level sensors to investors. I designed the dashboard and the market research behind it. €100M+ addressable segment in Germany." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="RullJa IoT Dashboard — Waste Management Design · Julie Di Gao" />
+    <meta property="og:description" content="Waste-tech startup pitching IoT fill-level sensors to investors. I designed the dashboard and the market research behind it. €100M+ addressable segment in Germany." />
+    <meta property="og:url" content="https://juliedigao.info/rullja-app.html" />
+  <meta property="og:image" content="https://juliedigao.info/img/rullja/rullja-software.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="canonical" href="https://juliedigao.info/rullja-app.html" />
+  <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="fonts.css" />
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F5F6F7; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .page-section { display: none; }
+        .page-section.active { display: flex; }
+        .leaflet-container { z-index: 10 !important; font-family: 'Inter', sans-serif;}
+        .route-card { transition: border-color 0.2s, box-shadow 0.2s; border-radius: 10px; }
+        .route-card.active-route { border: 1.5px solid #3370FF; box-shadow: 0 0 0 3px rgba(51,112,255,0.08); }
+        .route-card:not(.active-route) { cursor: pointer; }
+        .stop-row { transition: background-color 0.15s; border-radius: 6px; padding: 2px 4px; margin: -2px -4px; }
+        .stop-row:hover { background-color: #F0F3FF; }
+        .marker-pulse { animation: pulse-ring 1s ease-out; }
+        @keyframes pulse-ring { 0% { stroke-width: 2; stroke-opacity: 1; } 100% { stroke-width: 14; stroke-opacity: 0; } }
+        .truck-icon { background: #3370FF; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+        /* Feishu-style overrides */
+        .feishu-card { background: white; border: 1px solid #E5E6EB; border-radius: 10px; box-shadow: none; }
+        aside .nav-btn { border-radius: 8px; font-size: 14px; }
+        /* Mobile: hide app, show notice */
+        .mobile-notice { display: none; }
+        @media (max-width: 767px) {
+            .app-shell { display: none !important; }
+            .mobile-notice { display: flex; }
+        }
+        /* Portfolio nav — inlined from style.css to avoid global CSS conflicts */
+        .site-nav {
+            position: relative; flex-shrink: 0;
+            height: 64px; background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            z-index: 200; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 clamp(1.5rem, 5vw, 3.5rem);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        .nav-name {
+            font-size: 1.125rem; font-weight: 700; color: #051C2C;
+            letter-spacing: -0.01em; text-decoration: none;
+        }
+        .nav-linkedin { color: rgba(5,28,44,0.65); text-decoration: none; display: inline-flex; align-items: center; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; }
+        .nav-links a {
+            font-size: 0.875rem; font-weight: 400; color: rgba(5,28,44,0.65);
+            transition: color 0.2s; letter-spacing: 0.01em; text-decoration: none;
+        }
+        .nav-links a:hover { color: #051C2C; }
+        .nav-links .nav-cta {
+            font-weight: 500; color: #FFFFFF;
+            background: #111010; border: none; padding: 0.5rem 1.5rem; border-radius: 100px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .nav-links .nav-cta:hover {
+            background: #2b2b2b; color: #FFFFFF; transform: translateY(-1px);
+        }
+        .nav-toggle {
+            display: none; appearance: none; border: none; background: none;
+            cursor: pointer; padding: 0.25rem; width: 28px; height: 24px; position: relative; z-index: 201;
+        }
+        .nav-toggle span {
+            display: block; position: absolute; left: 0; width: 100%; height: 2px;
+            background: #051C2C; border-radius: 2px;
+            transition: transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s cubic-bezier(.22,1,.36,1);
+        }
+        .nav-toggle span:nth-child(1) { top: 2px; }
+        .nav-toggle span:nth-child(2) { top: 11px; }
+        .nav-toggle span:nth-child(3) { top: 20px; }
+        .nav-toggle.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .nav-toggle.open span:nth-child(2) { opacity: 0; }
+        .nav-toggle.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+        @media (max-width: 768px) {
+            .nav-links {
+                display: flex; flex-direction: column; align-items: stretch;
+                position: absolute; top: 100%; left: 0; right: 0;
+                height: calc(100vh - 64px); height: calc(100dvh - 64px);
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(24px) saturate(1.6); -webkit-backdrop-filter: blur(24px) saturate(1.6);
+                padding: 0; gap: 0; border-top: 1px solid rgba(0, 0, 0, 0.06);
+                overflow-y: auto; overflow-x: hidden;
+                opacity: 0; pointer-events: none; transition: opacity 0.3s cubic-bezier(.22,1,.36,1);
+            }
+            .nav-links.open { opacity: 1; pointer-events: auto; }
+            .nav-links a {
+                display: flex; align-items: center; justify-content: space-between;
+                font-size: 1rem; font-weight: 400; color: rgba(5, 28, 44, 0.65);
+                padding: 1.125rem 1.75rem; border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+                opacity: 0; transform: translateY(-6px); transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s;
+            }
+            .nav-links.open a { opacity: 1; transform: translateY(0); }
+            .nav-links.open > *:nth-child(1) { transition-delay: 0.04s; }
+            .nav-links.open > *:nth-child(2) { transition-delay: 0.08s; }
+            .nav-links.open > *:nth-child(3) { transition-delay: 0.12s; }
+            .nav-links.open > *:nth-child(4) { transition-delay: 0.16s; }
+            .nav-links .nav-cta {
+                margin-top: auto; margin-bottom: 1.75rem; width: calc(100% - 3.5rem); align-self: center;
+                border-bottom: none; padding: 1.125rem 1.5rem;
+                background: linear-gradient(135deg, #6B3DE8 0%, #2251FF 65%, #C07A3E 100%);
+                border: none; border-radius: 100px; color: #fff; font-weight: 600; font-size: 0.9375rem;
+                justify-content: center; text-align: center; box-shadow: 0 4px 20px rgba(34,81,255,0.32);
+            }
+            .nav-toggle { display: block; }
+            .site-nav:has(.nav-links.open) {
+                background: rgba(255, 255, 255, 0.98);
+                border-bottom-color: rgba(0, 0, 0, 0.06);
+            }
+            .site-nav:has(.nav-links.open) .nav-name { color: #051C2C; }
+            .site-nav:has(.nav-links.open) .nav-toggle span { background: #051C2C; }
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden text-gray-800">
+
+  <nav class="site-nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-name">Julie Di Gao</a>
+      <a href="https://www.linkedin.com/in/julie-gao-9985a615b/" class="nav-linkedin" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <div class="nav-links">
+      <a href="index.html#projects">Work</a>
+      <a href="about.html">About</a>
+      <a href="https://mail.google.com/mail/?view=cm&to=julie.gao369@gmail.com" target="_blank" rel="noopener" class="nav-cta">Contact</a>
+    </div>
+  </nav>
+
+    <div class="mobile-notice flex-col items-center justify-center flex-1 w-screen bg-[#F5F6F7] text-center px-8">
+        <div class="w-16 h-16 rounded-2xl bg-[#F0F3FF] flex items-center justify-center mx-auto mb-6">
+            <i class="fa-solid fa-desktop text-2xl text-[#3370FF]"></i>
+        </div>
+        <h2 class="text-xl font-bold text-[#1F2329] mb-3">Desktop Only</h2>
+        <p class="text-[#646A73] text-sm leading-relaxed max-w-xs mx-auto">Please use a computer to view this demo. The dashboard is optimized for larger screens.</p>
+    </div>
+
+    <div class="app-shell flex w-full flex-1 overflow-hidden">
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <aside id="sidebar" class="w-60 bg-white border-r border-[#E5E6EB] flex flex-col z-30 relative">
+        <div class="px-5 py-5 flex items-center gap-2.5">
+            <i class="fa-solid fa-microchip text-xl text-[#3370FF]"></i>
+            <h1 class="text-lg font-bold tracking-tight text-[#1F2329]">RullJa</h1>
+        </div>
+        <nav class="flex-1 px-4 space-y-2 mt-4" id="sidebar-nav">
+            <a href="javascript:void(0)" onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn flex items-center gap-3 px-3 py-2.5 bg-[#F0F3FF] text-[#3370FF] rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-satellite-dish"></i> <span data-i18n="nav_dashboard">Echtzeit-Übersicht</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchTab('historische')" id="nav-historische" class="nav-btn flex items-center gap-3 px-3 py-2.5 text-[#646A73] hover:bg-[#F5F6F7] rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-chart-line"></i> <span data-i18n="nav_historische">Historische Analysen</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchTab('fuhrpark')" id="nav-fuhrpark" class="nav-btn flex items-center gap-3 px-3 py-2.5 text-[#646A73] hover:bg-[#F5F6F7] rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-truck"></i> <span data-i18n="nav_fuhrpark">Fuhrparkverwaltung</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchTab('wartung')" id="nav-wartung" class="nav-btn flex items-center gap-3 px-3 py-2.5 text-[#646A73] hover:bg-[#F5F6F7] rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-wrench"></i> <span data-i18n="nav_wartung">Wartung</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchTab('kpis')" id="nav-kpis" class="nav-btn flex items-center gap-3 px-3 py-2.5 text-[#646A73] hover:bg-[#F5F6F7] rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-file-invoice"></i> <span data-i18n="nav_kpis">Geschäfts-KPIs</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden relative z-20 min-w-0">
+        
+        <header class="bg-white border-b border-[#E5E6EB] px-4 md:px-8 py-3 flex justify-between items-center z-20 shrink-0">
+            <div class="flex items-center gap-2 md:gap-3 min-w-0">
+                <button class="mobile-hamburger w-8 h-8 flex items-center justify-center text-[#646A73] hover:text-[#1F2329] rounded-lg hover:bg-[#F5F6F7] shrink-0" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <h2 id="page-title" class="text-sm md:text-base font-semibold text-[#1F2329] truncate">Echtzeit-Übersicht</h2>
+            </div>
+            <div class="flex items-center gap-2 md:gap-3 text-[#646A73] shrink-0">
+                <div class="hidden sm:flex items-center bg-[#F5F6F7] rounded-md p-0.5" id="lang-toggle">
+                    <button onclick="setLang('de')" id="lang-de" class="px-3 py-1.5 text-xs font-bold rounded-md bg-white text-[#1F2329] shadow-sm transition">DE</button>
+                    <button onclick="setLang('en')" id="lang-en" class="px-3 py-1.5 text-xs font-bold rounded-md text-[#646A73] hover:text-[#1F2329] transition">EN</button>
+                </div>
+                <div class="hidden sm:block h-5 w-px bg-[#E5E6EB]"></div>
+                <button class="hover:text-[#1F2329] relative"><i class="fa-regular fa-bell text-lg"></i><span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#F54A45] rounded-full text-white text-[9px] font-bold flex items-center justify-center">4</span></button>
+                <div class="w-8 h-8 rounded-full bg-[#F0F3FF] flex items-center justify-center border border-[#D0DFFF] cursor-pointer hover:ring-2 hover:ring-[#3370FF]/30">
+                    <span class="text-[#3370FF] font-bold text-sm">AD</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="page-dashboard" class="page-section active flex-col flex-1 overflow-y-auto md:overflow-hidden bg-[#F5F6F7]">
+            
+            <div class="mx-4 md:mx-8 mt-4 md:mt-5 mb-1 flex flex-wrap items-center gap-4 md:gap-8 bg-white rounded-[10px] border border-[#E5E6EB] px-4 md:px-6 py-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-sm"><i class="fa-solid fa-route"></i></div>
+                    <div><p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider" data-i18n="dash_active_routes">Aktive Routen</p><p class="text-lg font-bold text-gray-800 leading-tight">7</p></div>
+                </div>
+                <div class="w-px h-8 bg-gray-200 hidden md:block"></div>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-600 text-sm"><i class="fa-solid fa-truck"></i></div>
+                    <div><p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider" data-i18n="dash_vehicles_active">Fahrzeuge im Einsatz</p><p class="text-lg font-bold text-gray-800 leading-tight">12 <span class="text-xs text-gray-400 font-normal">/ 18</span></p></div>
+                </div>
+                <div class="w-px h-8 bg-gray-200 hidden md:block"></div>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 text-sm"><i class="fa-solid fa-trash-can"></i></div>
+                    <div><p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider" data-i18n="dash_collections_today">Abholungen heute</p><p class="text-lg font-bold text-gray-800 leading-tight">84 <span class="text-xs text-green-500 font-semibold">+12%</span></p></div>
+                </div>
+                <div class="w-px h-8 bg-gray-200 hidden md:block"></div>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 text-sm"><i class="fa-solid fa-gauge-high"></i></div>
+                    <div><p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider" data-i18n="dash_avg_fill">Ø Füllstand</p><p class="text-lg font-bold text-gray-800 leading-tight">95%</p></div>
+                </div>
+                <div class="w-px h-8 bg-gray-200 hidden md:block"></div>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-500 text-sm"><i class="fa-solid fa-fire"></i></div>
+                    <div><p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider" data-i18n="dash_fire_detect">Branderkennung</p><p class="text-lg font-bold text-gray-800 leading-tight">3</p></div>
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col md:flex-row gap-4 md:gap-6 px-4 md:px-8 py-4 md:overflow-hidden">
+                <div class="w-full md:w-[380px] flex flex-col z-20">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-700" data-i18n="dash_route_overview">Routenübersicht</h3>
+                        <button class="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-600 bg-white hover:bg-gray-50">
+                            <i class="fa-solid fa-filter"></i> Filter
+                        </button>
+                    </div>
+                    
+                    <div class="flex-1 overflow-y-auto scrollbar-hide space-y-3 pb-2">
+                        <div class="route-card active-route bg-white rounded-[10px] p-4" data-route="12337" onclick="selectRoute('12337')">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-base">Routen-ID #12337</h4>
+                                <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs font-semibold rounded-md" data-i18n="dash_in_pickup">In Abholung</span>
+                            </div>
+                            <p class="text-gray-400 text-xs mb-3">Aug 21, 2025</p>
+                            <div class="space-y-1.5 mb-3 text-sm text-gray-600">
+                                <p><i class="fa-solid fa-truck mr-2 text-blue-600"></i> STG-3765 &middot; S. Garg</p>
+                                <p><i class="fa-solid fa-location-dot mr-2 text-blue-600"></i> 105 km &nbsp;&middot;&nbsp; <i class="fa-solid fa-trash-can mr-1"></i> 27 Standorte</p>
+                            </div>
+                            <h5 class="font-semibold text-xs mb-2 text-gray-500 uppercase tracking-wide" data-i18n="dash_stop_list">Haltestellenliste</h5>
+                            <div class="space-y-2 text-sm">
+                                <div class="stop-row flex justify-between items-center" data-address="Urbanstraße 16" onmouseenter="highlightStop('Urbanstraße 16')" onmouseleave="unhighlightStop('Urbanstraße 16')">
+                                    <span class="w-1/3 text-gray-600 truncate">Urbanstraße 16</span>
+                                    <span class="w-1/4 text-gray-500 text-xs">9:20</span>
+                                    <div class="w-1/3 flex items-center gap-2">
+                                        <div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-red-500 h-2 rounded-full" style="width: 98%"></div></div>
+                                        <span class="text-xs font-bold w-8 text-right">98%</span>
+                                    </div>
+                                </div>
+                                <div class="stop-row flex justify-between items-center" data-address="DC Depot" onmouseenter="highlightStop('DC Depot')" onmouseleave="unhighlightStop('DC Depot')">
+                                    <span class="w-1/3 text-gray-600 truncate">DC Depot</span>
+                                    <span class="w-1/4 text-gray-500 text-xs">9:30</span>
+                                    <div class="w-1/3 flex items-center gap-2">
+                                        <div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-red-500 h-2 rounded-full" style="width: 90%"></div></div>
+                                        <span class="text-xs font-bold w-8 text-right">90%</span>
+                                    </div>
+                                </div>
+                                <div class="stop-row flex justify-between items-center" data-address="Mosveld 20" onmouseenter="highlightStop('Mosveld 20')" onmouseleave="unhighlightStop('Mosveld 20')">
+                                    <span class="w-1/3 text-gray-600 truncate">Mosveld 20</span>
+                                    <span class="w-1/4 text-gray-500 text-xs">9:37</span>
+                                    <div class="w-1/3 flex items-center gap-2">
+                                        <div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-red-500 h-2 rounded-full" style="width: 99%"></div></div>
+                                        <span class="text-xs font-bold w-8 text-right">99%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="route-card bg-white border border-[#E5E6EB] rounded-[10px] p-4 hover:border-[#3370FF] transition cursor-pointer" data-route="12341" onclick="selectRoute('12341')">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-base">Routen-ID #12341</h4>
+                                <span class="px-2 py-0.5 bg-green-50 text-green-600 text-xs font-semibold rounded-md" data-i18n="dash_on_time">Planmäßig</span>
+                            </div>
+                            <p class="text-gray-400 text-xs mb-3">Aug 21, 2025</p>
+                            <div class="space-y-1.5 text-sm text-gray-600">
+                                <p><i class="fa-solid fa-truck mr-2 text-blue-600"></i> STG-4201 &middot; M. Klein</p>
+                                <p><i class="fa-solid fa-location-dot mr-2 text-blue-600"></i> 82 km &nbsp;&middot;&nbsp; <i class="fa-solid fa-trash-can mr-1"></i> 19 Standorte</p>
+                            </div>
+                            <div class="mt-3 w-full bg-gray-200 rounded-full h-1.5"><div class="bg-green-500 h-1.5 rounded-full" style="width: 45%"></div></div>
+                            <p class="text-xs text-gray-400 mt-1">45% abgeschlossen</p>
+                        </div>
+
+                        <div class="route-card bg-white border border-[#E5E6EB] rounded-[10px] p-4 hover:border-[#3370FF] transition cursor-pointer" data-route="12345" onclick="selectRoute('12345')">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-base">Routen-ID #12345</h4>
+                                <span class="px-2 py-0.5 bg-yellow-50 text-yellow-600 text-xs font-semibold rounded-md" data-i18n="dash_delayed">Verspätet</span>
+                            </div>
+                            <p class="text-gray-400 text-xs mb-3">Aug 21, 2025</p>
+                            <div class="space-y-1.5 text-sm text-gray-600">
+                                <p><i class="fa-solid fa-bolt mr-2 text-blue-500"></i> STG-5580 (E) &middot; T. Weber</p>
+                                <p><i class="fa-solid fa-location-dot mr-2 text-blue-600"></i> 56 km &nbsp;&middot;&nbsp; <i class="fa-solid fa-trash-can mr-1"></i> 14 Standorte</p>
+                            </div>
+                            <div class="mt-3 w-full bg-gray-200 rounded-full h-1.5"><div class="bg-yellow-500 h-1.5 rounded-full" style="width: 72%"></div></div>
+                            <p class="text-xs text-yellow-600 mt-1">72% &middot; +12 min Verzögerung</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex-1 flex flex-col h-[400px] md:h-full z-10">
+                    
+                    <div class="flex-1 rounded-[10px] border border-[#E5E6EB] overflow-hidden relative">
+                        <div id="dashboardMap" class="w-full h-full"></div>
+                        <div class="absolute bottom-4 left-4 right-4 z-[15]">
+                            <div class="bg-white/95 backdrop-blur-sm rounded-xl border border-gray-200 shadow-lg p-3 flex items-center gap-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="flex items-center gap-1"><div class="w-2.5 h-2.5 rounded-full bg-red-500"></div><span class="text-xs text-gray-600 font-medium">&gt;85%</span></div>
+                                    <div class="flex items-center gap-1"><div class="w-2.5 h-2.5 rounded-full bg-green-500"></div><span class="text-xs text-gray-600 font-medium">&lt;85%</span></div>
+                                </div>
+                                <div class="h-4 w-px bg-gray-300"></div>
+                                <p class="text-xs text-gray-500"><span class="font-semibold text-gray-700">7</span> Container in Route #12337 &middot; <span class="font-semibold text-red-600">4 Alarme</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 bg-white p-3 rounded-[10px] border border-[#E5E6EB] flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
+                                    <img src="https://ui-avatars.com/api/?name=Siddhesh+Garg&background=EBF4FF&color=1E3A8A" alt="Collector" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-sm">Siddhesh Garg</h5>
+                                    <p class="text-xs text-gray-500">STG-3765 &middot; Route #12337</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 text-sm"><i class="fa-solid fa-comment-dots"></i></button>
+                            <button class="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 text-sm"><i class="fa-solid fa-phone"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-historische" class="page-section flex-col p-4 md:p-8 bg-[#F5F6F7] flex-1 min-h-0 overflow-y-auto">
+            
+            <div class="flex flex-col md:flex-row justify-between md:items-center gap-3 mb-6">
+                <div>
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-800" data-i18n="hist_title">Historische Daten & Trends</h3>
+                    <p class="text-xs md:text-sm text-gray-500 mt-1" data-i18n="hist_subtitle">Sensorbasierte Sammelanalyse | Stuttgart Region</p>
+                </div>
+                <div class="flex flex-wrap gap-2 md:gap-3">
+                    <select id="hist-range" class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-600 font-medium outline-none shadow-sm cursor-pointer hover:border-gray-400">
+                        <option data-i18n="hist_range_12w">Letzte 12 Wochen</option>
+                        <option data-i18n="hist_range_6m">Letzte 6 Monate</option>
+                        <option>YTD 2025</option>
+                    </select>
+                    <button class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm text-gray-600 font-medium hover:bg-gray-50 shadow-sm transition">
+                        <i class="fa-solid fa-download"></i> CSV Export
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-wide mb-1" data-i18n="hist_total_volume">Gesamtvolumen</p>
+                    <div class="flex items-end gap-2"><h2 class="text-3xl font-bold text-gray-800">1,842 <span class="text-lg text-gray-500 font-normal">t</span></h2></div>
+                    <p class="text-sm text-green-600 font-medium mt-2" data-i18n="hist_vol_change"><i class="fa-solid fa-arrow-up"></i> +12% vs. Vorquartal</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-wide mb-1" data-i18n="hist_avg_fill">Ø Füllstand bei Abholung</p>
+                    <div class="flex items-end gap-2"><h2 class="text-3xl font-bold text-gray-800">87%</h2></div>
+                    <p class="text-sm text-green-600 font-medium mt-2" data-i18n="hist_fill_change"><i class="fa-solid fa-arrow-up"></i> +9 Pp. vs. vor IoT</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-wide mb-1" data-i18n="hist_empty_trips">Leerfahrten vermieden</p>
+                    <div class="flex items-end gap-2"><h2 class="text-3xl font-bold text-gray-800">312</h2></div>
+                    <p class="text-sm text-blue-600 font-medium mt-2" data-i18n="hist_empty_detail"><i class="fa-solid fa-route"></i> 23% aller geplanten Fahrten</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-wide mb-1" data-i18n="hist_recycling">Recyclingquote</p>
+                    <div class="flex items-end gap-2"><h2 class="text-3xl font-bold text-gray-800">64.2%</h2></div>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-3"><div class="bg-green-500 h-1.5 rounded-full" style="width: 64.2%"></div></div>
+                    <p class="text-xs text-gray-500 font-medium mt-1" data-i18n="hist_recycling_goal">Ziel: 70% bis Q4 2025</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm md:col-span-2 flex flex-col">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg" data-i18n="hist_chart_volume">Sammelvolumen nach Woche (Tonnen)</h4>
+                            <p class="text-xs text-gray-500" data-i18n="hist_chart_volume_sub">Tatsächliche vs. prognostizierte Sammlung pro Woche</p>
+                        </div>
+                    </div>
+                    <div class="w-full h-72 flex-1"><canvas id="volumeChart"></canvas></div>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm col-span-1 flex flex-col">
+                    <div class="mb-4">
+                        <h4 class="font-bold text-gray-800 text-lg" data-i18n="hist_chart_composition">Abfallzusammensetzung</h4>
+                        <p class="text-xs text-gray-500" data-i18n="hist_chart_comp_sub">Durchschnitt Q3 2025</p>
+                    </div>
+                    <div class="w-full h-56 flex justify-center items-center flex-1"><canvas id="compositionChart"></canvas></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                    <div class="mb-4">
+                        <h4 class="font-bold text-gray-800 text-lg" data-i18n="hist_chart_heatmap">Füllstand-Heatmap nach Tageszeit</h4>
+                        <p class="text-xs text-gray-500" data-i18n="hist_chart_heat_sub">Wann die Container am schnellsten voll werden</p>
+                    </div>
+                    <div class="w-full h-64 flex-1"><canvas id="heatmapChart"></canvas></div>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                    <div class="mb-4">
+                        <h4 class="font-bold text-gray-800 text-lg" data-i18n="hist_chart_alarms">Sensoralarme nach Kategorie</h4>
+                        <p class="text-xs text-gray-500" data-i18n="hist_chart_alarms_sub">Kumulierte Alarme der letzten 12 Wochen</p>
+                    </div>
+                    <div class="w-full h-64 flex-1"><canvas id="alarmsChart"></canvas></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                    <h4 class="font-bold text-gray-800" data-i18n="hist_top10_title">Top 10 Standorte nach Sammelvolumen</h4>
+                    <span class="text-xs text-gray-500 font-medium" data-i18n="hist_top10_period">Q3 2025 kumuliert</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-white text-gray-500 text-xs uppercase tracking-wider border-b border-gray-200">
+                                <th class="p-4 font-semibold">#</th>
+                                <th class="p-4 font-semibold" data-i18n="hist_th_location">Standort</th>
+                                <th class="p-4 font-semibold" data-i18n="hist_th_district">Bezirk</th>
+                                <th class="p-4 font-semibold text-right" data-i18n="hist_th_volume">Volumen (t)</th>
+                                <th class="p-4 font-semibold text-right" data-i18n="hist_th_fill">Ø Füllstand</th>
+                                <th class="p-4 font-semibold text-right" data-i18n="hist_th_pickups">Abholungen</th>
+                                <th class="p-4 font-semibold text-center" data-i18n="hist_th_trend">Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">1</td>
+                                <td class="p-4 font-medium text-gray-800">Marienplatz Süd</td>
+                                <td class="p-4 text-gray-600">Stuttgart-Süd</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">84.2</td>
+                                <td class="p-4 text-right text-gray-600">92%</td>
+                                <td class="p-4 text-right text-gray-600">187</td>
+                                <td class="p-4 text-center text-green-600"><i class="fa-solid fa-arrow-up"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">2</td>
+                                <td class="p-4 font-medium text-gray-800">Hauptbahnhof Nord</td>
+                                <td class="p-4 text-gray-600">Stuttgart-Mitte</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">78.6</td>
+                                <td class="p-4 text-right text-gray-600">89%</td>
+                                <td class="p-4 text-right text-gray-600">164</td>
+                                <td class="p-4 text-center text-green-600"><i class="fa-solid fa-arrow-up"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">3</td>
+                                <td class="p-4 font-medium text-gray-800">Schlossplatz</td>
+                                <td class="p-4 text-gray-600">Stuttgart-Mitte</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">71.4</td>
+                                <td class="p-4 text-right text-gray-600">86%</td>
+                                <td class="p-4 text-right text-gray-600">152</td>
+                                <td class="p-4 text-center text-gray-400"><i class="fa-solid fa-minus"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">4</td>
+                                <td class="p-4 font-medium text-gray-800">Cannstatter Wasen</td>
+                                <td class="p-4 text-gray-600">Bad Cannstatt</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">65.9</td>
+                                <td class="p-4 text-right text-gray-600">94%</td>
+                                <td class="p-4 text-right text-gray-600">138</td>
+                                <td class="p-4 text-center text-red-500"><i class="fa-solid fa-arrow-down"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">5</td>
+                                <td class="p-4 font-medium text-gray-800">Killesberg Park</td>
+                                <td class="p-4 text-gray-600">Stuttgart-Nord</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">58.3</td>
+                                <td class="p-4 text-right text-gray-600">81%</td>
+                                <td class="p-4 text-right text-gray-600">121</td>
+                                <td class="p-4 text-center text-green-600"><i class="fa-solid fa-arrow-up"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">6</td>
+                                <td class="p-4 font-medium text-gray-800">Rotebühlplatz</td>
+                                <td class="p-4 text-gray-600">Stuttgart-Mitte</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">52.7</td>
+                                <td class="p-4 text-right text-gray-600">78%</td>
+                                <td class="p-4 text-right text-gray-600">113</td>
+                                <td class="p-4 text-center text-green-600"><i class="fa-solid fa-arrow-up"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">7</td>
+                                <td class="p-4 font-medium text-gray-800">Feuerbach Bf</td>
+                                <td class="p-4 text-gray-600">Feuerbach</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">49.1</td>
+                                <td class="p-4 text-right text-gray-600">85%</td>
+                                <td class="p-4 text-right text-gray-600">104</td>
+                                <td class="p-4 text-center text-gray-400"><i class="fa-solid fa-minus"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">8</td>
+                                <td class="p-4 font-medium text-gray-800">Vaihingen Schule</td>
+                                <td class="p-4 text-gray-600">Vaihingen</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">44.6</td>
+                                <td class="p-4 text-right text-gray-600">91%</td>
+                                <td class="p-4 text-right text-gray-600">96</td>
+                                <td class="p-4 text-center text-red-500"><i class="fa-solid fa-arrow-down"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">9</td>
+                                <td class="p-4 font-medium text-gray-800">Olgastraße Ost</td>
+                                <td class="p-4 text-gray-600">Stuttgart-Ost</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">41.2</td>
+                                <td class="p-4 text-right text-gray-600">76%</td>
+                                <td class="p-4 text-right text-gray-600">89</td>
+                                <td class="p-4 text-center text-green-600"><i class="fa-solid fa-arrow-up"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-4 font-bold text-gray-400">10</td>
+                                <td class="p-4 font-medium text-gray-800">Degerloch Zentrum</td>
+                                <td class="p-4 text-gray-600">Degerloch</td>
+                                <td class="p-4 text-right font-semibold text-gray-800">38.9</td>
+                                <td class="p-4 text-right text-gray-600">83%</td>
+                                <td class="p-4 text-right text-gray-600">82</td>
+                                <td class="p-4 text-center text-gray-400"><i class="fa-solid fa-minus"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-fuhrpark" class="page-section flex-col p-4 md:p-8 bg-[#F5F6F7] flex-1 min-h-0 overflow-y-auto">
+          <div>
+            
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row justify-between md:items-center gap-3 mb-5">
+                <div>
+                    <h3 class="text-xl md:text-2xl font-bold text-[#1F2329]" data-i18n="fleet_title">Fuhrparkverwaltung & Tracking</h3>
+                    <p class="text-xs md:text-sm text-[#646A73] mt-1" data-i18n="fleet_subtitle">Echtzeitstatus aller Sammelfahrzeuge | Stuttgart Flotte</p>
+                </div>
+                <div class="flex flex-wrap gap-2 md:gap-3">
+                    <select class="bg-white border border-[#E5E6EB] rounded-lg px-3 py-2 text-sm text-[#1F2329] font-medium outline-none cursor-pointer hover:border-[#3370FF] transition">
+                        <option data-i18n="fleet_filter_all">Alle Fahrzeuge</option>
+                        <option data-i18n="fleet_filter_active">Nur Aktive</option>
+                        <option data-i18n="fleet_filter_maint">In Wartung</option>
+                    </select>
+                    <button class="flex items-center gap-2 px-4 py-2 bg-[#3370FF] text-white rounded-lg text-sm font-medium hover:bg-[#245BDB] transition">
+                        <i class="fa-solid fa-plus text-xs"></i> <span data-i18n="fleet_add_btn">Fahrzeug hinzufügen</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPI strip -->
+            <div class="flex items-center gap-3 mb-5 bg-white rounded-xl border border-[#E5E6EB] px-5 py-3.5">
+                <div class="flex items-center gap-3 pr-5 border-r border-[#E5E6EB]">
+                    <div class="w-9 h-9 rounded-lg bg-[#F0F3FF] flex items-center justify-center text-[#3370FF]"><i class="fa-solid fa-truck text-sm"></i></div>
+                    <div>
+                        <p class="text-[10px] text-[#646A73] font-medium uppercase tracking-wider" data-i18n="fleet_total">Gesamt</p>
+                        <p class="text-lg font-bold text-[#1F2329] leading-tight">18 <span class="text-xs text-[#646A73] font-normal" data-i18n="fleet_vehicles">Fahrzeuge</span></p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 pr-5 border-r border-[#E5E6EB]">
+                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                    <div>
+                        <p class="text-[10px] text-[#646A73] font-medium uppercase tracking-wider" data-i18n="fleet_active">Im Einsatz</p>
+                        <p class="text-lg font-bold text-[#1F2329] leading-tight">12</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 pr-5 border-r border-[#E5E6EB]">
+                    <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div>
+                        <p class="text-[10px] text-[#646A73] font-medium uppercase tracking-wider" data-i18n="fleet_depot">Im Depot</p>
+                        <p class="text-lg font-bold text-[#1F2329] leading-tight">3</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 pr-5 border-r border-[#E5E6EB]">
+                    <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                    <div>
+                        <p class="text-[10px] text-[#646A73] font-medium uppercase tracking-wider" data-i18n="fleet_in_maint">In Wartung</p>
+                        <p class="text-lg font-bold text-[#1F2329] leading-tight">2</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 rounded-full bg-[#3370FF]"></div>
+                    <div>
+                        <p class="text-[10px] text-[#646A73] font-medium uppercase tracking-wider" data-i18n="fleet_ev">E-Fahrzeug</p>
+                        <p class="text-lg font-bold text-[#1F2329] leading-tight">1</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle table -->
+            <div class="bg-white rounded-xl border border-[#E5E6EB] overflow-hidden mb-5">
+                <div class="px-5 py-3.5 border-b border-[#E5E6EB] flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                    <div class="flex items-center gap-3">
+                        <h4 class="font-bold text-[#1F2329] text-sm" data-i18n="fleet_table_title">Fahrzeugübersicht</h4>
+                        <span class="text-[11px] text-[#646A73] bg-[#F5F6F7] px-2 py-0.5 rounded-md font-medium">18 Einträge</span>
+                    </div>
+                    <div class="relative w-full sm:w-auto">
+                        <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-[#646A73] text-xs"></i>
+                        <input type="text" id="fleetSearchInput" oninput="filterFleetTable()" placeholder="Fahrzeug suchen..." data-i18n-placeholder="fleet_search" class="pl-8 pr-4 py-1.5 border border-[#E5E6EB] rounded-lg text-sm outline-none w-full sm:w-52 focus:border-[#3370FF] focus:ring-1 focus:ring-[#3370FF]/20 transition bg-[#F5F6F7] placeholder-[#8F959E]">
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-[#F5F6F7] text-[#646A73] text-[11px] uppercase tracking-wider border-b border-[#E5E6EB]">
+                                <th class="px-5 py-2.5 font-semibold" data-i18n="fleet_th_id">Fahrzeug-ID</th>
+                                <th class="px-4 py-2.5 font-semibold" data-i18n="fleet_th_type">Typ</th>
+                                <th class="px-4 py-2.5 font-semibold" data-i18n="fleet_th_driver">Fahrer</th>
+                                <th class="px-4 py-2.5 font-semibold" data-i18n="fleet_th_route">Route</th>
+                                <th class="px-4 py-2.5 font-semibold text-center" data-i18n="fleet_th_status">Status</th>
+                                <th class="px-4 py-2.5 font-semibold text-right" data-i18n="fleet_th_km">km heute</th>
+                                <th class="px-4 py-2.5 font-semibold text-right" data-i18n="fleet_th_fuel">Kraftstoff</th>
+                                <th class="px-4 py-2.5 font-semibold text-right" data-i18n="fleet_th_tuv">TÜV</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fleetTableBody" class="text-[13px]">
+                            <tr class="border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-3765</span><span class="text-[11px] text-[#8F959E] ml-2">MAN TGS 26.320</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Hecklader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-[#F0F3FF] flex items-center justify-center text-[10px] font-bold text-[#3370FF]">SG</div><span class="text-[#1F2329]">S. Garg</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12337</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">67.4</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 72%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">72%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Dez 2025</td>
+                            </tr>
+                            <tr class="border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-4201</span><span class="text-[11px] text-[#8F959E] ml-2">Mercedes Econic</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Seitenlader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-purple-50 flex items-center justify-center text-[10px] font-bold text-purple-600">MK</div><span class="text-[#1F2329]">M. Klein</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12341</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">48.1</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 58%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">58%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Feb 2026</td>
+                            </tr>
+                            <tr class="border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-5580</span><span class="text-[11px] text-[#8F959E] ml-2">Volvo FE Electric</span></td>
+                                <td class="px-4 py-3 text-[#3370FF] font-medium"><i class="fa-solid fa-bolt text-[10px] mr-1"></i>E-Hecklader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-green-50 flex items-center justify-center text-[10px] font-bold text-green-600">TW</div><span class="text-[#1F2329]">T. Weber</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12345</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">34.8</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-[#3370FF] h-1 rounded-full" style="width: 45%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">45%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Mär 2026</td>
+                            </tr>
+                            <tr class="border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-2918</span><span class="text-[11px] text-[#8F959E] ml-2">DAF CF 340</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Frontlader</td>
+                                <td class="px-4 py-3 text-[#8F959E] text-xs">Nicht zugewiesen</td>
+                                <td class="px-4 py-3 text-[#8F959E]">—</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-yellow-50 text-yellow-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>Depot</span></td>
+                                <td class="px-4 py-3 text-right text-[#8F959E] tabular-nums">0</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 100%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">100%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Jan 2026</td>
+                            </tr>
+                            <tr class="hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-1847</span><span class="text-[11px] text-[#8F959E] ml-2">MAN TGS 26.320</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Hecklader</td>
+                                <td class="px-4 py-3 text-[#8F959E] text-xs">Nicht zugewiesen</td>
+                                <td class="px-4 py-3 text-[#8F959E]">—</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-red-50 text-red-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>Wartung</span></td>
+                                <td class="px-4 py-3 text-right text-[#8F959E] tabular-nums">0</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-[#E5E6EB] h-1 rounded-full" style="width: 0%"></div></div><span class="text-[11px] font-medium text-[#8F959E] tabular-nums w-8 text-right">—</span></div></td>
+                                <td class="px-4 py-3 text-right"><span class="text-red-600 text-[11px] font-semibold bg-red-50 px-2 py-0.5 rounded-md">Überfällig</span></td>
+                            </tr>
+                            <!-- Hidden rows (6–18), toggled by Show more -->
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-6102</span><span class="text-[11px] text-[#8F959E] ml-2">Mercedes Econic</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Hecklader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-orange-50 flex items-center justify-center text-[10px] font-bold text-orange-600">LH</div><span class="text-[#1F2329]">L. Hoffmann</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12339</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">52.3</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 61%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">61%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Apr 2026</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-7284</span><span class="text-[11px] text-[#8F959E] ml-2">MAN TGS 26.320</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Seitenlader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-teal-50 flex items-center justify-center text-[10px] font-bold text-teal-600">AB</div><span class="text-[#1F2329]">A. Braun</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12340</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">41.7</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 55%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">55%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Jun 2026</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-3091</span><span class="text-[11px] text-[#8F959E] ml-2">DAF CF 340</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Hecklader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-pink-50 flex items-center justify-center text-[10px] font-bold text-pink-600">KS</div><span class="text-[#1F2329]">K. Schmitt</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12342</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">59.2</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-yellow-500 h-1 rounded-full" style="width: 38%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">38%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Sep 2026</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-4450</span><span class="text-[11px] text-[#8F959E] ml-2">Scania P280</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Frontlader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-[#F0F3FF] flex items-center justify-center text-[10px] font-bold text-[#3370FF]">JM</div><span class="text-[#1F2329]">J. Müller</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12346</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">73.6</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 65%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">65%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Nov 2026</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-5813</span><span class="text-[11px] text-[#8F959E] ml-2">Mercedes Econic</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Hecklader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-yellow-50 flex items-center justify-center text-[10px] font-bold text-yellow-600">PF</div><span class="text-[#1F2329]">P. Fischer</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12348</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">38.9</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 80%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">80%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Jul 2026</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-6679</span><span class="text-[11px] text-[#8F959E] ml-2">Volvo FMX 420</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Seitenlader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-red-50 flex items-center justify-center text-[10px] font-bold text-red-600">RW</div><span class="text-[#1F2329]">R. Wagner</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12350</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">55.1</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 47%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">47%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Aug 2026</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-8001</span><span class="text-[11px] text-[#8F959E] ml-2">MAN TGS 26.320</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Hecklader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center text-[10px] font-bold text-indigo-600">HS</div><span class="text-[#1F2329]">H. Schneider</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12351</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">44.0</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 52%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">52%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Jan 2027</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-2245</span><span class="text-[11px] text-[#8F959E] ml-2">DAF CF 340</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Frontlader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-cyan-50 flex items-center justify-center text-[10px] font-bold text-cyan-600">EK</div><span class="text-[#1F2329]">E. Koch</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12353</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">61.8</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-yellow-500 h-1 rounded-full" style="width: 33%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">33%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Okt 2026</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-9374</span><span class="text-[11px] text-[#8F959E] ml-2">Scania P280</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Seitenlader</td>
+                                <td class="px-4 py-3"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-amber-50 flex items-center justify-center text-[10px] font-bold text-amber-600">NB</div><span class="text-[#1F2329]">N. Bauer</span></div></td>
+                                <td class="px-4 py-3 text-[#646A73] font-mono text-xs">#12355</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Aktiv</span></td>
+                                <td class="px-4 py-3 text-right font-medium text-[#1F2329] tabular-nums">29.4</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 88%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">88%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Mai 2026</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-1156</span><span class="text-[11px] text-[#8F959E] ml-2">Mercedes Econic</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Hecklader</td>
+                                <td class="px-4 py-3 text-[#8F959E] text-xs">Nicht zugewiesen</td>
+                                <td class="px-4 py-3 text-[#8F959E]">—</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-yellow-50 text-yellow-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>Depot</span></td>
+                                <td class="px-4 py-3 text-right text-[#8F959E] tabular-nums">0</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 100%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">100%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Mär 2027</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-4789</span><span class="text-[11px] text-[#8F959E] ml-2">Volvo FMX 420</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Frontlader</td>
+                                <td class="px-4 py-3 text-[#8F959E] text-xs">Nicht zugewiesen</td>
+                                <td class="px-4 py-3 text-[#8F959E]">—</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-yellow-50 text-yellow-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>Depot</span></td>
+                                <td class="px-4 py-3 text-right text-[#8F959E] tabular-nums">0</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-green-500 h-1 rounded-full" style="width: 91%"></div></div><span class="text-[11px] font-medium text-[#646A73] tabular-nums w-8 text-right">91%</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Feb 2027</td>
+                            </tr>
+                            <tr class="fleet-hidden-row hidden border-b border-[#F0F1F2] hover:bg-[#F5F6F7]/50 transition-colors">
+                                <td class="px-5 py-3"><span class="font-semibold text-[#1F2329]">STG-3327</span><span class="text-[11px] text-[#8F959E] ml-2">MAN TGS 26.320</span></td>
+                                <td class="px-4 py-3 text-[#646A73]">Hecklader</td>
+                                <td class="px-4 py-3 text-[#8F959E] text-xs">Nicht zugewiesen</td>
+                                <td class="px-4 py-3 text-[#8F959E]">—</td>
+                                <td class="px-4 py-3 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 bg-red-50 text-red-700 text-[11px] font-semibold rounded-md"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>Wartung</span></td>
+                                <td class="px-4 py-3 text-right text-[#8F959E] tabular-nums">0</td>
+                                <td class="px-4 py-3 text-right"><div class="flex items-center justify-end gap-2"><div class="w-14 bg-[#E5E6EB] rounded-full h-1"><div class="bg-[#E5E6EB] h-1 rounded-full" style="width: 0%"></div></div><span class="text-[11px] font-medium text-[#8F959E] tabular-nums w-8 text-right">—</span></div></td>
+                                <td class="px-4 py-3 text-right text-[#646A73] text-xs">Mai 2026</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Show more / Show less toggle -->
+                <div class="px-5 py-3 border-t border-[#E5E6EB] text-center">
+                    <button id="fleetToggleBtn" onclick="toggleFleetRows()" class="text-[#3370FF] text-sm font-medium hover:text-[#245BDB] transition inline-flex items-center gap-1.5">
+                        <span id="fleetToggleText">Alle 18 Fahrzeuge anzeigen</span>
+                        <i id="fleetToggleIcon" class="fa-solid fa-chevron-down text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="bg-white p-5 rounded-xl border border-[#E5E6EB] flex flex-col">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h4 class="font-bold text-[#1F2329] text-sm" data-i18n="fleet_chart_util">Flottenauslastung (letzte 4 Wochen)</h4>
+                            <p class="text-[11px] text-[#8F959E] mt-0.5" data-i18n="fleet_chart_util_sub">Einsatzstunden vs. verfügbare Stunden</p>
+                        </div>
+                        <span class="text-[11px] text-[#646A73] bg-[#F5F6F7] px-2 py-0.5 rounded-md font-medium">KW 30–33</span>
+                    </div>
+                    <div class="w-full h-56 flex-1"><canvas id="fleetUtilChart"></canvas></div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-[#E5E6EB] flex flex-col">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h4 class="font-bold text-[#1F2329] text-sm" data-i18n="fleet_chart_fuel">Kraftstoffverbrauch nach Fahrzeug</h4>
+                            <p class="text-[11px] text-[#8F959E] mt-0.5" data-i18n="fleet_chart_fuel_sub">Liter / 100km Durchschnitt im aktuellen Monat</p>
+                        </div>
+                        <span class="text-[11px] text-[#646A73] bg-[#F5F6F7] px-2 py-0.5 rounded-md font-medium">Jul 2025</span>
+                    </div>
+                    <div class="w-full h-56 flex-1"><canvas id="fuelConsChart"></canvas></div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="page-wartung" class="page-section flex-col p-4 md:p-8 bg-[#F5F6F7] flex-1 min-h-0 overflow-y-auto md:overflow-hidden">
+            
+            <div class="flex flex-col md:flex-row justify-between md:items-center gap-3 mb-6">
+                <div>
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-800" data-i18n="maint_title">Wartung & Instandhaltung</h3>
+                    <p class="text-xs md:text-sm text-gray-500 mt-1" data-i18n="maint_subtitle">Kanban Board | Fahrzeuge & IoT-Sensoren</p>
+                </div>
+                <div class="flex flex-wrap gap-2 md:gap-3">
+                    <select class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-600 font-medium outline-none shadow-sm cursor-pointer hover:border-gray-400">
+                        <option data-i18n="maint_filter_all">Alle Kategorien</option>
+                        <option data-i18n="maint_filter_vehicles">Fahrzeuge</option>
+                        <option data-i18n="maint_filter_iot">IoT Sensoren</option>
+                        <option data-i18n="maint_filter_containers">Container</option>
+                    </select>
+                    <button class="flex items-center gap-2 px-4 py-2 bg-[#3370FF] text-white rounded-lg text-sm font-medium hover:bg-[#245BDB] shadow-sm transition">
+                        <i class="fa-solid fa-plus"></i> <span data-i18n="maint_new_order">Neuer Auftrag</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center text-red-600"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div><p class="text-xs text-gray-500 font-medium" data-i18n="maint_overdue">Überfällig</p><h3 class="text-xl font-bold text-red-600">3</h3></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center text-yellow-600"><i class="fa-solid fa-clock"></i></div>
+                    <div><p class="text-xs text-gray-500 font-medium" data-i18n="maint_due_week">Diese Woche fällig</p><h3 class="text-xl font-bold text-yellow-600">5</h3></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600"><i class="fa-solid fa-wrench"></i></div>
+                    <div><p class="text-xs text-gray-500 font-medium" data-i18n="maint_in_progress">In Bearbeitung</p><h3 class="text-xl font-bold text-blue-600">4</h3></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600"><i class="fa-solid fa-check"></i></div>
+                    <div><p class="text-xs text-gray-500 font-medium" data-i18n="maint_done_week">Diese Woche erledigt</p><h3 class="text-xl font-bold text-green-600">8</h3></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5 flex-1 overflow-x-auto md:overflow-hidden">
+                
+                <div class="flex flex-col min-h-0 min-w-[260px]">
+                    <div class="flex items-center gap-2 mb-3 px-1">
+                        <div class="w-3 h-3 rounded-full bg-gray-400"></div>
+                        <h4 class="font-bold text-sm text-gray-700" data-i18n="maint_col_planned">Geplant</h4>
+                        <span class="text-xs bg-gray-200 text-gray-600 font-bold px-2 py-0.5 rounded-full ml-auto">6</span>
+                    </div>
+                    <div class="flex-1 overflow-y-auto scrollbar-hide space-y-3 pb-2">
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded">Dringend</span>
+                                <span class="text-xs text-gray-400">W-0047</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1">Bremsbeläge wechseln</h5>
+                            <p class="text-xs text-gray-500 mb-3">STG-1847 | MAN TGS 26.320</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><div class="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center text-xs font-bold text-orange-700">HM</div><span class="text-xs text-gray-500">H. Müller</span></div>
+                                <span class="text-xs text-red-500 font-medium"><i class="fa-regular fa-calendar mr-1"></i>Überfällig</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">Mittel</span>
+                                <span class="text-xs text-gray-400">W-0051</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1">Sensor Kalibrierung (Batch)</h5>
+                            <p class="text-xs text-gray-500 mb-3">12x Ultraschall-Sensoren | Bezirk Süd</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><i class="fa-solid fa-microchip text-xs text-blue-400"></i><span class="text-xs text-gray-500">IoT</span></div>
+                                <span class="text-xs text-gray-500 font-medium"><i class="fa-regular fa-calendar mr-1"></i>22. Aug</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs font-bold rounded">Niedrig</span>
+                                <span class="text-xs text-gray-400">W-0053</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1">Hydrauliköl Wechsel</h5>
+                            <p class="text-xs text-gray-500 mb-3">STG-2918 | DAF CF 340</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center text-xs font-bold text-green-700">PF</div><span class="text-xs text-gray-500">P. Fischer</span></div>
+                                <span class="text-xs text-gray-500 font-medium"><i class="fa-regular fa-calendar mr-1"></i>28. Aug</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col min-h-0 min-w-[260px]">
+                    <div class="flex items-center gap-2 mb-3 px-1">
+                        <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <h4 class="font-bold text-sm text-gray-700" data-i18n="maint_col_progress">In Bearbeitung</h4>
+                        <span class="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full ml-auto">4</span>
+                    </div>
+                    <div class="flex-1 overflow-y-auto scrollbar-hide space-y-3 pb-2">
+                        <div class="bg-white p-4 rounded-xl border-2 border-blue-200 shadow-sm">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded">Dringend</span>
+                                <span class="text-xs text-gray-400">W-0044</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1">Motor Diagnose & Reparatur</h5>
+                            <p class="text-xs text-gray-500 mb-2">STG-1847 | MAN TGS 26.320</p>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mb-2"><div class="bg-blue-500 h-1.5 rounded-full" style="width: 65%"></div></div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><div class="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center text-xs font-bold text-orange-700">HM</div><span class="text-xs text-gray-500">H. Müller</span></div>
+                                <span class="text-xs text-blue-600 font-medium">65%</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border-2 border-blue-200 shadow-sm">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">Mittel</span>
+                                <span class="text-xs text-gray-400">W-0046</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1">Container Schweißarbeiten (3x)</h5>
+                            <p class="text-xs text-gray-500 mb-2">Standorte: Marienplatz, Schlossplatz, Hbf</p>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mb-2"><div class="bg-blue-500 h-1.5 rounded-full" style="width: 30%"></div></div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><div class="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center text-xs font-bold text-teal-700">AS</div><span class="text-xs text-gray-500">A. Schmidt</span></div>
+                                <span class="text-xs text-blue-600 font-medium">30%</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border-2 border-blue-200 shadow-sm">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">Mittel</span>
+                                <span class="text-xs text-gray-400">W-0048</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1">Gateway Firmware Update</h5>
+                            <p class="text-xs text-gray-500 mb-2">8x LoRaWAN Gateways | OTA Rollout</p>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mb-2"><div class="bg-blue-500 h-1.5 rounded-full" style="width: 88%"></div></div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><i class="fa-solid fa-microchip text-xs text-blue-400"></i><span class="text-xs text-gray-500">IoT</span></div>
+                                <span class="text-xs text-blue-600 font-medium">88%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col min-h-0 min-w-[260px]">
+                    <div class="flex items-center gap-2 mb-3 px-1">
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <h4 class="font-bold text-sm text-gray-700" data-i18n="maint_col_waiting">Warte auf Teile</h4>
+                        <span class="text-xs bg-yellow-100 text-yellow-700 font-bold px-2 py-0.5 rounded-full ml-auto">2</span>
+                    </div>
+                    <div class="flex-1 overflow-y-auto scrollbar-hide space-y-3 pb-2">
+                        <div class="bg-white p-4 rounded-xl border border-dashed border-yellow-300 shadow-sm">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded">Dringend</span>
+                                <span class="text-xs text-gray-400">W-0042</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1">Getriebe Austausch</h5>
+                            <p class="text-xs text-gray-500 mb-2">STG-0991 | Mercedes Econic</p>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-2 mb-2">
+                                <p class="text-xs text-yellow-700"><i class="fa-solid fa-box mr-1"></i>Ersatzteil bestellt: ZF-6AS800 | Lieferung: 25. Aug</p>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><div class="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center text-xs font-bold text-orange-700">HM</div><span class="text-xs text-gray-500">H. Müller</span></div>
+                                <span class="text-xs text-yellow-600 font-medium">Blockiert</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-dashed border-yellow-300 shadow-sm">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">Mittel</span>
+                                <span class="text-xs text-gray-400">W-0050</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1">Sensor Austausch (defekt)</h5>
+                            <p class="text-xs text-gray-500 mb-2">4x Füllstandsensoren | Typ US-300</p>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-2 mb-2">
+                                <p class="text-xs text-yellow-700"><i class="fa-solid fa-box mr-1"></i>Auf Lager: 2/4 | Nachbestellung läuft</p>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><i class="fa-solid fa-microchip text-xs text-blue-400"></i><span class="text-xs text-gray-500">IoT</span></div>
+                                <span class="text-xs text-yellow-600 font-medium">Teilweise</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col min-h-0 min-w-[260px]">
+                    <div class="flex items-center gap-2 mb-3 px-1">
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <h4 class="font-bold text-sm text-gray-700" data-i18n="maint_col_done">Erledigt</h4>
+                        <span class="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full ml-auto">8</span>
+                    </div>
+                    <div class="flex-1 overflow-y-auto scrollbar-hide space-y-3 pb-2">
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm opacity-75">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-bold rounded"><i class="fa-solid fa-check mr-1"></i>Erledigt</span>
+                                <span class="text-xs text-gray-400">W-0039</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1 line-through">Ölwechsel + Filter</h5>
+                            <p class="text-xs text-gray-500 mb-2">STG-3765 | MAN TGS 26.320</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center text-xs font-bold text-green-700">PF</div><span class="text-xs text-gray-500">P. Fischer</span></div>
+                                <span class="text-xs text-green-600 font-medium">18. Aug</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm opacity-75">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-bold rounded"><i class="fa-solid fa-check mr-1"></i>Erledigt</span>
+                                <span class="text-xs text-gray-400">W-0040</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1 line-through">Reifenwechsel (Vorderachse)</h5>
+                            <p class="text-xs text-gray-500 mb-2">STG-4201 | Mercedes Econic</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><div class="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center text-xs font-bold text-teal-700">AS</div><span class="text-xs text-gray-500">A. Schmidt</span></div>
+                                <span class="text-xs text-green-600 font-medium">16. Aug</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm opacity-75">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-bold rounded"><i class="fa-solid fa-check mr-1"></i>Erledigt</span>
+                                <span class="text-xs text-gray-400">W-0041</span>
+                            </div>
+                            <h5 class="font-semibold text-sm text-gray-800 mb-1 line-through">Sensor Batterie Austausch (20x)</h5>
+                            <p class="text-xs text-gray-500 mb-2">Bezirk Nord + Mitte | Typ CR123A</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1"><i class="fa-solid fa-microchip text-xs text-blue-400"></i><span class="text-xs text-gray-500">IoT</span></div>
+                                <span class="text-xs text-green-600 font-medium">15. Aug</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="page-kpis" class="page-section flex-col p-4 md:p-8 bg-[#F5F6F7] flex-1 min-h-0 overflow-y-auto">
+            
+            <div class="flex flex-col md:flex-row justify-between md:items-center gap-3 mb-6">
+                <div>
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-800" data-i18n="kpi_title">Financial Performance & ROI</h3>
+                    <p class="text-xs md:text-sm text-gray-500 mt-1" data-i18n="kpi_subtitle">Stuttgart Metropolitan Area | Fiscal Year 2025</p>
+                </div>
+                <div class="flex flex-wrap gap-2 md:gap-3">
+                    <select class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-600 font-medium outline-none shadow-sm cursor-pointer hover:border-gray-400">
+                        <option>Q3 2025 (Aktuell)</option>
+                        <option>YTD 2025</option>
+                        <option>FY 2024</option>
+                    </select>
+                    <button class="flex items-center gap-2 px-4 py-2 bg-[#1F2329] text-white rounded-lg text-sm font-medium hover:bg-[#2B2F36] shadow-sm transition">
+                        <i class="fa-solid fa-file-pdf"></i> <span data-i18n="kpi_report_btn">CFO Report generieren</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-wide mb-1">Unit Economics</p>
+                    <h4 class="text-sm text-gray-600 mb-1" data-i18n="kpi_opex_label">OpEx pro gesammelter Tonne</h4>
+                    <div class="flex items-end gap-2"><h2 class="text-3xl font-bold text-gray-800">€ 38.40</h2></div>
+                    <p class="text-sm text-green-600 font-medium mt-2" data-i18n="kpi_opex_change"><i class="fa-solid fa-arrow-down"></i> -14% vs. Basislinie</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-wide mb-1">Amortisation (ROI)</p>
+                    <h4 class="text-sm text-gray-600 mb-1" data-i18n="kpi_roi_label">IoT Sensoren Payback</h4>
+                    <div class="flex items-end gap-2"><h2 class="text-3xl font-bold text-gray-800">11.2 <span class="text-lg text-gray-500 font-normal">Monate</span></h2></div>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-3"><div class="bg-blue-600 h-1.5 rounded-full" style="width: 82%"></div></div>
+                    <p class="text-xs text-gray-500 font-medium mt-1" data-i18n="kpi_roi_detail">82% des CapEx amortisiert</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-wide mb-1" data-i18n="kpi_savings_head">Operative Einsparungen</p>
+                    <h4 class="text-sm text-gray-600 mb-1" data-i18n="kpi_savings_label">YTD Kraftstoff & Wartung</h4>
+                    <div class="flex items-end gap-2"><h2 class="text-3xl font-bold text-gray-800">€ 142k</h2></div>
+                    <p class="text-sm text-green-600 font-medium mt-2" data-i18n="kpi_savings_change"><i class="fa-solid fa-check-circle"></i> Übertrifft Q3 Ziel um €18k</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm bg-gradient-to-br from-green-50 to-white">
+                    <p class="text-green-700 text-xs font-bold uppercase tracking-wide mb-1" data-i18n="kpi_esg_head">ESG Monetarisierung</p>
+                    <h4 class="text-sm text-gray-600 mb-1" data-i18n="kpi_esg_label">CO2-Zertifikat Äquivalent</h4>
+                    <div class="flex items-end gap-2"><h2 class="text-3xl font-bold text-gray-800">€ 28.5k</h2></div>
+                    <p class="text-sm text-green-700 font-medium mt-2" data-i18n="kpi_esg_detail">Basierend auf 412t CO2 Einsparung</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg" data-i18n="kpi_chart_cashflow">Cashflow: CapEx vs. OpEx Trend</h4>
+                            <p class="text-xs text-gray-500" data-i18n="kpi_chart_cashflow_sub">Visualisierung der IoT-Investition vs. monatliche Betriebskosten</p>
+                        </div>
+                    </div>
+                    <div class="w-full h-72 flex-1"><canvas id="cfoFlowChart"></canvas></div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg" data-i18n="kpi_chart_asset">Ressourcennutzung vs. Abschreibung</h4>
+                            <p class="text-xs text-gray-500" data-i18n="kpi_chart_asset_sub">Korrelation zwischen gefahrenen Kilometern und Flottenwertverlust</p>
+                        </div>
+                    </div>
+                    <div class="w-full h-72 flex-1"><canvas id="cfoAssetChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // --- 1. LEAFLET MAP INITIALIZATION ---
+        let map;
+        let routeLayers = {};
+        let routeLines = {};
+        let truckMarkers = {};
+        let activeRouteId = '12337';
+        let markerByAddress = {};
+
+        const routeData = {
+            '12337': {
+                color: '#2563eb',
+                driver: { name: 'S. Garg', vehicle: 'STG-3765', lat: 48.7825, lng: 9.1790 },
+                bins: [
+                    { lat: 48.7830, lng: 9.1800, status: 'alert', fill: '98%', address: 'Urbanstraße 16' },
+                    { lat: 48.7850, lng: 9.1750, status: 'alert', fill: '90%', address: 'DC Depot' },
+                    { lat: 48.7780, lng: 9.1700, status: 'alert', fill: '99%', address: 'Mosveld 20' },
+                    { lat: 48.7800, lng: 9.1850, status: 'normal', fill: '45%', address: 'Jägerstraße 4' },
+                    { lat: 48.7810, lng: 9.1780, status: 'normal', fill: '60%', address: 'Kronenstraße 12' },
+                    { lat: 48.7750, lng: 9.1820, status: 'normal', fill: '30%', address: 'Schlossgarten Süd' },
+                    { lat: 48.7870, lng: 9.1810, status: 'alert', fill: '95%', address: 'Nordbahnhof' }
+                ]
+            },
+            '12341': {
+                color: '#22c55e',
+                driver: { name: 'M. Klein', vehicle: 'STG-4201', lat: 48.7900, lng: 9.1650 },
+                bins: [
+                    { lat: 48.7920, lng: 9.1620, status: 'normal', fill: '40%', address: 'Feuerbach Bf' },
+                    { lat: 48.7905, lng: 9.1680, status: 'normal', fill: '55%', address: 'Stuttgarter Str. 8' },
+                    { lat: 48.7880, lng: 9.1640, status: 'alert', fill: '88%', address: 'Pragfriedhof' },
+                    { lat: 48.7895, lng: 9.1710, status: 'normal', fill: '35%', address: 'Killesberg Park' },
+                    { lat: 48.7860, lng: 9.1600, status: 'normal', fill: '50%', address: 'Botnanger Str. 22' }
+                ]
+            },
+            '12345': {
+                color: '#eab308',
+                driver: { name: 'T. Weber', vehicle: 'STG-5580', lat: 48.7740, lng: 9.1900 },
+                bins: [
+                    { lat: 48.7720, lng: 9.1920, status: 'alert', fill: '92%', address: 'Olgastraße 3' },
+                    { lat: 48.7755, lng: 9.1880, status: 'normal', fill: '60%', address: 'Charlottenplatz' },
+                    { lat: 48.7730, lng: 9.1950, status: 'alert', fill: '87%', address: 'Bopser Tunnel' },
+                    { lat: 48.7760, lng: 9.1860, status: 'normal', fill: '25%', address: 'Eugensplatz' }
+                ]
+            }
+        };
+
+        function initMap() {
+            map = L.map('dashboardMap').setView([48.7823, 9.1770], 14);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+
+            Object.keys(routeData).forEach(routeId => {
+                const route = routeData[routeId];
+                const layerGroup = L.layerGroup();
+                const coords = [];
+
+                route.bins.forEach(bin => {
+                    const isAlert = bin.status === 'alert';
+                    const color = isAlert ? '#ef4444' : '#22c55e';
+                    coords.push([bin.lat, bin.lng]);
+
+                    const marker = L.circleMarker([bin.lat, bin.lng], {
+                        radius: isAlert ? 9 : 7,
+                        fillColor: color,
+                        color: '#ffffff',
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 1
+                    });
+
+                    marker.bindPopup(`
+                        <div style="font-family: 'Inter', sans-serif;">
+                            <strong style="display:block; margin-bottom:4px;">${bin.address}</strong>
+                            Route: <strong>#${routeId}</strong><br>
+                            Status: <span style="color: ${color}; font-weight: bold;">${isAlert ? 'Abholung erforderlich' : 'Normal'}</span><br>
+                            Füllstand: <strong>${bin.fill}</strong>
+                        </div>
+                    `);
+
+                    marker.on('click', () => {
+                        if (activeRouteId !== routeId) selectRoute(routeId);
+                    });
+
+                    layerGroup.addLayer(marker);
+                    markerByAddress[bin.address] = marker;
+                });
+
+                const routeLine = L.polyline(coords, {
+                    color: route.color,
+                    weight: 3,
+                    opacity: 0.5,
+                    dashArray: '8 6'
+                });
+                layerGroup.addLayer(routeLine);
+                routeLines[routeId] = routeLine;
+
+                const truckIcon = L.divIcon({
+                    className: '',
+                    html: `<div class="truck-icon"><i class="fa-solid fa-truck" style="font-size:11px"></i></div>`,
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                });
+                const truck = L.marker([route.driver.lat, route.driver.lng], { icon: truckIcon });
+                truck.bindTooltip(`${route.driver.vehicle} · ${route.driver.name}`, { direction: 'top', offset: [0, -16] });
+                layerGroup.addLayer(truck);
+                truckMarkers[routeId] = truck;
+
+                routeLayers[routeId] = layerGroup;
+            });
+
+            showRoute('12337');
+        }
+
+        function showRoute(routeId) {
+            Object.keys(routeLayers).forEach(id => {
+                if (map.hasLayer(routeLayers[id])) {
+                    routeLayers[id].eachLayer(layer => {
+                        if (layer instanceof L.CircleMarker) {
+                            layer.setStyle({ opacity: 0.3, fillOpacity: 0.3 });
+                        }
+                        if (layer instanceof L.Polyline && !(layer instanceof L.CircleMarker)) {
+                            layer.setStyle({ opacity: 0.15 });
+                        }
+                    });
+                }
+                if (!map.hasLayer(routeLayers[id])) {
+                    routeLayers[id].addTo(map);
+                }
+            });
+
+            const activeLayer = routeLayers[routeId];
+            activeLayer.eachLayer(layer => {
+                if (layer instanceof L.CircleMarker) {
+                    layer.setStyle({ opacity: 1, fillOpacity: 1 });
+                }
+                if (layer instanceof L.Polyline && !(layer instanceof L.CircleMarker)) {
+                    layer.setStyle({ opacity: 0.6 });
+                }
+            });
+
+            const bounds = L.latLngBounds(routeData[routeId].bins.map(b => [b.lat, b.lng]));
+            map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+        }
+
+        function selectRoute(routeId) {
+            activeRouteId = routeId;
+
+            document.querySelectorAll('.route-card').forEach(card => {
+                card.classList.remove('active-route');
+                if (!card.classList.contains('border-gray-200')) {
+                    card.classList.add('border', 'border-gray-200');
+                }
+            });
+            const activeCard = document.querySelector(`.route-card[data-route="${routeId}"]`);
+            if (activeCard) {
+                activeCard.classList.add('active-route');
+                activeCard.classList.remove('border-gray-200');
+                activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            showRoute(routeId);
+            updateLegend(routeId);
+            updateDriverCard(routeId);
+        }
+
+        function updateLegend(routeId) {
+            const route = routeData[routeId];
+            const alertCount = route.bins.filter(b => b.status === 'alert').length;
+            const legendText = document.querySelector('#page-dashboard .absolute .bg-white\\/95 p');
+            if (legendText) {
+                legendText.innerHTML = `<span class="font-semibold text-gray-700">${route.bins.length}</span> Container in Route #${routeId} &middot; <span class="font-semibold text-red-600">${alertCount} Alarme</span>`;
+            }
+        }
+
+        function updateDriverCard(routeId) {
+            const drivers = {
+                '12337': { name: 'Siddhesh Garg', vehicle: 'STG-3765' },
+                '12341': { name: 'Martin Klein', vehicle: 'STG-4201' },
+                '12345': { name: 'Thomas Weber', vehicle: 'STG-5580' }
+            };
+            const d = drivers[routeId];
+            const card = document.querySelector('#page-dashboard .mt-3.bg-white.p-3');
+            if (card && d) {
+                const img = card.querySelector('img');
+                const h5 = card.querySelector('h5');
+                const pInfo = card.querySelector('h5 + p');
+                if (img) img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name)}&background=EBF4FF&color=1E3A8A`;
+                if (h5) h5.textContent = d.name;
+                if (pInfo) pInfo.textContent = `${d.vehicle} · Route #${routeId}`;
+            }
+        }
+
+        let highlightRing = null;
+        function highlightStop(address) {
+            const marker = markerByAddress[address];
+            if (!marker) return;
+            const latlng = marker.getLatLng();
+            if (highlightRing) { map.removeLayer(highlightRing); }
+            highlightRing = L.circleMarker(latlng, {
+                radius: 18,
+                fillColor: 'transparent',
+                color: '#2563eb',
+                weight: 3,
+                opacity: 0.8,
+                fillOpacity: 0
+            }).addTo(map);
+            marker.openPopup();
+        }
+
+        function unhighlightStop(address) {
+            if (highlightRing) { map.removeLayer(highlightRing); highlightRing = null; }
+            const marker = markerByAddress[address];
+            if (marker) marker.closePopup();
+        }
+
+        // Initialize map immediately on load since Dashboard is the default view
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+        });
+
+
+        // --- 2. CHART.JS & TAB SWITCHING (From previous steps) ---
+        let chartsInitializedHistorische = false;
+        let chartsInitializedKpis = false;
+        let chartsInitializedFuhrpark = false;
+
+        function initHistorischeCharts() {
+            const ctxVolume = document.getElementById('volumeChart').getContext('2d');
+            new Chart(ctxVolume, {
+                type: 'bar',
+                data: {
+                    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11', 'W12'],
+                    datasets: [
+                        {
+                            label: 'Tatsächlich (t)',
+                            data: [142, 156, 148, 168, 159, 172, 164, 178, 170, 182, 175, 188],
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 4,
+                            order: 2
+                        },
+                        {
+                            label: 'IoT Prognose (t)',
+                            type: 'line',
+                            data: [140, 150, 152, 165, 162, 170, 168, 175, 172, 180, 178, 185],
+                            borderColor: '#10b981',
+                            borderWidth: 2,
+                            borderDash: [4, 4],
+                            pointRadius: 3,
+                            pointBackgroundColor: '#10b981',
+                            fill: false,
+                            tension: 0.3,
+                            order: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { title: { display: true, text: 'Tonnen' }, beginAtZero: false }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            const ctxComp = document.getElementById('compositionChart').getContext('2d');
+            new Chart(ctxComp, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Restmüll', 'Papier / Karton', 'Biomüll', 'Leichtverpackung', 'Glas', 'Sperrmüll'],
+                    datasets: [{
+                        data: [32, 22, 18, 14, 9, 5],
+                        backgroundColor: ['#4b5563', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899'],
+                        borderWidth: 0,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '68%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', padding: 12, font: { size: 11 } } }
+                    }
+                }
+            });
+
+            const ctxHeatmap = document.getElementById('heatmapChart').getContext('2d');
+            new Chart(ctxHeatmap, {
+                type: 'bar',
+                data: {
+                    labels: ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'],
+                    datasets: [
+                        { label: 'Mo-Fr', data: [12, 35, 58, 82, 65, 48, 30, 15], backgroundColor: '#3b82f6', borderRadius: 3 },
+                        { label: 'Sa-So', data: [5, 15, 28, 45, 52, 40, 25, 10], backgroundColor: '#93c5fd', borderRadius: 3 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { title: { display: true, text: 'Ø Füllrate (%)' } }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            const ctxAlarms = document.getElementById('alarmsChart').getContext('2d');
+            new Chart(ctxAlarms, {
+                type: 'bar',
+                data: {
+                    labels: ['Überfüllung', 'Brandgefahr', 'Sensor offline', 'Vandalismusverdacht', 'Batterie niedrig', 'Deckel offen'],
+                    datasets: [{
+                        label: 'Anzahl Alarme',
+                        data: [87, 12, 23, 6, 34, 19],
+                        backgroundColor: ['#ef4444', '#f97316', '#6366f1', '#ec4899', '#eab308', '#94a3b8'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { title: { display: true, text: 'Alarme (12 Wochen)' }, grid: { display: false } },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function initFuhrparkCharts() {
+            const ctxUtil = document.getElementById('fleetUtilChart').getContext('2d');
+            new Chart(ctxUtil, {
+                type: 'bar',
+                data: {
+                    labels: ['KW 30', 'KW 31', 'KW 32', 'KW 33'],
+                    datasets: [
+                        { label: 'Einsatzstunden', data: [720, 684, 756, 738], backgroundColor: '#3b82f6', borderRadius: 4 },
+                        { label: 'Verfügbare Stunden', data: [864, 864, 864, 864], backgroundColor: '#e2e8f0', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { title: { display: true, text: 'Stunden' } }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            const ctxFuel = document.getElementById('fuelConsChart').getContext('2d');
+            new Chart(ctxFuel, {
+                type: 'bar',
+                data: {
+                    labels: ['STG-3765', 'STG-4201', 'STG-5580 (E)', 'STG-2918', 'STG-1847'],
+                    datasets: [{
+                        label: 'L/100km (bzw. kWh)',
+                        data: [38.2, 41.5, 22.8, 36.1, 44.3],
+                        backgroundColor: ['#3b82f6', '#3b82f6', '#10b981', '#3b82f6', '#ef4444'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { title: { display: true, text: 'Verbrauch' }, grid: { display: false } },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        annotation: {}
+                    }
+                }
+            });
+        }
+
+        function initKpiCharts() {
+            const ctxFlow = document.getElementById('cfoFlowChart').getContext('2d');
+            new Chart(ctxFlow, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug'],
+                    datasets: [
+                        {
+                            label: 'OpEx (Betriebskosten)',
+                            type: 'bar',
+                            data: [120, 118, 105, 95, 88, 85, 82, 80],
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 4,
+                            order: 2
+                        },
+                        {
+                            label: 'Kumulierte Netto-Einsparung',
+                            type: 'line',
+                            data: [0, 2, 17, 42, 74, 109, 147, 187],
+                            borderColor: '#10b981',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#10b981',
+                            fill: false,
+                            tension: 0.4,
+                            order: 1,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Kosten (€ Tsd.)' } },
+                        y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Einsparung (€ Tsd.)' }, grid: { drawOnChartArea: false } }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            const ctxAsset = document.getElementById('cfoAssetChart').getContext('2d');
+            new Chart(ctxAsset, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug'],
+                    datasets: [
+                        {
+                            label: 'Flottenkilometer (Effizienz)',
+                            data: [45000, 42000, 38000, 31000, 29000, 28500, 28000, 27800],
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.3,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Geplante Kilometer (Ohne IoT)',
+                            data: [45000, 45000, 45000, 45000, 45000, 45000, 45000, 45000],
+                            borderColor: '#cbd5e1',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            fill: false,
+                            pointRadius: 0,
+                            yAxisID: 'y'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: false, title: { display: true, text: 'Gefahrene Kilometer' } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        function filterFleetTable() {
+            const query = document.getElementById('fleetSearchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#fleetTableBody tr');
+            rows.forEach(row => {
+                const isHidden = row.classList.contains('fleet-hidden-row');
+                const matchesQuery = row.textContent.toLowerCase().includes(query);
+                if (query) {
+                    row.style.display = matchesQuery ? '' : 'none';
+                    row.classList.remove('hidden');
+                } else {
+                    row.style.display = '';
+                    if (isHidden && !fleetExpanded) row.classList.add('hidden');
+                    else row.classList.remove('hidden');
+                }
+            });
+        }
+
+        let fleetExpanded = false;
+        function toggleFleetRows() {
+            fleetExpanded = !fleetExpanded;
+            const hiddenRows = document.querySelectorAll('.fleet-hidden-row');
+            const btnText = document.getElementById('fleetToggleText');
+            const btnIcon = document.getElementById('fleetToggleIcon');
+            hiddenRows.forEach(row => row.classList.toggle('hidden', !fleetExpanded));
+            btnText.textContent = fleetExpanded ? 'Weniger anzeigen' : 'Alle 18 Fahrzeuge anzeigen';
+            btnIcon.style.transform = fleetExpanded ? 'rotate(180deg)' : '';
+        }
+
+        function switchTab(pageId) {
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => { page.classList.remove('active'); });
+
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => { btn.className = 'nav-btn flex items-center gap-3 px-3 py-2.5 text-[#646A73] hover:bg-[#F5F6F7] rounded-lg font-medium transition-colors'; });
+
+            document.getElementById('page-' + pageId).classList.add('active');
+            const activeBtn = document.getElementById('nav-' + pageId);
+            activeBtn.className = 'nav-btn flex items-center gap-3 px-3 py-2.5 bg-[#F0F3FF] text-[#3370FF] rounded-lg font-medium transition-colors';
+
+            // Close sidebar on mobile
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebarOverlay').classList.remove('active');
+            }
+
+            const currentLang = document.documentElement.getAttribute('data-lang') || 'de';
+            const titlesMap = {
+                de: { 'dashboard': 'Echtzeit-Übersicht', 'historische': 'Historische Analysen', 'fuhrpark': 'Fuhrparkverwaltung', 'wartung': 'Wartung & Instandhaltung', 'kpis': 'Geschäfts-KPIs (CFO View)' },
+                en: { 'dashboard': 'Live Overview', 'historische': 'Historical Analysis', 'fuhrpark': 'Fleet Management', 'wartung': 'Maintenance & Repairs', 'kpis': 'Business KPIs (CFO View)' }
+            };
+            document.getElementById('page-title').innerText = titlesMap[currentLang][pageId];
+
+            // If switching back to dashboard, tell Leaflet to resize just in case the layout shifted
+            if (pageId === 'dashboard' && map) {
+                setTimeout(() => { map.invalidateSize(); }, 100);
+            }
+
+            if (pageId === 'historische' && !chartsInitializedHistorische) { initHistorischeCharts(); chartsInitializedHistorische = true; }
+            if (pageId === 'fuhrpark' && !chartsInitializedFuhrpark) { initFuhrparkCharts(); chartsInitializedFuhrpark = true; }
+            if (pageId === 'kpis' && !chartsInitializedKpis) { initKpiCharts(); chartsInitializedKpis = true; }
+        }
+
+        // --- i18n LANGUAGE SWITCHING ---
+        const i18n = {
+            de: {
+                // Nav
+                nav_dashboard: 'Echtzeit-Übersicht', nav_historische: 'Historische Analysen', nav_fuhrpark: 'Fuhrparkverwaltung', nav_wartung: 'Wartung', nav_kpis: 'Geschäfts-KPIs',
+                // Dashboard
+                dash_active_routes: 'Aktive Routen', dash_vehicles_active: 'Fahrzeuge im Einsatz', dash_collections_today: 'Abholungen heute', dash_alerts: 'Offene Alarme', dash_tonnage_today: 'Tonnage heute',
+                dash_route_overview: 'Routenübersicht', dash_stop_list: 'Haltestellenliste', dash_in_pickup: 'In Abholung', dash_on_time: 'Planmäßig', dash_delayed: 'Verspätet',
+                dash_live_activity: 'Live Aktivität', dash_avg_fill: 'Ø Füllstand', dash_fire_detect: 'Branderkennung', dash_vandalism: 'Vandalismus',
+                // Historische
+                hist_title: 'Historische Daten & Trends', hist_subtitle: 'Sensorbasierte Sammelanalyse | Stuttgart Region',
+                hist_range_12w: 'Letzte 12 Wochen', hist_range_6m: 'Letzte 6 Monate',
+                hist_total_volume: 'Gesamtvolumen', hist_vol_change: '+12% vs. Vorquartal',
+                hist_avg_fill: 'Ø Füllstand bei Abholung', hist_fill_change: '+9 Pp. vs. vor IoT',
+                hist_empty_trips: 'Leerfahrten vermieden', hist_empty_detail: '23% aller geplanten Fahrten',
+                hist_recycling: 'Recyclingquote', hist_recycling_goal: 'Ziel: 70% bis Q4 2025',
+                hist_chart_volume: 'Sammelvolumen nach Woche (Tonnen)', hist_chart_volume_sub: 'Tatsächliche vs. prognostizierte Sammlung pro Woche',
+                hist_chart_composition: 'Abfallzusammensetzung', hist_chart_comp_sub: 'Durchschnitt Q3 2025',
+                hist_chart_heatmap: 'Füllstand-Heatmap nach Tageszeit', hist_chart_heat_sub: 'Wann die Container am schnellsten voll werden',
+                hist_chart_alarms: 'Sensoralarme nach Kategorie', hist_chart_alarms_sub: 'Kumulierte Alarme der letzten 12 Wochen',
+                hist_top10_title: 'Top 10 Standorte nach Sammelvolumen', hist_top10_period: 'Q3 2025 kumuliert',
+                hist_th_location: 'Standort', hist_th_district: 'Bezirk', hist_th_volume: 'Volumen (t)', hist_th_fill: 'Ø Füllstand', hist_th_pickups: 'Abholungen', hist_th_trend: 'Trend',
+                // Fuhrpark
+                fleet_title: 'Fuhrparkverwaltung & Tracking', fleet_subtitle: 'Echtzeitstatus aller Sammelfahrzeuge | Stuttgart Flotte',
+                fleet_filter_all: 'Alle Fahrzeuge', fleet_filter_active: 'Nur Aktive', fleet_filter_maint: 'In Wartung',
+                fleet_add_btn: 'Fahrzeug hinzufügen', fleet_total: 'Gesamt', fleet_vehicles: 'Fahrzeuge',
+                fleet_active: 'Im Einsatz', fleet_depot: 'Im Depot', fleet_in_maint: 'In Wartung', fleet_ev: 'E-Fahrzeug',
+                fleet_table_title: 'Fahrzeugübersicht', fleet_search: 'Fahrzeug suchen...',
+                fleet_th_id: 'Fahrzeug-ID', fleet_th_type: 'Typ', fleet_th_driver: 'Fahrer', fleet_th_route: 'Aktuelle Route',
+                fleet_th_status: 'Status', fleet_th_km: 'km heute', fleet_th_fuel: 'Kraftstoff / Akku', fleet_th_tuv: 'Nächste TÜV',
+                fleet_chart_util: 'Flottenauslastung (letzte 4 Wochen)', fleet_chart_util_sub: 'Einsatzstunden vs. verfügbare Stunden',
+                fleet_chart_fuel: 'Kraftstoffverbrauch nach Fahrzeug', fleet_chart_fuel_sub: 'Liter / 100km Durchschnitt im aktuellen Monat',
+                // Wartung
+                maint_title: 'Wartung & Instandhaltung', maint_subtitle: 'Kanban Board | Fahrzeuge & IoT-Sensoren',
+                maint_filter_all: 'Alle Kategorien', maint_filter_vehicles: 'Fahrzeuge', maint_filter_iot: 'IoT Sensoren', maint_filter_containers: 'Container',
+                maint_new_order: 'Neuer Auftrag',
+                maint_overdue: 'Überfällig', maint_due_week: 'Diese Woche fällig', maint_in_progress: 'In Bearbeitung', maint_done_week: 'Diese Woche erledigt',
+                maint_col_planned: 'Geplant', maint_col_progress: 'In Bearbeitung', maint_col_waiting: 'Warte auf Teile', maint_col_done: 'Erledigt',
+                // KPIs
+                kpi_title: 'Financial Performance & ROI', kpi_subtitle: 'Stuttgart Metropolitan Area | Fiscal Year 2025',
+                kpi_report_btn: 'CFO Report generieren',
+                kpi_opex_label: 'OpEx pro gesammelter Tonne', kpi_opex_change: '-14% vs. Basislinie',
+                kpi_roi_label: 'IoT Sensoren Payback', kpi_roi_detail: '82% des CapEx amortisiert',
+                kpi_savings_head: 'Operative Einsparungen', kpi_savings_label: 'YTD Kraftstoff & Wartung', kpi_savings_change: 'Übertrifft Q3 Ziel um €18k',
+                kpi_esg_head: 'ESG Monetarisierung', kpi_esg_label: 'CO2-Zertifikat Äquivalent', kpi_esg_detail: 'Basierend auf 412t CO2 Einsparung',
+                kpi_chart_cashflow: 'Cashflow: CapEx vs. OpEx Trend', kpi_chart_cashflow_sub: 'Visualisierung der IoT-Investition vs. monatliche Betriebskosten',
+                kpi_chart_asset: 'Ressourcennutzung vs. Abschreibung', kpi_chart_asset_sub: 'Korrelation zwischen gefahrenen Kilometern und Flottenwertverlust',
+                kpi_cost_title: 'Kostenstellen Analyse (Q3 2025)',
+                kpi_th_category: 'Kategorie', kpi_th_budget: 'Budget Q3', kpi_th_actual: 'Ist-Kosten (Actual)', kpi_th_variance: 'Abweichung (Variance)', kpi_th_status: 'Status',
+                kpi_row_fuel: 'Kraftstoff (Diesel / Strom)', kpi_status_under: 'Günstiger',
+                kpi_row_maint: 'Fahrzeugwartung', kpi_status_plan: 'Planmäßig',
+                kpi_row_iot: 'IoT Sensor Wartung / Lizenzen', kpi_status_over: 'Überzogen',
+                kpi_row_total: 'Gesamt Betriebsaufwand (OpEx)'
+            },
+            en: {
+                // Nav
+                nav_dashboard: 'Live Overview', nav_historische: 'Historical Analysis', nav_fuhrpark: 'Fleet Management', nav_wartung: 'Maintenance', nav_kpis: 'Business KPIs',
+                // Dashboard
+                dash_active_routes: 'Active Routes', dash_vehicles_active: 'Vehicles Active', dash_collections_today: 'Collections Today', dash_alerts: 'Open Alerts', dash_tonnage_today: 'Tonnage Today',
+                dash_route_overview: 'Route Overview', dash_stop_list: 'Stop List', dash_in_pickup: 'Collecting', dash_on_time: 'On Time', dash_delayed: 'Delayed',
+                dash_live_activity: 'Live Activity', dash_avg_fill: 'Avg. Fill Level', dash_fire_detect: 'Fire Detection', dash_vandalism: 'Vandalism',
+                // Historische
+                hist_title: 'Historical Data & Trends', hist_subtitle: 'Sensor-Based Collection Analysis | Stuttgart Region',
+                hist_range_12w: 'Last 12 Weeks', hist_range_6m: 'Last 6 Months',
+                hist_total_volume: 'Total Volume', hist_vol_change: '+12% vs. Prior QTR',
+                hist_avg_fill: 'Avg. Fill at Pickup', hist_fill_change: '+9 pts vs. Pre-IoT',
+                hist_empty_trips: 'Empty Trips Avoided', hist_empty_detail: '23% of all scheduled runs',
+                hist_recycling: 'Recycling Rate', hist_recycling_goal: 'Target: 70% by Q4 2025',
+                hist_chart_volume: 'Collection Volume by Week (Tonnes)', hist_chart_volume_sub: 'Actual vs. forecasted collection per week',
+                hist_chart_composition: 'Waste Composition', hist_chart_comp_sub: 'Average Q3 2025',
+                hist_chart_heatmap: 'Fill Level Heatmap by Time of Day', hist_chart_heat_sub: 'When containers fill up the fastest',
+                hist_chart_alarms: 'Sensor Alarms by Category', hist_chart_alarms_sub: 'Cumulative alarms over the last 12 weeks',
+                hist_top10_title: 'Top 10 Locations by Collection Volume', hist_top10_period: 'Q3 2025 Cumulative',
+                hist_th_location: 'Location', hist_th_district: 'District', hist_th_volume: 'Volume (t)', hist_th_fill: 'Avg. Fill', hist_th_pickups: 'Pickups', hist_th_trend: 'Trend',
+                // Fuhrpark
+                fleet_title: 'Fleet Management & Tracking', fleet_subtitle: 'Real-time status of all collection vehicles | Stuttgart Fleet',
+                fleet_filter_all: 'All Vehicles', fleet_filter_active: 'Active Only', fleet_filter_maint: 'In Maintenance',
+                fleet_add_btn: 'Add Vehicle', fleet_total: 'Total', fleet_vehicles: 'Vehicles',
+                fleet_active: 'Active', fleet_depot: 'In Depot', fleet_in_maint: 'In Maintenance', fleet_ev: 'EV',
+                fleet_table_title: 'Vehicle Overview', fleet_search: 'Search vehicle...',
+                fleet_th_id: 'Vehicle ID', fleet_th_type: 'Type', fleet_th_driver: 'Driver', fleet_th_route: 'Current Route',
+                fleet_th_status: 'Status', fleet_th_km: 'km Today', fleet_th_fuel: 'Fuel / Battery', fleet_th_tuv: 'Next Inspection',
+                fleet_chart_util: 'Fleet Utilisation (Last 4 Weeks)', fleet_chart_util_sub: 'Operational hours vs. available hours',
+                fleet_chart_fuel: 'Fuel Consumption by Vehicle', fleet_chart_fuel_sub: 'Litres / 100 km average this month',
+                // Wartung
+                maint_title: 'Maintenance & Repairs', maint_subtitle: 'Kanban Board | Vehicles & IoT Sensors',
+                maint_filter_all: 'All Categories', maint_filter_vehicles: 'Vehicles', maint_filter_iot: 'IoT Sensors', maint_filter_containers: 'Containers',
+                maint_new_order: 'New Work Order',
+                maint_overdue: 'Overdue', maint_due_week: 'Due This Week', maint_in_progress: 'In Progress', maint_done_week: 'Completed This Week',
+                maint_col_planned: 'Planned', maint_col_progress: 'In Progress', maint_col_waiting: 'Waiting for Parts', maint_col_done: 'Completed',
+                // KPIs
+                kpi_title: 'Financial Performance & ROI', kpi_subtitle: 'Stuttgart Metropolitan Area | Fiscal Year 2025',
+                kpi_report_btn: 'Generate CFO Report',
+                kpi_opex_label: 'OpEx per Tonne Collected', kpi_opex_change: '-14% vs. Baseline',
+                kpi_roi_label: 'IoT Sensor Payback', kpi_roi_detail: '82% of CapEx recouped',
+                kpi_savings_head: 'Operational Savings', kpi_savings_label: 'YTD Fuel & Maintenance', kpi_savings_change: 'Exceeds Q3 target by €18k',
+                kpi_esg_head: 'ESG Monetisation', kpi_esg_label: 'CO₂ Certificate Equivalent', kpi_esg_detail: 'Based on 412t CO₂ savings',
+                kpi_chart_cashflow: 'Cash Flow: CapEx vs. OpEx Trend', kpi_chart_cashflow_sub: 'IoT investment vs. monthly operating costs',
+                kpi_chart_asset: 'Asset Utilisation vs. Depreciation', kpi_chart_asset_sub: 'Correlation between kilometres driven and fleet value loss',
+                kpi_cost_title: 'Cost Centre Analysis (Q3 2025)',
+                kpi_th_category: 'Category', kpi_th_budget: 'Budget Q3', kpi_th_actual: 'Actual Cost', kpi_th_variance: 'Variance', kpi_th_status: 'Status',
+                kpi_row_fuel: 'Fuel (Diesel / Electric)', kpi_status_under: 'Under Budget',
+                kpi_row_maint: 'Vehicle Maintenance', kpi_status_plan: 'On Plan',
+                kpi_row_iot: 'IoT Sensor Maintenance / Licences', kpi_status_over: 'Over Budget',
+                kpi_row_total: 'Total Operating Expense (OpEx)'
+            }
+        };
+
+        function setLang(lang) {
+            document.documentElement.setAttribute('data-lang', lang);
+
+            const deBtn = document.getElementById('lang-de');
+            const enBtn = document.getElementById('lang-en');
+            if (lang === 'de') {
+                deBtn.className = 'px-3 py-1.5 text-xs font-bold rounded-md bg-white text-[#1F2329] shadow-sm transition';
+                enBtn.className = 'px-3 py-1.5 text-xs font-bold rounded-md text-[#646A73] hover:text-[#1F2329] transition';
+            } else {
+                enBtn.className = 'px-3 py-1.5 text-xs font-bold rounded-md bg-white text-[#1F2329] shadow-sm transition';
+                deBtn.className = 'px-3 py-1.5 text-xs font-bold rounded-md text-[#646A73] hover:text-[#1F2329] transition';
+            }
+
+            // Update all elements with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang] && i18n[lang][key]) {
+                    el.textContent = i18n[lang][key];
+                }
+            });
+
+            // Update placeholder attributes
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (i18n[lang] && i18n[lang][key]) {
+                    el.placeholder = i18n[lang][key];
+                }
+            });
+
+            // Batch update: Fuhrpark table status badges
+            const fleetStatuses = {
+                de: { active: 'Im Einsatz', depot: 'Im Depot', maint: 'In Wartung', overdue: 'Überfällig', unassigned: 'Nicht zugewiesen' },
+                en: { active: 'Active', depot: 'In Depot', maint: 'In Maintenance', overdue: 'Overdue', unassigned: 'Unassigned' }
+            };
+            document.querySelectorAll('#page-fuhrpark .bg-green-100.text-green-700').forEach(el => { el.textContent = fleetStatuses[lang].active; });
+            document.querySelectorAll('#page-fuhrpark .bg-yellow-100.text-yellow-700').forEach(el => { el.textContent = fleetStatuses[lang].depot; });
+            document.querySelectorAll('#page-fuhrpark .bg-red-100.text-red-700').forEach(el => { el.textContent = fleetStatuses[lang].maint; });
+            document.querySelectorAll('#page-fuhrpark td.text-red-600.font-medium').forEach(el => { el.textContent = fleetStatuses[lang].overdue; });
+            document.querySelectorAll('#page-fuhrpark td.text-gray-400').forEach(el => {
+                if (el.textContent.trim() === 'Nicht zugewiesen' || el.textContent.trim() === 'Unassigned') el.textContent = fleetStatuses[lang].unassigned;
+            });
+
+            // Batch update: Wartung kanban priority badges
+            const priorities = {
+                de: { urgent: 'Dringend', medium: 'Mittel', low: 'Niedrig', blocked: 'Blockiert', partial: 'Teilweise' },
+                en: { urgent: 'Urgent', medium: 'Medium', low: 'Low', blocked: 'Blocked', partial: 'Partial' }
+            };
+            document.querySelectorAll('#page-wartung .bg-red-100.text-red-700').forEach(el => {
+                if (!el.innerHTML.includes('fa-check')) el.textContent = priorities[lang].urgent;
+            });
+            document.querySelectorAll('#page-wartung .bg-yellow-100.text-yellow-700').forEach(el => { el.textContent = priorities[lang].medium; });
+            document.querySelectorAll('#page-wartung .bg-gray-100.text-gray-600').forEach(el => { el.textContent = priorities[lang].low; });
+            document.querySelectorAll('#page-wartung .text-yellow-600.font-medium').forEach(el => {
+                if (el.textContent.trim() === 'Blockiert' || el.textContent.trim() === 'Blocked') el.textContent = priorities[lang].blocked;
+                if (el.textContent.trim() === 'Teilweise' || el.textContent.trim() === 'Partial') el.textContent = priorities[lang].partial;
+            });
+
+            // Wartung "Erledigt" badges
+            document.querySelectorAll('#page-wartung .bg-green-100.text-green-700').forEach(el => {
+                if (el.innerHTML.includes('fa-check')) el.innerHTML = `<i class="fa-solid fa-check mr-1"></i>${lang === 'de' ? 'Erledigt' : 'Done'}`;
+            });
+
+            // Update page title
+            const activeTab = document.querySelector('.page-section.active');
+            if (activeTab) {
+                const pageId = activeTab.id.replace('page-', '');
+                const titlesMap = {
+                    de: { 'dashboard': 'Echtzeit-Übersicht', 'historische': 'Historische Analysen', 'fuhrpark': 'Fuhrparkverwaltung', 'wartung': 'Wartung & Instandhaltung', 'kpis': 'Geschäfts-KPIs (CFO View)' },
+                    en: { 'dashboard': 'Live Overview', 'historische': 'Historical Analysis', 'fuhrpark': 'Fleet Management', 'wartung': 'Maintenance & Repairs', 'kpis': 'Business KPIs (CFO View)' }
+                };
+                document.getElementById('page-title').innerText = titlesMap[lang][pageId];
+            }
+        }
+
+        // Set default lang
+        document.documentElement.setAttribute('data-lang', 'de');
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+    </script>
+    </div><!-- .app-shell -->
+    <script>
+    // Portfolio nav toggle (mobile only) — extracted from script.js to avoid page-exit conflicts
+    (function() {
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks  = document.querySelector('.nav-links');
+        if (!navToggle || !navLinks) return;
+
+        function closeNav() {
+            navLinks.classList.remove('open');
+            navToggle.classList.remove('open');
+            navToggle.setAttribute('aria-expanded', false);
+            document.body.classList.remove('nav-open');
+        }
+
+        navToggle.addEventListener('click', () => {
+            const open = navLinks.classList.toggle('open');
+            navToggle.classList.toggle('open', open);
+            navToggle.setAttribute('aria-expanded', open);
+            document.body.classList.toggle('nav-open', open);
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeNav);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!navLinks.classList.contains('open')) return;
+            if (navLinks.contains(e.target) || navToggle.contains(e.target)) return;
+            closeNav();
+        });
+    })();
+    </script>
+</body>
+</html>

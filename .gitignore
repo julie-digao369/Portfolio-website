@@ -1,0 +1,9 @@
+.DS_Store
+CLAUDE.md
+.claude/
+.Rhistory
+.playwright-mcp/
+
+# Playwright/debug screenshots (not portfolio assets)
+responsive-*.png
+fixed-*.png

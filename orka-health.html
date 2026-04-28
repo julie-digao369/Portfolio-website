@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Orka Two Hearing Aids App Onboarding design · Case Study · Julie Di Gao</title>
+  <meta name="description" content="New hearing aid users returned devices within two weeks. I redesigned Orka Two's onboarding around that critical window and raised satisfaction to 5.3/7." />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Orka Two Hearing Aids App Onboarding · Julie Di Gao" />
+  <meta property="og:description" content="New hearing aid users returned devices within two weeks. I redesigned Orka Two's onboarding around that critical window and raised satisfaction to 5.3/7." />
+  <meta property="og:url" content="https://juliedigao.info/orka-health.html" />
+  <meta property="og:image" content="https://juliedigao.info/img/orka-thumb.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://juliedigao.info/orka-health.html" />
+  <link rel="preload" href="fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/dm-serif-display-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .layout, .sidebar, .content { display: contents; }
+  </style>
+</head>
+<body class="cs-page">
+  <a class="skip-link" href="#cs-main">Skip to content</a>
+
+  <nav class="site-nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-name">Julie Di Gao</a>
+      <a href="https://www.linkedin.com/in/julie-gao-9985a615b/" class="nav-linkedin" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <div class="nav-links">
+      <a href="index.html#projects">Work</a>
+      <a href="about.html">About</a>
+      <a href="mailto:julie.gao369@gmail.com" class="nav-cta">Contact</a>
+    </div>
+  </nav>
+
+  <main id="cs-main">
+    <div class="cs-header">
+      <p class="cs-eyebrow">Digital Product Design · Nov 2022–Mar 2023 · B2C App · US Market</p>
+      <h1 class="cs-title">Orka Digital Product Design</h1>
+      <p class="cs-sub">Hearing aids are returned more often than almost any other consumer health device. The first two weeks are make-or-break — and most products leave users to figure it out alone. This project was about fixing that.</p>
+
+      <div class="cs-meta">
+        <div class="cs-meta-item"><span class="cs-meta-label">Role</span> <span class="cs-meta-value">Senior UX Designer</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Client</span> <span class="cs-meta-value">Orka</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Year</span> <span class="cs-meta-value">2022–2023</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Focus</span> <span class="cs-meta-value">iOS / Android onboarding redesign</span></div>
+      </div>
+    </div>
+
+    <div class="cs-body">
+
+      <!-- Outcome metrics -->
+      <div class="cs-metrics">
+        <div class="cs-metric">
+          <div class="cs-metric-number">5.3<span style="font-size:1rem;font-weight:400">/7</span></div>
+          <div class="cs-metric-label">average satisfaction score in US user survey</div>
+        </div>
+        <div class="cs-metric">
+          <div class="cs-metric-number">25%</div>
+          <div class="cs-metric-label">of surveyed users gave the full score</div>
+        </div>
+        <div class="cs-metric">
+          <div class="cs-metric-number">4/4</div>
+          <div class="cs-metric-label">validation criteria passed after iteration</div>
+        </div>
+      </div>
+
+      <!-- Problem -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">The problem</p>
+        <h2>Users were returning the Gen 1 product because the first two weeks were too hard</h2>
+        <p>Wearing hearing aids for the first time takes adjustment — there's a physical adaptation period, a learning curve for the controls, and real anxiety about whether the device is even working correctly. Gen 1 had high return rates, and the root cause was clear: users weren't getting enough support in that critical early window.</p>
+        <p>For Gen 2, the goal was to design an onboarding experience that walked users through setup and adaptation — reducing confusion, reducing returns, and converting trial users into confident, long-term customers.</p>
+
+        <figure class="cs-figure">
+          <img src="img/orka-homepage-before-after.webp" alt="Before and after comparison of the Orka app homepage — Gen 1 vs Gen 2 redesign" loading="lazy" />
+          <figcaption>Gen 1 (left) vs Gen 2 (right) — the homepage was redesigned to feel warmer, more visual, and easier to navigate.</figcaption>
+        </figure>
+      </div>
+
+      <!-- Callout -->
+      <div class="cs-callout">
+        <p>The device was fine. The experience around it wasn't. Users didn't know how to wear it, didn't understand what they were hearing, and had no path to professional help when they needed it.</p>
+      </div>
+
+      <!-- Process -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Research &amp; process</p>
+        <h2>Interviews, personas, journey maps — then workshops to align across teams</h2>
+        <p>The team started with user interviews to understand what actually went wrong in those first two weeks. What did people try to do? Where did they get stuck? When did they give up? From that research, we built personas and journey maps that the whole team — including industrial designers and audiologists — could reason from.</p>
+        <p>I ran cross-departmental workshops to define scope across three functional areas: Bluetooth connection, tutorial content, and hearing profile setup. Each had different stakeholders, different constraints, and different definitions of "done." Getting alignment across all three early was what kept the project on track.</p>
+
+        <figure class="cs-figure">
+          <img src="img/orka-journey-map.webp" alt="User journey map for persona Mr. S — mapping the full onboarding experience from unboxing to audiologist fitting" loading="lazy" />
+          <figcaption>User journey map for "Mr. S" — tracing experience, key insights, and design opportunities across every onboarding stage.</figcaption>
+        </figure>
+
+        <figure class="cs-figure">
+          <img src="img/orka-user-flow.webp" alt="Orka Health V2.0 onboarding user flow showing the complete information architecture" loading="lazy" />
+          <figcaption>V2.0 onboarding user flow — covering account setup, wearing tutorial, streaming, hearing profile, control panel, and remote fitting.</figcaption>
+        </figure>
+      </div>
+
+      <!-- Defined functions -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Scoping</p>
+        <h2>Three functional areas, each mapped to a real user pain point</h2>
+        <p>From the research insights, I defined three onboarding function categories. Each one targeted a specific moment where users were getting stuck or dropping off.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2.5rem;margin-top:2.5rem;padding:2rem 0">
+          <div style="text-align:center">
+            <div style="width:56px;height:56px;margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;border:1.5px solid #d1d5db;border-radius:14px">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"></polyline></svg>
+            </div>
+            <h3 style="font-size:1rem;font-weight:600;color:#1d1d1f;margin-bottom:0.6rem;letter-spacing:-0.01em">Bluetooth connection</h3>
+            <p style="font-size:0.82rem;color:#86868b;line-height:1.65;margin:0">First-time setup guide<br>Daily connect interaction</p>
+          </div>
+          <div style="text-align:center">
+            <div style="width:56px;height:56px;margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;border:1.5px solid #d1d5db;border-radius:14px">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+            </div>
+            <h3 style="font-size:1rem;font-weight:600;color:#1d1d1f;margin-bottom:0.6rem;letter-spacing:-0.01em">How-to-use tutorial</h3>
+            <p style="font-size:0.82rem;color:#86868b;line-height:1.65;margin:0">Wearing tutorial<br>Phone call interaction<br>Streaming function</p>
+          </div>
+          <div style="text-align:center">
+            <div style="width:56px;height:56px;margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;border:1.5px solid #d1d5db;border-radius:14px">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></svg>
+            </div>
+            <h3 style="font-size:1rem;font-weight:600;color:#1d1d1f;margin-bottom:0.6rem;letter-spacing:-0.01em">Hearing profile set-up</h3>
+            <p style="font-size:0.82rem;color:#86868b;line-height:1.65;margin:0">Program quick set up<br>In-app hearing test<br>Arrange appointments</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Three features -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">What we designed</p>
+        <h2>Three onboarding features, each targeting a specific drop-off point</h2>
+
+        <div class="cs-features">
+          <div class="cs-feature">
+            <div class="cs-feature-num">01</div>
+            <h3>Wearing Tutorial</h3>
+            <p>Step-by-step instructions so users never need to hunt for a how-to video or dig through a manual. Clear visuals, the right amount of words.</p>
+            <figure class="cs-figure">
+              <img src="img/orka-tutorial-before-after.webp" alt="Before and after of the wearing tutorial — 3D illustrations replaced with real photography" loading="lazy" />
+              <figcaption>Before: abstract 3D illustration. After: real-person photography for clearer, more relatable guidance.</figcaption>
+            </figure>
+          </div>
+          <div class="cs-feature">
+            <div class="cs-feature-num">02</div>
+            <h3>Everyday Benefits</h3>
+            <p>Instead of technical specs, we showed users what the device would sound like in their actual life — restaurant conversations, morning birds, TV. Immersive scenarios, not audiogram charts.</p>
+            <figure class="cs-figure">
+              <img src="img/orka-streaming-before-after.webp" alt="Before and after of the streaming tutorial — text-heavy screens replaced with immersive visual cards" loading="lazy" />
+              <figcaption>Before: text-heavy technical explanation. After: immersive visual cards showing real-life streaming scenarios.</figcaption>
+            </figure>
+          </div>
+          <div class="cs-feature">
+            <div class="cs-feature-num">03</div>
+            <h3>Tailored Hearing Profile</h3>
+            <p>A flow to schedule a remote fitting session with a professional audiologist — so users who needed more than self-service had a clear, accessible path to get it.</p>
+            <figure class="cs-figure">
+              <img src="img/orka-audiologist-screens.webp" alt="Hearing profile setup, audiogram results, remote consultation booking, and live video fitting session" loading="lazy" />
+              <figcaption>The complete hearing profile flow — from self-assessment and audiogram to remote consultation with a professional audiologist.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prototype CTA -->
+      <div class="cs-callout fade-in" style="text-align:center;padding:2rem">
+        <p style="font-size:1.1rem;font-weight:600;margin-bottom:0.5rem">Want to see how it feels?</p>
+        <p style="margin-bottom:1.25rem;color:var(--secondary)">Tap through the onboarding prototype. It runs on ProtoPie, so interactions feel close to the real thing.</p>
+        <a href="https://cloud.protopie.io/p/981679f6b47a6b549fbed1c8?ui=true&scaleToFit=true&enableHotspotHints=true&cursorType=touch&mockup=true&bgColor=%23F5F5F5&bgImage=undefined&playSpeed=1" target="_blank" rel="noopener" style="display:inline-block;padding:0.65rem 1.75rem;background:#2251FF;color:#fff;border-radius:100px;font-weight:600;font-size:0.9rem;text-decoration:none">Try the prototype &rarr;</a>
+      </div>
+
+      <!-- Validation -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Testing &amp; iteration</p>
+        <h2>First round failed on efficiency and experience. Second round passed everything.</h2>
+        <p>We tested against four criteria: efficiency, user experience, consistency, and controllability. The first round told us clearly where the design fell short — efficiency and experience weren't there yet. We iterated, retested, and brought all four criteria to pass.</p>
+
+        <div class="cs-validation">
+          <div class="cs-val-row">
+            <span class="cs-val-criterion" style="color:var(--tertiary)">Criterion</span>
+            <span class="cs-val-header">Round 1</span>
+            <span class="cs-val-header">Round 2</span>
+          </div>
+          <div class="cs-val-row">
+            <span class="cs-val-criterion">Efficiency</span>
+            <span class="cs-fail">✗ Fail</span>
+            <span class="cs-pass">✓ Pass</span>
+          </div>
+          <div class="cs-val-row">
+            <span class="cs-val-criterion">User experience</span>
+            <span class="cs-fail">✗ Fail</span>
+            <span class="cs-pass">✓ Pass</span>
+          </div>
+          <div class="cs-val-row">
+            <span class="cs-val-criterion">Consistency</span>
+            <span class="cs-pass">✓ Pass</span>
+            <span class="cs-pass">✓ Pass</span>
+          </div>
+          <div class="cs-val-row">
+            <span class="cs-val-criterion">Controllability</span>
+            <span class="cs-pass">✓ Pass</span>
+            <span class="cs-pass">✓ Pass</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outcome -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Outcome</p>
+        <h2>A 5.3/7 satisfaction score and 25% of users giving full marks at launch</h2>
+        <p>The US user survey after launch showed an average satisfaction score of 5.3 out of 7, with a quarter of respondents awarding the maximum score. For a first-time hearing aid user — in a category where returns are common — that's a meaningful signal that the experience landed.</p>
+        <figure class="cs-figure fade-in" style="margin-top:1.5rem">
+          <picture>
+            <source srcset="img/orka-trustpilot-review.webp" type="image/webp">
+            <img src="img/orka-trustpilot-review.png" alt="Trustpilot 5-star review from a retired design director praising Orka's packaging, app design, and claymation imagery" loading="lazy" style="border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.08)" />
+          </picture>
+          <figcaption>Trustpilot review highlighting the unboxing experience and app design quality.</figcaption>
+        </figure>
+        <div class="cs-video fade-in" style="margin-top:1.5rem">
+          <p style="margin-bottom:0.75rem;font-weight:600;font-size:0.95rem">Unboxing from hearing aids experts:</p>
+          <iframe width="100%" height="420" src="https://www.youtube.com/embed/ZxYNPuQ04tY" title="Orka Two Onboarding" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius:8px"></iframe>
+        </div>
+      </div>
+
+      <div class="cs-tags">
+        <span class="cs-tag">Interaction Design</span>
+        <span class="cs-tag">User Research</span>
+        <span class="cs-tag">Onboarding</span>
+        <span class="cs-tag">Telehealth</span>
+        <span class="cs-tag">B2C</span>
+        <span class="cs-tag">iOS / Android</span>
+      </div>
+
+    </div>
+
+    <!-- Next project -->
+    <div class="cs-next-project">
+      <p class="cs-next-label">Next Project</p>
+      <a href="agile-cps.html" class="cs-next-link">
+        <h2 class="cs-next-title">Developing CPS as Entrepreneurs: Agile Development in Startups and SMEs</h2>
+        <p class="cs-next-desc">Master thesis at ECIE 2025 — mapped how hardware+software startups adapt agile.</p>
+        <span class="cs-next-arrow">Read case study &rarr;</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>&copy; 2025 Julie Di Gao</span>
+    <a href="mailto:julie.gao369@gmail.com">julie.gao369@gmail.com</a>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Agile Methods in CPS Startups — ECIE 2025 Research · Julie Di Gao</title>
+  <meta name="description" content="Master's thesis published at ECIE 2025. Systematic review of 1,929 papers on how agile methods adapt in CPS startups and SMEs, with an AI-assisted extraction workflow." />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Agile Methods in CPS Startups — ECIE 2025 Research · Julie Di Gao" />
+  <meta property="og:description" content="Master's thesis published at ECIE 2025. Systematic review of 1,929 papers on how agile methods adapt in CPS startups and SMEs, with an AI-assisted extraction workflow." />
+  <meta property="og:url" content="https://juliedigao.info/agile-cps.html" />
+  <meta property="og:image" content="https://juliedigao.info/img/agile-cps.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://juliedigao.info/agile-cps.html" />
+  <link rel="preload" href="fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/dm-serif-display-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .layout, .sidebar, .content { display: contents; }
+
+    /* Publication block */
+    .cs-publication {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--surface);
+      border-radius: 4px;
+      margin: 1.75rem 0;
+    }
+    .cs-publication-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+      flex-shrink: 0;
+      color: var(--secondary);
+    }
+    .cs-publication-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .cs-publication-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      font-family: var(--font);
+    }
+    .cs-publication-detail {
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      line-height: 1.5;
+      font-family: var(--font);
+    }
+
+    /* AI workflow sections */
+    .cs-ai-workflow {
+      margin: 3rem 0 1.5rem;
+    }
+    .cs-ai-workflow-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent, #4f6ef7);
+      margin-bottom: 0.5rem;
+    }
+    .cs-ai-workflow h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 1rem;
+      color: var(--text);
+    }
+
+    /* Prompt box */
+    .cs-prompt-box {
+      background: #0f1117;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      font-family: ui-monospace, 'SFMono-Regular', 'SF Mono', Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #c9d1d9;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    /* Explicitly beat .cs-section p in style.css */
+    .cs-prompt-box p,
+    .cs-prompt-box li,
+    .cs-prompt-box ul {
+      font-family: ui-monospace, 'SFMono-Regular', 'SF Mono', Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #c9d1d9;
+      margin: 0;
+    }
+    .cs-prompt-section {
+      padding: 0.45rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .cs-prompt-section:last-child { border-bottom: none; }
+    .cs-prompt-section-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .prompt-role  { color: #79c0ff; }
+    .prompt-label { color: #56d364; }
+    .cs-prompt-body {
+      color: #c9d1d9;
+      font-weight: 400;
+    }
+    .cs-prompt-list {
+      padding: 0;
+      list-style: none;
+    }
+    .cs-prompt-list li {
+      display: flex;
+      gap: 0.4rem;
+      color: #c9d1d9;
+      padding: 0.1rem 0;
+      font-weight: 400;
+    }
+    .cs-prompt-list li::before {
+      content: '·';
+      color: rgba(255,255,255,0.45);
+      flex-shrink: 0;
+    }
+    /* Fix: li containing a sublist must be block so the ul doesn't float right */
+    .cs-prompt-list li:has(> ul) {
+      display: block;
+    }
+    .cs-prompt-list li:has(> ul)::before {
+      display: inline;
+      margin-right: 0.35rem;
+    }
+    .cs-prompt-sublist {
+      margin: 0.2rem 0 0.1rem 1.1rem;
+      padding: 0;
+      list-style: none;
+    }
+    .cs-prompt-sublist li {
+      display: flex;
+      gap: 0.4rem;
+      color: rgba(201,209,217,0.6);
+      padding: 0.1rem 0;
+    }
+    .cs-prompt-sublist li::before {
+      content: '—';
+      flex-shrink: 0;
+      color: rgba(255,255,255,0.15);
+    }
+    .cs-pk { color: #e6edf3; }
+
+    /* Dimensions grid */
+    .cs-dimensions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+    .cs-dimension {
+      background: var(--surface);
+      border-radius: 4px;
+      padding: 1rem 1.1rem;
+    }
+    .cs-dimension-num {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent, #4f6ef7);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .cs-dimension-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .cs-dimension-desc {
+      font-size: 0.75rem;
+      color: var(--secondary);
+      line-height: 1.45;
+    }
+
+    /* Validation step */
+    .cs-validation-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .cs-val-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .cs-val-step-icon {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 1.5rem;
+      background: var(--surface);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent, #4f6ef7);
+      margin-top: 0.1rem;
+    }
+    .cs-val-step-text {
+      font-size: 0.875rem;
+      color: var(--secondary);
+      line-height: 1.55;
+    }
+    .cs-val-step-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ─── Data charts ──────────────────────────────────────── */
+    .cs-chart-block {
+      padding: 1.5rem 0;
+      margin: 1.75rem 0;
+    }
+    .cs-chart-block-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 0.25rem;
+      font-family: var(--font);
+    }
+    .cs-chart-block-sub {
+      font-size: 0.8rem;
+      color: var(--secondary);
+      margin: 0 0 1rem;
+      font-family: var(--font);
+    }
+    .cs-chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .cs-chart-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--secondary);
+      font-family: var(--font);
+    }
+    .cs-leg-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .cs-chart-note {
+      font-size: 0.7rem;
+      color: var(--secondary);
+      text-align: center;
+      margin: 0.6rem 0 0;
+      font-family: var(--font);
+      font-style: italic;
+    }
+    /* Stacked horizontal bars */
+    .cs-hbar-rows { display: flex; flex-direction: column; gap: 0.65rem; }
+    .cs-hbar-row { display: flex; align-items: center; gap: 0.75rem; }
+    .cs-hbar-label {
+      flex-shrink: 0;
+      width: 135px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text);
+      text-align: right;
+      font-family: var(--font);
+      line-height: 1.3;
+    }
+    .cs-hbar {
+      flex: 1;
+      display: flex;
+      height: 1.35rem;
+      border-radius: 3px;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .cs-hbar-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      font-weight: 700;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 0 0.2rem;
+    }
+    /* Grouped vertical bars */
+    .cs-chart-scroll { overflow-x: auto; }
+    .cs-chart-scroll-inner { min-width: 400px; }
+    .cs-vbar-area {
+      display: flex;
+      align-items: flex-end;
+      height: 160px;
+      gap: 0.375rem;
+      border-bottom: 1px solid var(--border, #e5e7eb);
+    }
+    .cs-vbar-group {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 100%;
+    }
+    .cs-vbar {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      min-width: 0;
+      min-height: 0;
+    }
+    .cs-vbar-xlabels {
+      display: flex;
+      gap: 0.375rem;
+      margin-top: 0.35rem;
+    }
+    .cs-vbar-xlabel {
+      flex: 1;
+      font-size: 0.58rem;
+      color: var(--secondary);
+      text-align: center;
+      line-height: 1.35;
+      font-family: var(--font);
+    }
+
+    /* Donut charts */
+    .cs-donut-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 580px) {
+      .cs-donut-grid { grid-template-columns: 1fr; align-items: center; }
+    }
+    .cs-donut-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .cs-donut-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      font-family: var(--font);
+      text-align: center;
+    }
+    .cs-donut-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      flex-shrink: 0;
+    }
+    .cs-donut-ring {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+    }
+    .cs-donut-hole {
+      position: absolute;
+      inset: 27%;
+      background: var(--bg, #fff);
+      border-radius: 50%;
+    }
+    .cs-donut-key {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      width: 100%;
+    }
+    .cs-donut-key-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.625rem;
+      color: var(--secondary);
+      font-family: var(--font);
+      line-height: 1.3;
+    }
+    .cs-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .cs-donut-pct {
+      margin-left: auto;
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.625rem;
+    }
+  </style>
+</head>
+<body class="cs-page">
+  <a class="skip-link" href="#cs-main">Skip to content</a>
+
+  <nav class="site-nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-name">Julie Di Gao</a>
+      <a href="https://www.linkedin.com/in/julie-gao-9985a615b/" class="nav-linkedin" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <div class="nav-links">
+      <a href="index.html#projects">Work</a>
+      <a href="about.html">About</a>
+      <a href="mailto:julie.gao369@gmail.com" class="nav-cta">Contact</a>
+    </div>
+  </nav>
+
+  <main id="cs-main">
+    <div class="cs-header">
+      <p class="cs-eyebrow">Research &amp; Problem Framing · 2025 · Master Thesis → Conference Paper · KIT IPEK</p>
+      <h1 class="cs-title">Developing CPS as Entrepreneurs: Agile Development in Startups and SMEs</h1>
+      <p class="cs-sub">Master thesis at IPEK, Karlsruhe Institute of Technology, selected by the institute for publication at the 20th European Conference on Innovation and Entrepreneurship (ECIE 2025).</p>
+
+      <div class="cs-meta">
+        <div class="cs-meta-item"><span class="cs-meta-label">Role</span> <span class="cs-meta-value">Co-Author</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Client</span> <span class="cs-meta-value">KIT IPEK</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Year</span> <span class="cs-meta-value">2025</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Focus</span> <span class="cs-meta-value">Systematic literature review, AI workflow</span></div>
+      </div>
+    </div>
+
+    <div class="cs-body">
+
+      <!-- ── Research question ─────────────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Research question</p>
+        <h2>Do agile methods actually work for intelligent hardware, and does the answer change by org type?</h2>
+        <p>Cyber-physical systems (CPS) inextricably link software with physical components. Developing these intelligent hardware systems faces strict physical constraints. A product sprint cannot end until the hardware revision is ready and tested.</p>
+        <p>While agile frameworks primarily cater to pure software products, practitioners building smart hardware informally adapt these methods to absorb evolving requirements. This study documents how these adaptations play out across agile startups and legacy enterprises.</p>
+
+        <div style="margin:1.5rem 0;">
+          <h3 style="font-size:1.125rem; font-weight:600; margin:0 0 0.8rem 0; color:var(--text);">Two research questions guided the work:</h3>
+          <ul style="margin:0; padding-left:1.5rem; font-size:1rem; line-height:1.6; color:var(--secondary); font-family:var(--font-serif);">
+            <li style="margin-bottom:0.5rem;"><strong>RQ1:</strong> How do different types of organisations apply agile methodologies in their CPS engineering processes?</li>
+            <li><strong>RQ2:</strong> What are the key similarities and differences in agile practices between established companies and startups in CPS development?</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Method: SLR + AI Workflow ─────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Method</p>
+        <h2>Systematic literature review with AI-assisted extraction</h2>
+        <p>The study follows a systematic literature review (SLR) methodology. A structured boolean query spanning five dimensions was executed across four academic databases: Scopus, Web of Science, IEEE Xplore, and ACM Digital Library.</p>
+        <p>The search returned 1,929 papers. Screening that volume manually for structured data extraction introduces consistency drift and fatigue. To solve this, I built an AI-assisted extraction workflow: the LLM handles repetitive, structured summarisation at scale while every output is manually validated against the source text.</p>
+
+        <div class="cs-ai-workflow">
+          <div class="cs-ai-workflow-label">How it worked</div>
+          <h3>1. Strategic search &amp; systematic screening</h3>
+          <p>Title and abstract screening narrowed the initial 1,929 results to 145 candidates through predefined inclusion and exclusion criteria.</p>
+        </div>
+
+        <figure class="cs-figure fade-in visible">
+          <picture>
+            <source srcset="img/cps/research-process.webp" type="image/webp">
+            <img src="img/cps/research-process.jpg" alt="Research process and systematic screening funnel" />
+          </picture>
+          <figcaption>Systematic screening funnel from 1,929 initial results to final inclusion</figcaption>
+        </figure>
+
+        <div class="cs-ai-workflow">
+          <div class="cs-ai-workflow-label">Data Mapping</div>
+          <h3>2. Establish extraction dimensions</h3>
+          <p>Before prompting the LLM, five deliverable categories were defined to produce structured, comparable data uniformly across all 145 papers:</p>
+        </div>
+
+        <div class="cs-dimensions" style="margin-bottom:2rem;">
+          <div class="cs-dimension">
+            <div class="cs-dimension-num">01</div>
+            <div class="cs-dimension-name">Case Study ID</div>
+            <div class="cs-dimension-desc">Each case study identified separately</div>
+          </div>
+          <div class="cs-dimension">
+            <div class="cs-dimension-num">02</div>
+            <div class="cs-dimension-name">Context</div>
+            <div class="cs-dimension-desc">Industry domain, scale, org name, country, type</div>
+          </div>
+          <div class="cs-dimension">
+            <div class="cs-dimension-num">03</div>
+            <div class="cs-dimension-name">CPS Characteristics</div>
+            <div class="cs-dimension-desc">Hardware scope, software connectivity, focus, level</div>
+          </div>
+          <div class="cs-dimension">
+            <div class="cs-dimension-num">04</div>
+            <div class="cs-dimension-name">Dev Approach</div>
+            <div class="cs-dimension-desc">Method, practices, and agility rating</div>
+          </div>
+          <div class="cs-dimension">
+            <div class="cs-dimension-num">05</div>
+            <div class="cs-dimension-name">Key Findings</div>
+            <div class="cs-dimension-desc">Technical, process, and organizational insights</div>
+          </div>
+        </div>
+
+        <div class="cs-ai-workflow">
+          <div class="cs-ai-workflow-label">Design principle</div>
+          <h3>3. AI handles extraction scale; manual oversight secures quality</h3>
+          <p>145 papers needed structured extraction against those dimensions. Doing this manually would take weeks. Instead, an LLM-assisted protocol using Perplexity Deep Research processed each individually to prevent conflation.</p>
+          <p>A rigorous, detailed prompt enforced these constraints, mandating that every extracted data point include its page number for traceability:</p>
+        </div>
+
+        <div class="cs-prompt-box">
+
+            <div class="cs-prompt-section">
+              <span class="cs-prompt-section-label prompt-role">Role &amp; context</span>
+              <p class="cs-prompt-body">You are a researcher conducting a systematic literature review on agile methodologies in CPS engineering. Analyse the given paper based on the research context below. Provide page numbers for every extracted data point to ensure verifiability.</p>
+            </div>
+
+            <div class="cs-prompt-section">
+              <span class="cs-prompt-section-label prompt-label">1. Case study identification</span>
+              <ul class="cs-prompt-list">
+                <li>Identify each case study in the paper</li>
+              </ul>
+            </div>
+
+            <div class="cs-prompt-section">
+              <span class="cs-prompt-section-label prompt-label">2. Contextual information</span>
+              <ul class="cs-prompt-list">
+                <li><span class="cs-pk">Industry domain</span>: e.g. automotive, healthcare, manufacturing</li>
+                <li><span class="cs-pk">Project scale</span>: Small / Medium / Large</li>
+                <li><span class="cs-pk">Organization details</span>: name (if available), size, country</li>
+                <li><span class="cs-pk">Organization type</span>: Large Business / SME / Startup / Academic</li>
+              </ul>
+            </div>
+
+            <div class="cs-prompt-section">
+              <span class="cs-prompt-section-label prompt-label">3. CPS characteristics</span>
+              <ul class="cs-prompt-list">
+                <li><span class="cs-pk">Hardware scope</span>: mechatronic or other</li>
+                <li><span class="cs-pk">Software scope</span>: connectivity type (Wi-Fi, BLE, LoRa, 5G, Zigbee, etc.)</li>
+                <li><span class="cs-pk">System focus</span>: primary function of the system</li>
+                <li><span class="cs-pk">CPS level</span>: Sub-system, System, or System-of-Systems (SoS)</li>
+              </ul>
+            </div>
+
+            <div class="cs-prompt-section">
+              <span class="cs-prompt-section-label prompt-label">4. Development approach</span>
+              <ul class="cs-prompt-list">
+                <li><span class="cs-pk">Method</span>: Agile / Hybrid / Traditional</li>
+                <li><span class="cs-pk">Specific practices</span>: Scrum, Kanban, XP, Lean Startup, etc.</li>
+                <li><span class="cs-pk">Agility level</span>: High / Moderate / Low</li>
+              </ul>
+            </div>
+
+            <div class="cs-prompt-section">
+              <span class="cs-prompt-section-label prompt-label">5. Key findings</span>
+              <ul class="cs-prompt-list">
+                <li><span class="cs-pk">Technical insights</span>: findings related to agile development</li>
+                <li><span class="cs-pk">Process insights</span>: motivations for agile, obstacles encountered</li>
+                <li><span class="cs-pk">Organizational insights</span>: positive or negative findings</li>
+              </ul>
+            </div>
+
+            <div class="cs-prompt-section">
+              <span class="cs-prompt-section-label prompt-role">Output format</span>
+              <ul class="cs-prompt-list">
+                <li>One labelled table per aspect per case study</li>
+                <li>Page number alongside every data point</li>
+              </ul>
+            </div>
+
+          </div>
+
+        <div class="cs-ai-workflow">
+          <div class="cs-ai-workflow-label">Validation</div>
+          <h3>4. Every AI output subjected to manual verification</h3>
+        </div>
+
+        <div class="cs-validation-steps">
+          <div class="cs-val-step">
+            <div class="cs-val-step-icon">1</div>
+            <div class="cs-val-step-text"><strong>AI extraction:</strong> Perplexity generated structured summaries with page-level citations per paper.</div>
+          </div>
+          <div class="cs-val-step">
+            <div class="cs-val-step-icon">2</div>
+            <div class="cs-val-step-text"><strong>Manual cross-check:</strong> Every summary was verified against the original text using Zotero. Page references made discrepancies instantly locatable. <strong>57 of 145 passed.</strong></div>
+          </div>
+          <div class="cs-val-step">
+            <div class="cs-val-step-icon">3</div>
+            <div class="cs-val-step-text"><strong>Structured spreadsheet:</strong> 57 candidates were logged into a standardised extraction database for final scoring.</div>
+          </div>
+          <div class="cs-val-step">
+            <div class="cs-val-step-icon">4</div>
+            <div class="cs-val-step-text"><strong>6-criterion QA scoring:</strong> Each candidate was manually evaluated against inclusion thresholds. <strong>29 final studies.</strong></div>
+          </div>
+        </div>
+
+        <p>The six quality assessment criteria used a scored rubric (−1 / 0 / +1) to standardise exclusion decisions:</p>
+
+        <div style="overflow-x:auto; margin: 1.5rem 0;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.8rem; font-family:var(--font);">
+            <thead>
+              <tr style="background:var(--surface); text-align:left;">
+                <th style="padding:0.6rem 0.75rem; color:var(--secondary); font-weight:600; white-space:nowrap;">Criterion</th>
+                <th style="padding:0.6rem 0.75rem; color:var(--secondary); font-weight:600;">Question</th>
+                <th style="padding:0.6rem 0.75rem; color:var(--secondary); font-weight:600; white-space:nowrap;">Exclusion rule</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-top:1px solid var(--border,#e5e7eb);">
+                <td style="padding:0.6rem 0.75rem; font-weight:600; white-space:nowrap; color:var(--accent,#4f6ef7);">QA1 ★</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Is the scientific idea validated? (+1 = by case study/survey/interview; 0 = lab/student only; −1 = theory/proposal)</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Exclude if −1</td>
+              </tr>
+              <tr style="border-top:1px solid var(--border,#e5e7eb); background:var(--surface);">
+                <td style="padding:0.6rem 0.75rem; font-weight:600; white-space:nowrap; color:var(--accent,#4f6ef7);">QA2 ★</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Is the case study validated as CPS engineering? (+1 = details present; 0 = partial mechatronic+IoT; −1 = system missing)</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Exclude if −1</td>
+              </tr>
+              <tr style="border-top:1px solid var(--border,#e5e7eb);">
+                <td style="padding:0.6rem 0.75rem; font-weight:600; white-space:nowrap;">QA3</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Does the publication focus on product development? (+1 = detailed process; 0 = tooling/frameworks; −1 = outside scope)</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Informative only</td>
+              </tr>
+              <tr style="border-top:1px solid var(--border,#e5e7eb); background:var(--surface);">
+                <td style="padding:0.6rem 0.75rem; font-weight:600; white-space:nowrap; color:var(--accent,#4f6ef7);">QA4 ★</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Is any agile approach mentioned? (+1 = implementation details; 0 = agile principles implicit; −1 = none)</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Exclude if −1</td>
+              </tr>
+              <tr style="border-top:1px solid var(--border,#e5e7eb);">
+                <td style="padding:0.6rem 0.75rem; font-weight:600; white-space:nowrap;">QA5</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Does the publication include a personal opinion piece? (−1 = yes; 0 = partial; +1 = no, research-based)</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Informative only</td>
+              </tr>
+              <tr style="border-top:1px solid var(--border,#e5e7eb); background:var(--surface);">
+                <td style="padding:0.6rem 0.75rem; font-weight:600; white-space:nowrap;">QA6</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Has the publication been cited? (+1 = &gt;5 citations; 0 = 1–5; −1 = uncited)</td>
+                <td style="padding:0.6rem 0.75rem; color:var(--secondary);">Informative only</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:0.8rem; color:var(--secondary); margin-top:-0.5rem;">★ Exclusion criteria: papers failing QA1, QA2, or QA4 were excluded. Result: 1 excluded on QA1, 21 on QA2, 2 on QA4 → 29 final studies.</p>
+      </div>
+
+      <!-- ── Three archetypes ──────────────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Core finding 1</p>
+        <h2>Organisation type predicts not just how agile is used, but which CPS problems get solved</h2>
+        <p>The 53 case studies revealed a consistent pattern: CPS system complexity scales with organisational maturity. Startups cluster at the subsystem level; SMEs operate primarily at the system level; large enterprises handle system and system-of-systems (SoS) CPS. This isn't arbitrary. The coordination, process, and resource capacity required for SoS-level integration exceeds what a startup team can sustain.</p>
+
+        <figure class="cs-figure fade-in">
+          <picture>
+            <source srcset="img/cps/cps-levels.webp" type="image/webp">
+            <img src="img/cps/cps-levels.jpg" alt="Three-layer CPS architecture: SoS CPS at top, System CPS in middle, Subsystem CPS at bottom, with engineering domain components (ME, SE, EE, XE)" />
+          </picture>
+          <figcaption>CPS hierarchy: subsystem components aggregate into systems, which compose into systems-of-systems</figcaption>
+        </figure>
+
+        <div class="cs-chart-block fade-in">
+          <p class="cs-chart-block-title">Organizational Case Studies by CPS Level</p>
+          <div class="cs-chart-legend">
+            <span class="cs-chart-legend-item"><span class="cs-leg-swatch" style="background:#aab8ff"></span>SoS CPS</span>
+            <span class="cs-chart-legend-item"><span class="cs-leg-swatch" style="background:#051C2C"></span>System CPS</span>
+            <span class="cs-chart-legend-item"><span class="cs-leg-swatch" style="background:#2251FF"></span>Subsystem CPS</span>
+          </div>
+          <div class="cs-hbar-rows">
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Large Enterprises</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:11%;background:#aab8ff;color:#051C2C">11%</div>
+                <div class="cs-hbar-seg" style="width:64%;background:#051C2C;color:#fff">64%</div>
+                <div class="cs-hbar-seg" style="width:25%;background:#2251FF;color:#fff">25%</div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">SMEs</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:80%;background:#051C2C;color:#fff">80%</div>
+                <div class="cs-hbar-seg" style="width:20%;background:#2251FF;color:#fff">20%</div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Startups</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:13%;background:#051C2C;color:#fff">13%</div>
+                <div class="cs-hbar-seg" style="width:87%;background:#2251FF;color:#fff">87%</div>
+              </div>
+            </div>
+          </div>
+          <p class="cs-chart-note">Share of case studies within company type (%)</p>
+        </div>
+
+        <div class="cs-chart-block fade-in">
+          <p class="cs-chart-block-title">Industry Domain Distribution</p>
+          <p class="cs-chart-block-sub">Share of case studies within each company type (%)</p>
+          <div class="cs-chart-legend">
+            <span class="cs-chart-legend-item"><span class="cs-leg-swatch" style="background:#aab8ff"></span>Large Enterprises</span>
+            <span class="cs-chart-legend-item"><span class="cs-leg-swatch" style="background:#051C2C"></span>SMEs</span>
+            <span class="cs-chart-legend-item"><span class="cs-leg-swatch" style="background:#2251FF"></span>Startups</span>
+          </div>
+          <div class="cs-hbar-rows">
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Industrial Automation &amp; IIoT</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:61%;background:#aab8ff;color:#051C2C">61%</div>
+                <div class="cs-hbar-seg" style="width:56%;background:#051C2C;color:#fff">56%</div>
+                <div class="cs-hbar-seg" style="width:6%;background:#2251FF;color:#fff"></div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Medical Devices &amp; Systems</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:17%;background:#aab8ff;color:#051C2C">17%</div>
+                <div class="cs-hbar-seg" style="width:11%;background:#051C2C;color:#fff">11%</div>
+                <div class="cs-hbar-seg" style="width:24%;background:#2251FF;color:#fff">24%</div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Consumer Electronics</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:4%;background:#aab8ff;color:#051C2C"></div>
+                <div class="cs-hbar-seg" style="width:47%;background:#2251FF;color:#fff">47%</div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Defense Systems</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:22%;background:#051C2C;color:#fff">22%</div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Automotive &amp; Urban Mobility</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:9%;background:#aab8ff;color:#051C2C">9%</div>
+                <div class="cs-hbar-seg" style="width:11%;background:#051C2C;color:#fff">11%</div>
+                <div class="cs-hbar-seg" style="width:12%;background:#2251FF;color:#fff">12%</div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Agriculture</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:12%;background:#2251FF;color:#fff">12%</div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Aerospace &amp; Avionics</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:9%;background:#aab8ff;color:#051C2C">9%</div>
+              </div>
+            </div>
+          </div>
+          <p class="cs-chart-note">Shares of case studies within company type (%)</p>
+        </div>
+
+        <p>This has a structural implication: a startup's subsystem CPS typically needs to integrate into a broader framework built by an SME or large enterprise to become a functional, deployable product. The layers are interdependent.</p>
+
+        <div class="cs-archetypes">
+          <div class="cs-archetype">
+            <div class="cs-archetype-label">Startups</div>
+            <div class="cs-archetype-name">Rapid prototyping + informal Scrum</div>
+            <p>Operate at subsystem CPS level. Prioritise speed and concept validation, often using 3D printing, CAD mockups, and open-source IoT platforms to reduce cost and cycle time. Agile is informal and team-driven: simplified Scrum, ad-hoc methods, extended sprint cycles driven by hardware availability. Technical debt is accepted to validate ideas fast. Partial Scrum adoption is common but reduces effectiveness. One agri-tech case completed only 50% of tasks per iteration.</p>
+          </div>
+          <div class="cs-archetype">
+            <div class="cs-archetype-label">SMEs</div>
+            <div class="cs-archetype-name">Scrum + hybrid plan-driven models</div>
+            <p>Focus on system-level CPS integration. Customer-driven development ranks above raw speed. Scrum is the most common framework, with projects split by domain and executed in coordinated short sprints. Hybrid models (Agile-Stage-Gate, Agile-V-Model) balance flexibility against the structure required for Make-to-Order R&amp;D contexts. Reusable platforms and AI-enhanced decision tools support efficiency.</p>
+          </div>
+          <div class="cs-archetype">
+            <div class="cs-archetype-label">Large Enterprises</div>
+            <div class="cs-archetype-name">Agile within Stage-Gate or V-Model governance</div>
+            <p>Engage with system and SoS-level CPS, often in university collaboration. Agile operates at the team level; plan-driven models govern macro-level compliance. Common methods: Scrum, Kanban, Design Thinking, DevOps. Technology-oriented practices (Digital Twins, CI/CD, Microservices, AI/ML) are substantially more prevalent than in smaller organisations. Safety frameworks (FMEA) manage regulatory compliance.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Key findings: Differences ─────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Core finding 2</p>
+        <h2>Challenge profiles differ fundamentally by organisation type</h2>
+        <p>The study identified nine categories of challenge in implementing agile for CPS across the 29 papers. Their distribution is not uniform, which matters for anyone designing tools or processes for these teams.</p>
+
+        <div class="cs-chart-block fade-in">
+          <p class="cs-chart-block-title">Key Differences: Agile Adoption Challenges</p>
+          <p class="cs-chart-block-sub">Share of studies mentioning the challenge (%)</p>
+          <div class="cs-chart-legend">
+            <span class="cs-chart-legend-item"><span class="cs-leg-swatch" style="background:#aab8ff"></span>Large Enterprises</span>
+            <span class="cs-chart-legend-item"><span class="cs-leg-swatch" style="background:#2251FF"></span>Startups</span>
+            <span class="cs-chart-legend-item"><span class="cs-leg-swatch" style="background:#051C2C"></span>SMEs</span>
+          </div>
+          <div class="cs-chart-scroll">
+            <div style="min-width:520px;">
+              <div class="cs-vbar-area">
+                <div class="cs-vbar-group">
+                  <div class="cs-vbar" style="height:4%;background:#aab8ff" title="Large Enterprises: 2%"></div>
+                  <div class="cs-vbar" style="height:14%;background:#2251FF" title="Startups: 7%"></div>
+                  <div class="cs-vbar" style="height:0%;background:#051C2C" title="SMEs: 0%"></div>
+                </div>
+                <div class="cs-vbar-group">
+                  <div class="cs-vbar" style="height:10%;background:#aab8ff" title="Large Enterprises: 5%"></div>
+                  <div class="cs-vbar" style="height:0%;background:#2251FF" title="Startups: 0%"></div>
+                  <div class="cs-vbar" style="height:0%;background:#051C2C" title="SMEs: 0%"></div>
+                </div>
+                <div class="cs-vbar-group">
+                  <div class="cs-vbar" style="height:14%;background:#aab8ff" title="Large Enterprises: 7%"></div>
+                  <div class="cs-vbar" style="height:0%;background:#2251FF" title="Startups: 0%"></div>
+                  <div class="cs-vbar" style="height:0%;background:#051C2C" title="SMEs: 0%"></div>
+                </div>
+                <div class="cs-vbar-group">
+                  <div class="cs-vbar" style="height:20%;background:#aab8ff" title="Large Enterprises: 10%"></div>
+                  <div class="cs-vbar" style="height:20%;background:#2251FF" title="Startups: 10%"></div>
+                  <div class="cs-vbar" style="height:0%;background:#051C2C" title="SMEs: 0%"></div>
+                </div>
+                <div class="cs-vbar-group">
+                  <div class="cs-vbar" style="height:24%;background:#aab8ff" title="Large Enterprises: 12%"></div>
+                  <div class="cs-vbar" style="height:24%;background:#2251FF" title="Startups: 12%"></div>
+                  <div class="cs-vbar" style="height:20%;background:#051C2C" title="SMEs: 10%"></div>
+                </div>
+                <div class="cs-vbar-group">
+                  <div class="cs-vbar" style="height:36%;background:#aab8ff" title="Large Enterprises: 18%"></div>
+                  <div class="cs-vbar" style="height:0%;background:#2251FF" title="Startups: 0%"></div>
+                  <div class="cs-vbar" style="height:20%;background:#051C2C" title="SMEs: 10%"></div>
+                </div>
+                <div class="cs-vbar-group">
+                  <div class="cs-vbar" style="height:20%;background:#aab8ff" title="Large Enterprises: 10%"></div>
+                  <div class="cs-vbar" style="height:44%;background:#2251FF" title="Startups: 22%"></div>
+                  <div class="cs-vbar" style="height:20%;background:#051C2C" title="SMEs: 10%"></div>
+                </div>
+                <div class="cs-vbar-group">
+                  <div class="cs-vbar" style="height:34%;background:#aab8ff" title="Large Enterprises: 17%"></div>
+                  <div class="cs-vbar" style="height:70%;background:#2251FF" title="Startups: 35%"></div>
+                  <div class="cs-vbar" style="height:20%;background:#051C2C" title="SMEs: 10%"></div>
+                </div>
+                <div class="cs-vbar-group">
+                  <div class="cs-vbar" style="height:46%;background:#aab8ff" title="Large Enterprises: 23%"></div>
+                  <div class="cs-vbar" style="height:86%;background:#2251FF" title="Startups: 43%"></div>
+                  <div class="cs-vbar" style="height:56%;background:#051C2C" title="SMEs: 28%"></div>
+                </div>
+              </div>
+              <div class="cs-vbar-xlabels">
+                <span class="cs-vbar-xlabel">Intellectual Property</span>
+                <span class="cs-vbar-xlabel">Learning Curve</span>
+                <span class="cs-vbar-xlabel">Org. Restructuring</span>
+                <span class="cs-vbar-xlabel">Safety &amp; Compliance</span>
+                <span class="cs-vbar-xlabel">System Complexity</span>
+                <span class="cs-vbar-xlabel">Culture</span>
+                <span class="cs-vbar-xlabel">Resource &amp; Competence</span>
+                <span class="cs-vbar-xlabel">Hardware Constraints</span>
+                <span class="cs-vbar-xlabel">Process / Workflow</span>
+              </div>
+            </div>
+          </div>
+          <p class="cs-chart-note">Y-axis max: 50% · hover bars for exact values</p>
+        </div>
+
+        <div class="cs-findings">
+          <div class="cs-finding">
+            <h3>Hardware constraints dominate startup challenges</h3>
+            <p>Rapid iteration is the foundation of agile, but hardware revisions are slow and expensive. Startups feel this most acutely: they lack the capital buffers of large enterprises and the process maturity of SMEs. Sprint planning that ignores physical lead times produces friction immediately.</p>
+          </div>
+          <div class="cs-finding">
+            <h3>Process and complexity challenges dominate at scale</h3>
+            <p>SMEs and large enterprises report fewer hardware constraints as a primary blocker, and more challenges around process/workflow mismatches, system complexity (IoT integration, multi-domain coordination), and organisational restructuring. Scaling agile to cross-functional hardware teams introduces sync problems that software-only teams never face.</p>
+          </div>
+          <div class="cs-finding">
+            <h3>Safety and compliance create structural tension with agile's flexibility</h3>
+            <p>For regulated CPS (medical devices, automotive, aerospace), agile's iterative ethos conflicts with the documentation and traceability requirements of regulatory frameworks. Large enterprises respond with hybrid models; startups in these domains often lack the knowledge to navigate the tension at all.</p>
+          </div>
+          <div class="cs-finding">
+            <h3>Startups use agile unconsciously; enterprises use it structurally</h3>
+            <p>A defining difference the study surfaces: startups tend to organise their agile approaches unstructured, applying practices where immediately needed. Established firms apply agility in a stricter, more deliberate way, using it as a defined layer within a broader governance model. Neither is uniformly superior; the fit depends on CPS level and org context.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Key findings: Similarities ────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Core finding 3</p>
+        <h2>Despite the differences, all three converge on adaptability and Scrum</h2>
+        <p>Across all organisation types, the primary motivation for adopting agile was the same: the need to absorb evolving requirements and hardware uncertainty. Scrum was the dominant framework regardless of company size.</p>
+
+        <div class="cs-chart-block fade-in">
+          <p class="cs-chart-block-title">Primary Motivation: Adaptability</p>
+          <p class="cs-chart-block-sub">Motivation for adopting agile practices (%)</p>
+          <div class="cs-donut-grid">
+            <div class="cs-donut-item">
+              <span class="cs-donut-label">Startups</span>
+              <div class="cs-donut-wrap">
+                <div class="cs-donut-ring" style="background:conic-gradient(#2251FF 0% 34%,#051C2C 34% 67%,#E85D3A 67% 81%,#2DB88A 81% 88%,#C4C8D4 88% 100%)"></div>
+                <div class="cs-donut-hole"></div>
+              </div>
+              <div class="cs-donut-key">
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#2251FF"></span>Adaptability<span class="cs-donut-pct">34%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#051C2C"></span>Speed<span class="cs-donut-pct">33%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#E85D3A"></span>Customer-Driven Dev<span class="cs-donut-pct">14%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#2DB88A"></span>Lean Resource Use<span class="cs-donut-pct">7%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#C4C8D4"></span>Other<span class="cs-donut-pct">12%</span></span>
+              </div>
+            </div>
+            <div class="cs-donut-item">
+              <span class="cs-donut-label">SMEs</span>
+              <div class="cs-donut-wrap">
+                <div class="cs-donut-ring" style="background:conic-gradient(#2251FF 0% 36%,#E85D3A 36% 65%,#2DB88A 65% 86%,#051C2C 86% 93%,#C4C8D4 93% 100%)"></div>
+                <div class="cs-donut-hole"></div>
+              </div>
+              <div class="cs-donut-key">
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#2251FF"></span>Adaptability<span class="cs-donut-pct">36%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#E85D3A"></span>Customer-Driven Dev<span class="cs-donut-pct">29%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#2DB88A"></span>Cost Efficiency<span class="cs-donut-pct">21%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#051C2C"></span>Speed<span class="cs-donut-pct">7%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#C4C8D4"></span>Other<span class="cs-donut-pct">7%</span></span>
+              </div>
+            </div>
+            <div class="cs-donut-item">
+              <span class="cs-donut-label">Large Enterprises</span>
+              <div class="cs-donut-wrap">
+                <div class="cs-donut-ring" style="background:conic-gradient(#2251FF 0% 32%,#051C2C 32% 54%,#E85D3A 54% 73%,#2DB88A 73% 88%,#C4C8D4 88% 100%)"></div>
+                <div class="cs-donut-hole"></div>
+              </div>
+              <div class="cs-donut-key">
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#2251FF"></span>Adaptability<span class="cs-donut-pct">32%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#051C2C"></span>Speed<span class="cs-donut-pct">22%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#E85D3A"></span>Customer-Driven Dev<span class="cs-donut-pct">19%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#2DB88A"></span>Cost Efficiency<span class="cs-donut-pct">15%</span></span>
+                <span class="cs-donut-key-item"><span class="cs-dot" style="background:#C4C8D4"></span>Other<span class="cs-donut-pct">12%</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cs-chart-block fade-in">
+          <p class="cs-chart-block-title">Common Framework: Scrum</p>
+          <p class="cs-chart-block-sub">% of cases per organisation type mentioning Scrum</p>
+          <div class="cs-hbar-rows">
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Large Enterprises</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:61%;background:#2251FF;color:#fff">17 / 28 cases, 61%</div>
+                <div class="cs-hbar-seg" style="width:39%;background:#E8EEFF;"></div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">SMEs</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:80%;background:#2251FF;color:#fff">8 / 10 cases, 80%</div>
+                <div class="cs-hbar-seg" style="width:20%;background:#E8EEFF;"></div>
+              </div>
+            </div>
+            <div class="cs-hbar-row">
+              <span class="cs-hbar-label">Startups</span>
+              <div class="cs-hbar">
+                <div class="cs-hbar-seg" style="width:80%;background:#2251FF;color:#fff">12 / 15 cases, 80%</div>
+                <div class="cs-hbar-seg" style="width:20%;background:#E8EEFF;"></div>
+              </div>
+            </div>
+          </div>
+          <p class="cs-chart-note">% of cases per organisation type mentioning Scrum</p>
+        </div>
+      </div>
+
+      <!-- ── Strategic implications ────────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Implications</p>
+        <h2>Advice for Startups and SMEs in agile CPS development</h2>
+
+        <div class="cs-callout" style="margin-bottom:2rem;">
+          <p>There is no "one-size-fits-all" agile method. Practices must adapt to context.</p>
+        </div>
+
+        <!-- Startups row -->
+        <div style="display:flex; align-items:flex-start; gap:1.5rem; padding:1.5rem 0; border-top:1px solid var(--border,#e5e7eb);">
+          <div style="flex-shrink:0; width:120px;">
+            <span style="font-size:0.6875rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent,#4f6ef7); font-family:var(--font);">Startups</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.5rem; flex:1;">
+            <p style="font-size:0.9rem; color:var(--text); font-weight:600; margin:0; font-family:var(--font);">Speed through openness and partnerships</p>
+            <p style="font-size:0.8125rem; color:var(--secondary); line-height:1.6; margin:0; font-family:var(--font);">Leverage open-source hardware and software components for quick prototyping. Partner with established firms integrated into the CPS infrastructure or ecosystem. Gain rapid market feedback with MVPs.</p>
+          </div>
+        </div>
+
+        <!-- SMEs row -->
+        <div style="display:flex; align-items:flex-start; gap:1.5rem; padding:1.5rem 0; border-top:1px solid var(--border,#e5e7eb); border-bottom:1px solid var(--border,#e5e7eb);">
+          <div style="flex-shrink:0; width:120px;">
+            <span style="font-size:0.6875rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent,#4f6ef7); font-family:var(--font);">SMEs</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.5rem; flex:1;">
+            <p style="font-size:0.9rem; color:var(--text); font-weight:600; margin:0; font-family:var(--font);">Agility within structure</p>
+            <p style="font-size:0.8125rem; color:var(--secondary); line-height:1.6; margin:0; font-family:var(--font);">Enable rapid MVP delivery through agile, scalable system architectures. Incorporate agility within structured, high-level planning and governance.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ── Outlook ────────────────────────────── -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Outlook</p>
+        <h2>Future research in domain-specific CPS ecosystems and agile metrics</h2>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin:1.75rem 0;">
+
+          <!-- Card 1 -->
+          <div style="background:var(--surface); border-radius:6px; padding:2rem 1.75rem; border-top:3px solid var(--accent,#4f6ef7);">
+            <div style="width:40px; height:40px; margin-bottom:1rem; background:rgba(79,110,247,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent,#4f6ef7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/><circle cx="12" cy="12" r="9"/><path d="M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg></div>
+            <h3 style="font-size:1.05rem; font-weight:700; color:var(--text); margin:0 0 0.35rem; font-family:var(--font);">Deepen research in CPS ecosystems</h3>
+            <p style="font-size:0.8125rem; color:var(--secondary); line-height:1.55; margin:0 0 1.25rem; font-family:var(--font);">Build reusable ecosystem blueprints that bridge the subsystem-to-SoS gap.</p>
+            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+              <div style="display:flex; align-items:flex-start; gap:0.6rem;">
+                <span style="flex-shrink:0; width:6px; height:6px; border-radius:50%; background:var(--accent,#4f6ef7); margin-top:0.45rem;"></span>
+                <span style="font-size:0.8125rem; color:var(--secondary); line-height:1.5; font-family:var(--font);">Select two real-world domains</span>
+              </div>
+              <div style="display:flex; align-items:flex-start; gap:0.6rem;">
+                <span style="flex-shrink:0; width:6px; height:6px; border-radius:50%; background:var(--accent,#4f6ef7); margin-top:0.45rem;"></span>
+                <span style="font-size:0.8125rem; color:var(--secondary); line-height:1.5; font-family:var(--font);">Map platforms, data flows, and key stakeholders per domain</span>
+              </div>
+              <div style="display:flex; align-items:flex-start; gap:0.6rem;">
+                <span style="flex-shrink:0; width:6px; height:6px; border-radius:50%; background:var(--accent,#4f6ef7); margin-top:0.45rem;"></span>
+                <span style="font-size:0.8125rem; color:var(--secondary); line-height:1.5; font-family:var(--font);">Extract common patterns and publish a reusable "CPS Ecosystem Map"</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div style="background:var(--surface); border-radius:6px; padding:2rem 1.75rem; border-top:3px solid var(--accent,#4f6ef7);">
+            <div style="width:40px; height:40px; margin-bottom:1rem; background:rgba(79,110,247,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent,#4f6ef7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 4 5-8"/><circle cx="20" cy="6" r="1.5"/></svg></div>
+            <h3 style="font-size:1.05rem; font-weight:700; color:var(--text); margin:0 0 0.35rem; font-family:var(--font);">Define clear metrics for agile success</h3>
+            <p style="font-size:0.8125rem; color:var(--secondary); line-height:1.55; margin:0 0 1.25rem; font-family:var(--font);">Move from anecdotal evidence to quantifiable agile performance data.</p>
+            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+              <div style="display:flex; align-items:flex-start; gap:0.6rem;">
+                <span style="flex-shrink:0; width:6px; height:6px; border-radius:50%; background:var(--accent,#4f6ef7); margin-top:0.45rem;"></span>
+                <span style="font-size:0.8125rem; color:var(--secondary); line-height:1.5; font-family:var(--font);">Collaborate with companies to capture lead and cycle times</span>
+              </div>
+              <div style="display:flex; align-items:flex-start; gap:0.6rem;">
+                <span style="flex-shrink:0; width:6px; height:6px; border-radius:50%; background:var(--accent,#4f6ef7); margin-top:0.45rem;"></span>
+                <span style="font-size:0.8125rem; color:var(--secondary); line-height:1.5; font-family:var(--font);">Track production-escape defect rates and customer satisfaction per release</span>
+              </div>
+              <div style="display:flex; align-items:flex-start; gap:0.6rem;">
+                <span style="flex-shrink:0; width:6px; height:6px; border-radius:50%; background:var(--accent,#4f6ef7); margin-top:0.45rem;"></span>
+                <span style="font-size:0.8125rem; color:var(--secondary); line-height:1.5; font-family:var(--font);">Analyze metric correlations to identify high-impact practices</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Publication ───────────────────────────────────────── -->
+      <a href="https://www.researchgate.net/publication/395701479_Developing_Cyber-Physical_Systems_as_Entrepreneurs_Agile_Development_in_Startups_and_SMEs" target="_blank" rel="noopener" class="cs-publication fade-in" style="text-decoration:none; display:flex; align-items:flex-start; gap:1rem; padding:1.25rem 1.5rem; background:var(--surface); border-radius:4px; margin:1.75rem 0; transition: opacity 0.15s;">
+        <div class="cs-publication-icon">&#128196;</div>
+        <div class="cs-publication-text">
+          <span class="cs-publication-title">Developing Cyber-Physical Systems as Entrepreneurs: Agile Development in Startups and SMEs</span>
+          <span class="cs-publication-detail">Thomas Alexander Völk, Di Gao, Tobias Düser &amp; Albert Albers · IPEK, Karlsruhe Institute of Technology · Proceedings of the 20th European Conference on Innovation and Entrepreneurship (ECIE 2025) · Funded by DFG – SFB 1608 – 501798263</span>
+          <span class="cs-publication-detail" style="margin-top:0.35rem; color:var(--accent,#4f6ef7);">View on ResearchGate &rarr;</span>
+        </div>
+      </a>
+
+      <div class="cs-tags" style="margin-top:2rem">
+        <span class="cs-tag">Systematic Literature Review</span>
+        <span class="cs-tag">AI-Assisted Research</span>
+        <span class="cs-tag">Agile</span>
+        <span class="cs-tag">Cyber-Physical Systems</span>
+        <span class="cs-tag">CPS Startups</span>
+        <span class="cs-tag">Conference Paper</span>
+        <span class="cs-tag">KIT IPEK</span>
+      </div>
+
+    </div>
+
+    <!-- Next project -->
+    <div class="cs-next-project">
+      <p class="cs-next-label">Next Project</p>
+      <a href="german-telehealth.html" class="cs-next-link">
+        <h2 class="cs-next-title">German Telehealth Infrastructure: Structural Mapping for Threat Modeling</h2>
+        <p class="cs-next-desc">Mapped structural gaps between regulation, infrastructure &amp; clinical workflows in Germany's digital health landscape.</p>
+        <span class="cs-next-arrow">Read case study &rarr;</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>&copy; 2025 Julie Di Gao</span>
+    <a href="mailto:julie.gao369@gmail.com">julie.gao369@gmail.com</a>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

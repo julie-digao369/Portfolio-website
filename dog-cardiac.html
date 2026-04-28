@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PetsTech Cardiac Monitor — Veterinary Hardware UI Design · Julie Di Gao</title>
+  <meta name="description" content="Hardware UI design for a 20,000 CNY veterinary cardiac monitor with a segment LCD display. Every pixel is a hardware cost. Three concepts. One shipped." />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="PetsTech Cardiac Monitor — Veterinary Hardware UI Design · Julie Di Gao" />
+  <meta property="og:description" content="Hardware UI design for a 20,000 CNY veterinary cardiac monitor with a segment LCD display. Every pixel is a hardware cost. Three concepts. One shipped." />
+  <meta property="og:url" content="https://juliedigao.info/dog-cardiac.html" />
+  <meta property="og:image" content="https://juliedigao.info/img/petstech.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://juliedigao.info/dog-cardiac.html" />
+  <link rel="preload" href="fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/dm-serif-display-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .layout, .sidebar, .content { display: contents; }
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .concept-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .concept-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .concept-card p {
+      font-size: 0.82rem;
+      color: var(--secondary);
+      line-height: 1.55;
+    }
+    .concept-card .concept-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+      margin-bottom: 0.75rem;
+    }
+    .eval-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin-top: 1.25rem;
+    }
+    .eval-table th,
+    .eval-table td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .eval-table th {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.78rem;
+      background: var(--surface);
+    }
+    .eval-table td {
+      color: var(--secondary);
+    }
+    .eval-winner {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .param-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    .param-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+    .param-item .param-val {
+      font-size: 0.75rem;
+      color: var(--secondary);
+      margin-top: 0.25rem;
+    }
+    .param-item .param-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    @media (max-width: 700px) {
+      .concepts-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .req-stats-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+<body class="cs-page">
+  <a class="skip-link" href="#cs-main">Skip to content</a>
+
+  <nav class="site-nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-name">Julie Di Gao</a>
+      <a href="https://www.linkedin.com/in/julie-gao-9985a615b/" class="nav-linkedin" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <div class="nav-links">
+      <a href="index.html#projects">Work</a>
+      <a href="about.html">About</a>
+      <a href="mailto:julie.gao369@gmail.com" class="nav-cta">Contact</a>
+    </div>
+  </nav>
+
+  <main id="cs-main">
+    <div class="cs-header">
+      <p class="cs-eyebrow">Hardware UI Design · 2025 · B2B + B2C · China Market</p>
+      <h1 class="cs-title">PetsTech Cardiac Monitor UI Design</h1>
+      <p class="cs-sub">A veterinary cardiac monitor that costs 20,000 CNY per unit. The screen is a segment LCD. Every pixel is a hardware decision. I had to make it read like a hospital monitor while keeping BOM costs survivable.</p>
+
+      <div class="cs-meta">
+        <div class="cs-meta-item"><span class="cs-meta-label">Role</span> <span class="cs-meta-value">Product Designer</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Client</span> <span class="cs-meta-value">PetsTech (佩茨泰克)</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Year</span> <span class="cs-meta-value">2025</span></div>
+        <span class="cs-meta-dot">·</span>
+        <div class="cs-meta-item"><span class="cs-meta-label">Focus</span> <span class="cs-meta-value">Embedded segment LCD interface design</span></div>
+      </div>
+    </div>
+
+    <div class="cs-body">
+
+      <!-- Problem -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">The problem</p>
+        <h2>Vets need six cardiac biomarkers at a glance. The screen has zero pixels.</h2>
+        <p>PetsTech builds cardiac monitors for dogs and cats. Their device measures heart rate, ejection fraction, BNP, troponin, and more. Veterinarians and pet owners both use it. One group needs clinical precision. The other needs to not panic.</p>
+        <p>The catch: segment LCDs. No app. No touchscreen. Every character on screen corresponds to a physical circuit trace on the PCB. Add a line of text, you add manufacturing cost. Remove one, you lose critical medical info. The entire UI had to be negotiated at the hardware level.</p>
+      </div>
+
+      <div class="cs-callout">
+        <p>This is not software design. Every visual element I put on screen gets etched into glass. There is no undo after production.</p>
+      </div>
+
+      <!-- Requirements -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Requirements</p>
+        <h2>Everything a vet needs. Nothing the hardware can't handle.</h2>
+        <p>I worked with the veterinary team to inventory every piece of information the screen had to carry. The constraint was brutal: segment LCDs price per trace, so every element I added had a dollar sign attached.</p>
+
+        <div class="req-stats-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem">
+          <div style="text-align:center;padding:1.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px">
+            <div style="font-size:2rem;font-weight:700;color:var(--text);line-height:1">4</div>
+            <div style="font-size:0.82rem;font-weight:600;color:var(--text);margin-top:0.4rem">Treatment modes</div>
+            <p style="font-size:0.78rem;color:var(--secondary);margin-top:0.5rem;line-height:1.5">General · Heart Failure<br>Myocardial Injury · Arrhythmia</p>
+          </div>
+          <div style="text-align:center;padding:1.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px">
+            <div style="font-size:2rem;font-weight:700;color:var(--text);line-height:1">7</div>
+            <div style="font-size:0.82rem;font-weight:600;color:var(--text);margin-top:0.4rem">Parameters</div>
+            <p style="font-size:0.78rem;color:var(--secondary);margin-top:0.5rem;line-height:1.5">Age · Weight · Heart Rate<br>Ejection Fraction · NT-ProBNP · cTnI · Species</p>
+          </div>
+          <div style="text-align:center;padding:1.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px">
+            <div style="font-size:2rem;font-weight:700;color:var(--text);line-height:1">2</div>
+            <div style="font-size:0.82rem;font-weight:600;color:var(--text);margin-top:0.4rem">Species + organs</div>
+            <p style="font-size:0.78rem;color:var(--secondary);margin-top:0.5rem;line-height:1.5">Dog / Cat toggle<br>Heart &amp; liver status indicators</p>
+          </div>
+        </div>
+        <p style="margin-top:1.25rem">Plus a 30-minute countdown timer. All on a monochrome segment display where every character is a physical circuit trace.</p>
+      </div>
+
+      <!-- Design exploration -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Design exploration</p>
+        <h2>Three concepts. Each one a different bet on what matters most.</h2>
+        <p>I designed three directions and prototyped each as a real segment layout to evaluate manufacturability alongside usability.</p>
+
+        <div style="margin-top:1.5rem">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem">
+            <div style="display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap">
+              <div style="flex:1;min-width:240px">
+                <span class="concept-tag" style="background:#fff3cd;color:#856404">Concept A</span>
+                <h3 style="margin-top:0.5rem">Dashboard Style</h3>
+                <p style="font-size:0.85rem;color:var(--secondary);line-height:1.6;margin-top:0.5rem">All parameters visible at once alongside a full dog silhouette with heart/liver indicators. Reads like a miniature hospital monitor.</p>
+                <div style="margin-top:0.75rem;font-size:0.78rem">
+                  <span style="color:#155724;font-weight:600">+</span> <span style="color:var(--secondary)">Most intuitive. See set parameters and remaining time simultaneously.</span><br>
+                  <span style="color:#dc3545;font-weight:600">&minus;</span> <span style="color:var(--secondary)">Cat owners see a dog outline. Requires the most LCD segments. Highest BOM.</span>
+                </div>
+              </div>
+              <figure class="cs-figure" style="flex:1;min-width:280px;margin:0">
+                <picture>
+                  <source srcset="img/pets-tech/a.webp" type="image/webp">
+                  <img src="img/pets-tech/a.png" alt="Concept A: Dashboard style with dog silhouette and all parameters visible" loading="lazy" style="border-radius:8px" />
+                </picture>
+              </figure>
+            </div>
+          </div>
+
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem">
+            <div style="display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap">
+              <div style="flex:1;min-width:240px">
+                <span class="concept-tag" style="background:#d1ecf1;color:#0c5460">Concept B</span>
+                <h3 style="margin-top:0.5rem">Simplified Dashboard</h3>
+                <p style="font-size:0.85rem;color:var(--secondary);line-height:1.6;margin-top:0.5rem">Replaced the dog illustration with abstract organ icons (heart, liver). Parameters stay visible. Species-neutral.</p>
+                <div style="margin-top:0.75rem;font-size:0.78rem">
+                  <span style="color:#155724;font-weight:600">+</span> <span style="color:var(--secondary)">Solves the species conflict. Cleaner than A. Moderate segment count.</span><br>
+                  <span style="color:#dc3545;font-weight:600">&minus;</span> <span style="color:var(--secondary)">Slightly higher cost than C. Less visual personality.</span>
+                </div>
+              </div>
+              <figure class="cs-figure" style="flex:1;min-width:280px;margin:0">
+                <picture>
+                  <source srcset="img/pets-tech/b.webp" type="image/webp">
+                  <img src="img/pets-tech/b.png" alt="Concept B: Simplified dashboard with abstract organ icons" loading="lazy" style="border-radius:8px" />
+                </picture>
+              </figure>
+            </div>
+          </div>
+
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+            <div style="display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap">
+              <div style="flex:1;min-width:240px">
+                <span class="concept-tag" style="background:#d4edda;color:#155724">Concept C</span>
+                <h3 style="margin-top:0.5rem">Minimalist Reuse</h3>
+                <p style="font-size:0.85rem;color:var(--secondary);line-height:1.6;margin-top:0.5rem">One large number display shared across all parameters. Users scroll through values using the top navigation bar.</p>
+                <div style="margin-top:0.75rem;font-size:0.78rem">
+                  <span style="color:#155724;font-weight:600">+</span> <span style="color:var(--secondary)">Cleanest interface. Lowest BOM cost. Best production yield rate.</span><br>
+                  <span style="color:#dc3545;font-weight:600">&minus;</span> <span style="color:var(--secondary)">Editing requires checking three screen areas at once. Less intuitive for new users.</span>
+                </div>
+              </div>
+              <figure class="cs-figure" style="flex:1;min-width:280px;margin:0">
+                <picture>
+                  <source srcset="img/pets-tech/c.webp" type="image/webp">
+                  <img src="img/pets-tech/c.png" alt="Concept C: Minimalist layout with shared number display" loading="lazy" style="border-radius:8px" />
+                </picture>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Evaluation -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Evaluation</p>
+        <h2>I scored each concept across six dimensions. No single winner.</h2>
+        <p>The decision was not "which looks best." It was "which survives manufacturing while still being usable in a vet clinic at 2 AM."</p>
+
+        <div style="overflow-x:auto">
+        <table class="eval-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>A: Dashboard</th>
+              <th>B: Simplified</th>
+              <th>C: Minimalist</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Intuitiveness</td>
+              <td class="eval-winner">★★★★★</td>
+              <td class="eval-winner">★★★★★</td>
+              <td>★★★</td>
+            </tr>
+            <tr>
+              <td>Info completeness</td>
+              <td class="eval-winner">★★★★★</td>
+              <td class="eval-winner">★★★★★</td>
+              <td class="eval-winner">★★★★★</td>
+            </tr>
+            <tr>
+              <td>Visual noise</td>
+              <td>High</td>
+              <td>Medium</td>
+              <td class="eval-winner">Low</td>
+            </tr>
+            <tr>
+              <td>Ease of use</td>
+              <td>Frequent adjusters</td>
+              <td>Frequent adjusters</td>
+              <td>Infrequent adjusters</td>
+            </tr>
+            <tr>
+              <td>BOM cost</td>
+              <td>★ (highest)</td>
+              <td>★★ (medium)</td>
+              <td class="eval-winner">★★★★★ (lowest)</td>
+            </tr>
+            <tr>
+              <td>Production complexity</td>
+              <td>High</td>
+              <td>Medium</td>
+              <td class="eval-winner">Low</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- Outcome -->
+      <div class="cs-section fade-in">
+        <p class="cs-section-label">Final design</p>
+        <h2>Concept B won the evaluation. Then reality refined it further.</h2>
+        <p>B scored highest on the balance of usability and cost. But the client had additional manufacturing constraints: the factory wanted fewer segment engravings to improve yield rate and lower per-unit cost. That meant the dedicated parameter fields from B had to go.</p>
+        <p>The final design borrows B's species-neutral organ icons and treatment mode bar, but adopts C's shared large number display. One big readout cycles through all parameters instead of showing them simultaneously. Fewer traces on the LCD. Fewer engravings at the factory. Same clinical information, restructured for production reality.</p>
+        <p>The result is a hybrid that neither concept predicted: B's information architecture with C's manufacturing efficiency.</p>
+
+        <figure class="cs-figure" style="margin-top:1.5rem">
+          <picture>
+            <source srcset="img/pets-tech/final-design.webp" type="image/webp">
+            <img src="img/pets-tech/final-design.png" alt="Final PetsTech cardiac monitor: hybrid of Concept B structure with Concept C shared display" loading="lazy" style="border-radius:8px" />
+          </picture>
+          <figcaption>The shipped device. B's layout logic, C's display economy.</figcaption>
+        </figure>
+      </div>
+
+      <div class="cs-tags">
+        <span class="cs-tag">Hardware UI</span>
+        <span class="cs-tag">Medical Device</span>
+        <span class="cs-tag">Segment LCD</span>
+        <span class="cs-tag">Veterinary Tech</span>
+        <span class="cs-tag">B2B + B2C</span>
+        <span class="cs-tag">China Market</span>
+      </div>
+
+    </div>
+
+    <!-- Next project -->
+    <div class="cs-next-project">
+      <p class="cs-next-label">Next Project</p>
+      <a href="rullja-app.html" class="cs-next-link">
+        <h2 class="cs-next-title">RullJa IoT Dashboard — Investor Concept Demo</h2>
+        <p class="cs-next-desc">Built an interactive dashboard prototype for a waste-tech startup pitching IoT fill-level sensors to investors.</p>
+        <span class="cs-next-arrow">View demo &rarr;</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>&copy; 2025 Julie Di Gao</span>
+    <a href="mailto:julie.gao369@gmail.com">julie.gao369@gmail.com</a>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
