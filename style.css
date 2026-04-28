@@ -1078,7 +1078,7 @@ a.hero-badge:hover {
     border-bottom-color: rgba(0,0,0,0.07);
   }
   .cs-page .nav-links a:hover { color: var(--text); }
-  .cs-page .nav-links .nav-cta { color: #fff; }
+  .cs-page .nav-links .nav-cta { color: var(--secondary); }
 
   /* Solid white nav bar when dropdown is open on case study pages */
   .cs-page .site-nav:has(.nav-links.open) {
@@ -3772,4 +3772,28 @@ body:not(.cs-page) .site-nav.scrolled {
   background-position: -45px -45px, 30px 30px, 30px 30px;
   mask-image: linear-gradient(to bottom, rgba(0,0,0,0.20) 0px, rgba(0,0,0,0.20) 30px, rgba(0,0,0,1) 105px);
   -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.20) 0px, rgba(0,0,0,0.20) 30px, rgba(0,0,0,1) 105px);
+}
+
+/* ── Mobile: Contact pill → plain nav row (must come last to beat desktop specificity) ── */
+@media (max-width: 768px) {
+  .cs-page .nav-links .nav-cta,
+  body:not(.cs-page) .nav-links .nav-cta {
+    background: transparent;
+    color: rgba(5, 28, 44, 0.65);
+    border-radius: 0;
+    box-shadow: none;
+    padding: 1.125rem 1.75rem;
+    font-weight: 400;
+    font-size: 1rem;
+    margin: 0;
+    width: 100%;
+    align-self: stretch;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .cs-page .nav-links .nav-cta:hover,
+  body:not(.cs-page) .nav-links .nav-cta:hover {
+    background: transparent;
+    color: #051C2C;
+    transform: none;
+  }
 }
