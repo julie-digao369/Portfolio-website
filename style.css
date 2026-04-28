@@ -223,14 +223,20 @@ button { font-family: inherit; }
 /* ── Scroll reveal ── */
 .fade-in {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.8s cubic-bezier(.22,1,.36,1),
-              transform 0.8s cubic-bezier(.22,1,.36,1);
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(.22,1,.36,1),
+              transform 0.7s cubic-bezier(.22,1,.36,1);
 }
 .fade-in.visible {
   opacity: 1;
   transform: translateY(0);
 }
+
+.testimonials-grid .testimonial.fade-in:nth-child(2) { transition-delay: 100ms; }
+
+.projects-group .proj-row.fade-in:nth-child(2) { transition-delay: 60ms; }
+.projects-group .proj-row.fade-in:nth-child(3) { transition-delay: 120ms; }
+.projects-group .proj-row.fade-in:nth-child(4) { transition-delay: 180ms; }
 
 /* ── Skip link (screen-reader, visible on focus) ── */
 .skip-link {
@@ -1045,22 +1051,20 @@ a.hero-badge:hover {
   .nav-links.open > *:nth-child(4) { transition-delay: 0.16s; }
 
   .nav-links .nav-cta {
-    margin-top: auto;
-    margin-bottom: max(1.75rem, env(safe-area-inset-bottom));
-    width: calc(100% - 3.5rem);
-    align-self: center;
-    border-bottom: none;
-    padding: 0.875rem 1.5rem;
-    min-height: 48px;
-    background: var(--accent);
-    border: none;
-    border-radius: var(--radius-pill);
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(34,81,255,0.32);
+    background: none;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: none;
+    color: rgba(5, 28, 44, 0.65);
+    font-weight: 400;
+    font-size: 1rem;
+    padding: 1.125rem 1.75rem;
+    margin: 0;
+    width: 100%;
+    align-self: stretch;
+    justify-content: space-between;
+    text-align: left;
+    min-height: unset;
   }
 
   .cs-page .nav-links {
@@ -1146,7 +1150,7 @@ a.hero-badge:hover {
   }
 
   .projects-group + .projects-group {
-    margin-top: 3rem;
+    margin-top: 0;
   }
 
   .cta-inner {
@@ -1160,7 +1164,7 @@ a.hero-badge:hover {
 
   .site-footer {
     flex-direction: column;
-    text-align: center;
+    text-align: left;
     gap: 0.5rem;
   }
 
@@ -1391,6 +1395,7 @@ a.card:hover .card-thumb::after {
 @media (prefers-reduced-motion: reduce) {
   .hero-eyebrow,
   .hero-title,
+  .hero-bio,
   .hero-desc,
   .hero-cta {
     animation: none;
@@ -2507,14 +2512,14 @@ a.card:hover .card-thumb::after {
 .nav-left {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .nav-linkedin {
   color: var(--tertiary);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   line-height: 1;
   transition: color 0.2s;
   min-width: 48px;
@@ -2587,6 +2592,7 @@ a.card:hover .card-thumb::after {
   line-height: 1.8;
   color: var(--secondary);
   max-width: 580px;
+  animation: heroTextIn 0.8s cubic-bezier(.22,1,.36,1) 0.35s both;
 }
 
 /* ── Press / associations strip ── */
@@ -2843,7 +2849,7 @@ a.card:hover .card-thumb::after {
   .proj-row {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    padding: 3rem 0;
+    padding: 2rem 0;
   }
 
   .proj-row--flip .proj-text { order: 2; }

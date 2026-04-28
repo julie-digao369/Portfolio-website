@@ -83,7 +83,9 @@ function selectRole(role) {
 
   if (!projSection || !projListSection) return;
 
-  if (role === 'all') {
+  const isMobile = window.innerWidth <= 768;
+
+  if (role === 'all' && !isMobile) {
     projSection.hidden = false;
     projListSection.hidden = true;
     projCards.forEach(card => { card.hidden = false; });
@@ -95,7 +97,7 @@ function selectRole(role) {
     teardownMarquee();
     projListSection.hidden = false;
     projGroups.forEach(group => {
-      group.hidden = group.dataset.group !== role;
+      group.hidden = role !== 'all' && group.dataset.group !== role;
     });
   }
 }
