@@ -1150,7 +1150,7 @@ a.hero-badge:hover {
   }
 
   .projects-group + .projects-group {
-    margin-top: 0;
+    margin-top: 24px;
   }
 
   .cta-inner {
@@ -2852,7 +2852,11 @@ a.card:hover .card-thumb::after {
   .proj-row {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    padding: 2rem 0;
+    padding: 0;
+  }
+
+  .proj-row + .proj-row {
+    margin-top: 24px;
   }
 
   .proj-row--flip .proj-text { order: 2; }
@@ -3735,32 +3739,11 @@ body:not(.cs-page) .site-nav.scrolled {
   display: none !important;
 }
 
-/* ── Mobile: vertical list ── */
+/* ── Mobile: scroll section is desktop-only; panels handle mobile ── */
 @media (max-width: 768px) {
-  .proj-scroll-section,
-  .proj-scroll-section.marquee-active {
-    max-width: none;
-    padding: 1.5rem 1rem 3rem;
-    overflow: visible;
+  .proj-scroll-section {
+    display: none;
   }
-  .proj-scroll-track,
-  .proj-scroll-section.marquee-active .proj-scroll-track {
-    flex-direction: column;
-    overflow-x: visible;
-    animation: none !important;
-    padding-left: 0;
-    gap: 2rem;
-  }
-  .proj-card {
-    flex: none;
-    width: 100%;
-    margin-right: 0;
-  }
-  .proj-card-visual {
-    height: 280px;
-  }
-  .proj-card-body .proj-cat { font-size: 0.75rem; }
-  .proj-card-desc { font-size: 0.875rem; }
 }
 
 /* ══════════════════════════════════════════════════════════════
